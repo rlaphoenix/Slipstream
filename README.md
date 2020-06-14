@@ -40,8 +40,7 @@ This method builds Slipstream to a single executable file with no dependencies w
 git clone https://github.com/rlaPHOENiX/Slipstream.git
 cd Slipstream
 pyinstaller -F "Slipstream/__init__.py" --add-data "Slipstream/static:static" --add-data "Slipstream/cefpython3:cefpython3" --hidden-import="pkg_resources.py2_warn" -n "Slipstream"
-cd dist
-ls
+ls dist
 ```
 
 The built executable will be found in the `dist/` folder. You can move the executable anywhere you wish as it is entirely portable. You won't even need python installed to use it. You may need to explicitly give it execute permission (`chmod +x`).
