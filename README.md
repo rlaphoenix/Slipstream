@@ -16,6 +16,7 @@ Slipstream is a home-media REMUX-ing and backup software with a wide array of fe
 
 - [X] Craft GUI with Chromium Embedded Framework (CEF).
 - [X] Create a file based settings system.
+- [X] Implement a quick and simple way to build, pack with PyInstaller, upload, and install.
 - [ ] Design the UI.
 - [ ] Implement the UI and bridge the Javascript and Python together.
 - [ ] Add drive selection dropdown with information about the drive including disc label.
@@ -26,32 +27,31 @@ Slipstream is a home-media REMUX-ing and backup software with a wide array of fe
 - [ ] Add the ability to choose to remux by VOB ID, and VOB CELL's.
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 
+## Quick Installation
+
+    python -m pip install --user slipstream
+
+If you wish to manually install from source, take a look at [Building](#building) below.
+
+## Usage
+
+To run Slipstream, type `slipstream` into Terminal, App Launcher, or Start Menu.
+
 ## Building
 
-### Note:
+> Note:
+> Make sure you use Python version 3.x (`python --version`). Some environments may use `python` for Python version 2.x and `python3` for Python version 3.x so make sure you use the right one from here on in all the following build commands.
 
-- Make sure you use Python version 3.x (`python --version`). Some environments may use `python` for Python version 2.x and `python3` for Python version 3.x so make sure you use the right one from here on in all the following build commands.
+    git clone https://github.com/rlaPHOENiX/Slipstream.git
+    cd Slipstream
 
-### Method 1: PyInstaller (Portable executable file)
+Now you have three options, `dist`, `pack`, or `install`:
 
-This method builds Slipstream to a single executable file with no dependencies whatsoever. A fully portable binary.
+- `dist`, Build the source into a package file that's shareable and installable with pip, will be in /dist:  
+  `python setup.py dist`
+- `pack`, Build and pack the source with PyInstaller, resulting in a single portable binary file, will be in /dist:  
+  `python setup.py pack`
+- `install`, Build the source and install it with pip, essentially the same result as [Quick Installation](#installation) but without PyPI.org:  
+  `python -m pip install --user .`
 
-```
-git clone https://github.com/rlaPHOENiX/Slipstream.git
-cd Slipstream
-pyinstaller -F "Slipstream/__init__.py" --add-data "Slipstream/static:static" --add-data "Slipstream/cefpython3:cefpython3" --hidden-import="pkg_resources.py2_warn" -n "Slipstream"
-ls dist
-```
-
-The built executable will be found in the `dist/` folder. You can move the executable anywhere you wish as it is entirely portable. You won't even need python installed to use it. You may need to explicitly give it execute permission (`chmod +x`).
-
-### Method 2: PIP Python package file (setuptools/wheel)
-
-This method builds Slipstream into a wheel package file that can be installed by tools like Python's PIP.
-
-```
-python -m pip install --user --upgrade setuptools wheel
-python setup.py sdist bdist_wheel
-```
-
-The built package files will be found in the `dist/` folder. It can be installed with `python -m pip install --user .`. Once installed, it can be run by typing `slipstream` in terminal.
+Once built, use it as you please. If you went the `install` route, follow [Usage][#usage].

@@ -144,7 +144,6 @@ class PackCommand(Command):
     os.system("{0} -m pip install --user --upgrade pyinstaller".format(sys.executable))
     status("Packing with PyInstaller…")
     sub = subprocess.Popen([
-      #"pyinstaller", "--clean", "pyinstaller.spec"
       "pyinstaller", "--clean", "-F", "slipstream/__init__.py",
       "--add-data", "slipstream/static:static", "--add-data", f"{get_package_paths('cefpython3')[1]}:cefpython3",
       "--hidden-import", "pkg_resources.py2_warn", "-n", "Slipstream"
@@ -156,12 +155,6 @@ class PackCommand(Command):
       build_clean()
       sys.exit(1)
     sys.exit()
-
-
-    #os.system(
-    #  'pyinstaller -F "slipstream/__init__.py" --add-data "slipstream/static:static" '
-    #  '--hidden-import="pkg_resources.py2_warn" '
-    #  '-n "Slipstream"')
 
 
 # Where the magic happens:
@@ -212,7 +205,7 @@ setup(
   # $ setup.py publish support.
   cmdclass={
     "upload": UploadCommand,
-    "build": BuildCommand,
+    "dist": BuildCommand,
     "pack": PackCommand
   }
 )
