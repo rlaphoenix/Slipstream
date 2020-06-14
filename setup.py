@@ -107,13 +107,20 @@ setup(
   author_email=about["__author_email__"],
   python_requires=REQUIRES_PYTHON,
   url=about["__url__"],
+  project_urls={
+    #"Documentation": '...todo...',
+    "Source": 'https://github.com/rlaPHOENiX/Slipstream',
+  },
   packages=find_packages(),
   py_modules=[NAME_SLUG],
   entry_points={"console_scripts": [f'{about["__cmd__"]}={NAME_SLUG}:cli']},
   install_requires=REQUIRED,
   extras_require=EXTRAS,
   include_package_data=True,
-  package_data={NAME_SLUG: ["static/*"]},
+  package_data={
+    "": ["LICENSE", "HISTORY.md"],
+    NAME_SLUG: ["static/*"]
+  },
   license=about["__license__"],
   classifiers=[
     # Trove classifiers

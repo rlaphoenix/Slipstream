@@ -23,7 +23,6 @@ Metadata used throughout the application.
 By calculating all the metadata in __version__.py, it allows us
 to easily expose the information to the user via import as well as
 throughout the code by importing only what we want.
-
 """
 
 # std
@@ -43,7 +42,7 @@ __url__ = "https://github.com/rlaPHOENiX/Slipstream"
 __version__ = "0.0.0"
 __author__ = "PHOENiX"
 __author_email__ = "rlaphoenix@pm.me"
-__min_size__ = (1400, 440)  # width, height. todo ; move this to config file
+__min_size__ = "1400x440"  # todo ; move this to config file
 __package_obj__ = None
 try:
   __package_obj__ = pkg_resources.Requirement.parse(f"{__title__}=={__version__}")
@@ -82,4 +81,4 @@ if __package_obj__:
 # file paths
 __config_file__ = os.path.join(__user_dir__, "config.yml")
 __icon_file__ = os.path.join(__static_dir__, "icon.png")
-__ui_index__ = "file:///home/owner/github/SNIPR-UI/index.html"
+__ui_index__ = "https://google.com"  # prefix with `file://` for local file
