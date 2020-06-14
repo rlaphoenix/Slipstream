@@ -54,4 +54,4 @@ Now you have three options, `dist`, `pack`, or `install`:
 - `install`, Build the source and install it with pip, essentially the same result as [Quick Installation](#installation) but without PyPI.org:  
   `python -m pip install --user .`
 
-Once built, use it as you please. If you went the `install` route, follow [Usage][#usage].
+Once built, use it as you please. If you went the `install` route, follow [Usage](#usage).
