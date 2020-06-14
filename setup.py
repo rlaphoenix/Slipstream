@@ -12,6 +12,8 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
+import slipstream.__version__ as meta
+
 # Package meta-data. Most of it is loaded from ./{name}/__version__.py
 NAME = "Slipstream"
 NAME_SLUG = NAME.lower().replace("-", "_").replace(" ", "_")
@@ -45,18 +47,13 @@ EXTRAS = {
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-# Load the package's __version__.py module as a dictionary.
-about = {}
-with open(os.path.join(here, NAME_SLUG, "__version__.py")) as f:
-  exec(f.read(), about)
-
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 try:
   with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
 except FileNotFoundError:
-  long_description = about["__description__"]
+  long_description = meta.__description__
 
 
 class UploadCommand(Command):
@@ -90,7 +87,7 @@ class UploadCommand(Command):
     os.system("twine upload dist/*")
 
     self.status("Pushing git tags…")
-    os.system("git tag v{0}".format(about["__version__"]))
+    os.system("git tag v{0}".format(meta.__version__))
     os.system("git push --tags")
 
     sys.exit()
@@ -99,21 +96,21 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
   name=NAME,
-  version=about["__version__"],
-  description=about["__description__"],
+  version=meta.__version__,
+  description=meta.__description__,
   long_description=long_description,
   long_description_content_type="text/markdown",
-  author=about["__author__"],
-  author_email=about["__author_email__"],
+  author=meta.__author__,
+  author_email=meta.__author_email__,
   python_requires=REQUIRES_PYTHON,
-  url=about["__url__"],
+  url=meta.__url__,
   project_urls={
     #"Documentation": '...todo...',
     "Source": 'https://github.com/rlaPHOENiX/Slipstream',
   },
   packages=find_packages(),
   py_modules=[NAME_SLUG],
-  entry_points={"console_scripts": [f'{about["__cmd__"]}={NAME_SLUG}:cli']},
+  entry_points={"console_scripts": [f'{meta.__cmd__}={NAME_SLUG}:cli']},
   install_requires=REQUIRED,
   extras_require=EXTRAS,
   include_package_data=True,
@@ -121,7 +118,7 @@ setup(
     "": ["LICENSE", "HISTORY.md"],
     NAME_SLUG: ["static/*"]
   },
-  license=about["__license__"],
+  license=meta.__license__,
   classifiers=[
     # Trove classifiers
     # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
