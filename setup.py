@@ -8,9 +8,12 @@
 import io
 import os
 import sys
+import subprocess
 from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
+
+from PyInstaller.utils.hooks import get_package_paths
 
 import slipstream.__version__ as meta
 
@@ -54,17 +57,34 @@ try:
 except FileNotFoundError:
   long_description = meta.__description__
 
+def status(s):
+  """Prints things in bold."""
+  print("\033[1m{0}\033[0m".format(s))
+
+def build_clean():
+  status("Removing previous builds…")
+  try:
+    rmtree(os.path.join(here, "dist"))
+  except OSError:
+    pass
+  try:
+    rmtree(os.path.join(here, "build"))
+  except OSError:
+    pass
+
+def build():
+  build_clean()
+  status("Ensuring an up-to-date environment…")
+  os.system("{0} -m pip install --user --upgrade setuptools wheel".format(sys.executable))
+  status("Building Source and Wheel (universal) distribution…")
+  os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
+
 
 class UploadCommand(Command):
   """Support setup.py upload."""
 
   description = "Build and publish the package."
   user_options = []
-
-  @staticmethod
-  def status(s):
-    """Prints things in bold."""
-    print("\033[1m{0}\033[0m".format(s))
 
   def initialize_options(self):
     pass
@@ -73,23 +93,75 @@ class UploadCommand(Command):
     pass
 
   def run(self):
-    try:
-      self.status("Removing previous builds…")
-      rmtree(os.path.join(here, "dist"))
-    except OSError:
-      pass
+    build()
 
-    self.status("Building Source and Wheel (universal) distribution…")
-    os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
-
-    self.status("Uploading the package to PyPI via Twine…")
+    status("Uploading the package to PyPI via Twine…")
     os.system("twine upload dist/*")
 
-    self.status("Pushing git tags…")
+    status("Pushing git tags…")
     os.system("git tag v{0}".format(meta.__version__))
     os.system("git push --tags")
 
     sys.exit()
+
+
+class BuildCommand(Command):
+  """Support setup.py build."""
+
+  description = "Build the package."
+  user_options = []
+
+  def initialize_options(self):
+    pass
+
+  def finalize_options(self):
+    pass
+
+  def run(self):
+    build()
+    sys.exit()
+
+
+class PackCommand(Command):
+  """Support setup.py pack."""
+
+  description = "Pack the repo with PyInstaller."
+  user_options = []
+
+  def initialize_options(self):
+    pass
+
+  def finalize_options(self):
+    pass
+
+  def run(self):
+    build_clean()
+    status("Ensuring supported environment…")
+    if not meta.__windows__ and not meta.__linux__ and not meta.__darwin__:
+      print("Sorry! Only Windows, Linux and Darwin platforms are supported.")
+      sys.exit(1)
+    status("Ensuring PyInstaller is available…")
+    os.system("{0} -m pip install --user --upgrade pyinstaller".format(sys.executable))
+    status("Packing with PyInstaller…")
+    sub = subprocess.Popen([
+      #"pyinstaller", "--clean", "pyinstaller.spec"
+      "pyinstaller", "--clean", "-F", "slipstream/__init__.py",
+      "--add-data", "slipstream/static:static", "--add-data", f"{get_package_paths('cefpython3')[1]}:cefpython3",
+      "--hidden-import", "pkg_resources.py2_warn", "-n", "Slipstream"
+    ])
+    sub.communicate()
+    rcode = sub.returncode
+    if rcode != 0:
+      print("Oh no! PyInstaller failed, code=%s" % rcode)
+      build_clean()
+      sys.exit(1)
+    sys.exit()
+
+
+    #os.system(
+    #  'pyinstaller -F "slipstream/__init__.py" --add-data "slipstream/static:static" '
+    #  '--hidden-import="pkg_resources.py2_warn" '
+    #  '-n "Slipstream"')
 
 
 # Where the magic happens:
@@ -138,5 +210,9 @@ setup(
     "Topic :: Multimedia :: Video :: Conversion",
   ],
   # $ setup.py publish support.
-  cmdclass={"upload": UploadCommand}
+  cmdclass={
+    "upload": UploadCommand,
+    "build": BuildCommand,
+    "pack": PackCommand
+  }
 )
