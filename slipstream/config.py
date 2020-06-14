@@ -27,13 +27,15 @@ permissions and such.
 
 # std
 import os.path
+
 # pip packages
 import yaml
 
-class Config(object):
 
+class Config(object):
     def __init__(self, config_path):
         self.settings = {
+            "-", "-"  # need at least one config entry, otherwise it infinite loops
             # todo ; implement stuff that needs configuration
         }
         self.config_path = config_path
@@ -45,8 +47,12 @@ class Config(object):
 
     def load(self):
         """Load yaml config file as a dictionary"""
-        if not os.path.exists(self.config_path) or not os.path.isfile(self.config_path):
-            # no config file exists yet, let's create one with the default_settings items if they exist
+        if (
+            not os.path.exists(self.config_path)
+            or not os.path.isfile(self.config_path)
+            or not os.path.exists(self.config_path)
+        ):
+            # no config file exists yet, let's create base one
             self.save()
         with self.get_handle() as f:
             stored_settings = yaml.safe_load(f)
