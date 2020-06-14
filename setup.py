@@ -29,6 +29,8 @@ REQUIRED = [
   # http and such
   "requests>=2.23.0",
   "python-status>=1.0.1",
+  # parsing, syntax, and validators
+  "validate_email>=1.3"
 ]
 
 # What packages are optional?
@@ -107,7 +109,7 @@ setup(
   url=about["__url__"],
   packages=find_packages(),
   py_modules=[NAME_SLUG],
-  entry_points={"console_scripts": [f"{NAME_SLUG}={NAME_SLUG}:cli"]},
+  entry_points={"console_scripts": [f'{about["__cmd__"]}={NAME_SLUG}:cli']},
   install_requires=REQUIRED,
   extras_require=EXTRAS,
   include_package_data=True,
