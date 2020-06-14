@@ -37,6 +37,7 @@ from appdirs import user_data_dir
 
 # general
 __title__ = "Slipstream"
+__title_pkg__ = __title__.lower()
 __description__ = "The most informative Home-media backup solution."
 __url__ = "https://github.com/rlaPHOENiX/Slipstream"
 __version__ = "0.0.0"
@@ -45,36 +46,36 @@ __author_email__ = "rlaphoenix@pm.me"
 __min_size__ = "1400x440"  # todo ; move this to config file
 __package_obj__ = None
 try:
-  __package_obj__ = pkg_resources.Requirement.parse(f"{__title__}=={__version__}")
+  __package_obj__ = pkg_resources.Requirement.parse(f"{__title_pkg__}=={__version__}")
 except pkg_resources.DistributionNotFound:
   pass
 
 # environment
-__cmd__ = "slipstream"
 __cef_version__ = cef.GetVersion()
 __py_version__ = platform.python_version()
 __architecture__ = platform.architecture()[0]
-__windows__ = platform.system() == "Windows"
-__linux__ = platform.system() == "Linux"
-__darwin__ = platform.system() == "Darwin"
+__platform__ = platform.system()
+__windows__ = __platform__ == "Windows"
+__linux__ = __platform__ == "Linux"
+__darwin__ = __platform__ == "Darwin"
 
 # licensing and copyright
 __license__ = "GPLv3"
 __copyright__ = f"Copyright (C) {datetime.datetime.now().year} {__author__}"
-__copyright_paragraph__ = """\
-%s  %s
-This program comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it
-under certain conditions; type '%s --license' for details.
-""" % (__title__, __copyright__, __cmd__)
+__copyright_paragraph__ = "\n".join([
+  f"{__title__}  {__copyright__}",
+  "This program comes with ABSOLUTELY NO WARRANTY.",
+  "This is free software, and you are welcome to redistribute it",
+  f"under certain conditions; type '{__title_pkg__} --license' for details."
+])
 
 # directories
 __root_dir__ = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-__user_dir__ = user_data_dir(__title__, __author__)
+__user_dir__ = user_data_dir(__title_pkg__, __author__)
 __static_dir__ = os.path.join(__root_dir__, "static")
 if __package_obj__:
   try:
-    __static_dir__ = pkg_resources.resource_filename(__package_obj__, f"{__title__}/assets")
+    __static_dir__ = pkg_resources.resource_filename(__package_obj__, f"{__title_pkg__}/static")
   except pkg_resources.DistributionNotFound:
     pass
 

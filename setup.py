@@ -15,7 +15,7 @@ from setuptools import find_packages, setup, Command
 import slipstream.__version__ as meta
 
 # Package meta-data. Most of it is loaded from ./{name}/__version__.py
-NAME = meta.__title__.lower()
+NAME = meta.__title_pkg__
 REQUIRES_PYTHON = ">=3.6.0"
 
 # What packages are required for this module to be executed?
@@ -109,7 +109,7 @@ setup(
   },
   packages=find_packages(),
   py_modules=[NAME],
-  entry_points={"console_scripts": [f'{meta.__cmd__}={NAME}.__init__:main']},
+  entry_points={"console_scripts": [f'{NAME}={NAME}.__init__:main']},
   install_requires=REQUIRED,
   extras_require=EXTRAS,
   include_package_data=True,

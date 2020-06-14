@@ -35,7 +35,7 @@ import yaml
 class Config(object):
     def __init__(self, config_path):
         self.settings = {
-            "-", "-"  # need at least one config entry, otherwise it infinite loops
+            "-": "-"  # need at least one config entry, otherwise it infinite loops
             # todo ; implement stuff that needs configuration
         }
         self.config_path = config_path

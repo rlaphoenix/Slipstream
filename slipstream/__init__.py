@@ -58,17 +58,16 @@ def main():
     g.CFG.load()
 
     # Print Runtime Details
-    print(f""" \
-    :: {meta.__title__} v{meta.__version__}
-       {meta.__description__}
-       {meta.__url__}
-    :: {'DEBUG' if g.DBG else 'Standard'} MODE
-    :: Architecture: {meta.__architecture__}
-    :: CEF Runtime: {meta.__cef_version__}
-    :: Python Runtime: {meta.__py_version__}
-    :: User Directory: {meta.__user_dir__}
-    :: Assets Directory: {meta.__static_dir__}
-    """ + "\n")
+    print("\n".join([
+        f":: {meta.__title__} v{meta.__version__}",
+        f"{meta.__description__}",
+        f"{meta.__url__}",
+        f":: {'DEBUG' if g.DBG else 'Standard'} MODE",
+        f":: {meta.__platform__} {meta.__architecture__} (Python v{meta.__py_version__})",
+        f":: CEF Runtime: {meta.__cef_version__}",
+        f":: User Directory: {meta.__user_dir__}",
+        f":: Static Directory: {meta.__static_dir__}"
+    ]) + "\n")
 
     # Start GUI
     Gui(
@@ -79,20 +78,7 @@ def main():
                 {
                     "name": "config",
                     "item": g.CFG.settings
-                },
-                {
-                    "name": "metadata",
-                    "item": {
-                        name: val
-                        for name, val in meta.__dict__.items()
-                        if name.startswith("__") and name.endswith("__")
-                        and (
-                            isinstance(getattr(meta, name), str)
-                            or isinstance(getattr(meta, name), dict)
-                            or isinstance(getattr(meta, name), list)
-                        )
-                    }
-                },
+                }
             ],
             "functions": [
                 {"name": "pyDelete", "item": os.remove},
