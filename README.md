@@ -14,8 +14,10 @@ Slipstream is a home-media REMUX-ing and backup software with a wide array of fe
 
 ## To-do
 
-- [ ] Craft GUI with Chromium Embedded Framework (CEF).
-- [ ] Create a file based settings system.
+- [X] Craft GUI with Chromium Embedded Framework (CEF).
+- [X] Create a file based settings system.
+- [ ] Design the UI.
+- [ ] Implement the UI and bridge the Javascript and Python together.
 - [ ] Add DVD backup support.
 
 ## Building
