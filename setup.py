@@ -15,8 +15,7 @@ from setuptools import find_packages, setup, Command
 import slipstream.__version__ as meta
 
 # Package meta-data. Most of it is loaded from ./{name}/__version__.py
-NAME = "Slipstream"
-NAME_SLUG = NAME.lower().replace("-", "_").replace(" ", "_")
+NAME = meta.__title__.lower()
 REQUIRES_PYTHON = ">=3.6.0"
 
 # What packages are required for this module to be executed?
@@ -109,14 +108,14 @@ setup(
     "Source": 'https://github.com/rlaPHOENiX/Slipstream',
   },
   packages=find_packages(),
-  py_modules=[NAME_SLUG],
-  entry_points={"console_scripts": [f'{meta.__cmd__}={NAME_SLUG}:cli']},
+  py_modules=[NAME],
+  entry_points={"console_scripts": [f'{meta.__cmd__}={NAME}.__init__:main']},
   install_requires=REQUIRED,
   extras_require=EXTRAS,
   include_package_data=True,
   package_data={
     "": ["LICENSE", "HISTORY.md"],
-    NAME_SLUG: ["static/*"]
+    NAME: ["static/*"]
   },
   license=meta.__license__,
   classifiers=[
