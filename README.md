@@ -17,11 +17,11 @@ Slipstream is a home-media REMUX-ing and backup software with a wide array of fe
 - [X] Craft GUI with Chromium Embedded Framework (CEF).
 - [X] Create a file based settings system.
 - [X] Implement a quick and simple way to build, pack with PyInstaller, upload, and install.
+- [X] Add DVD backup support, using libdvdcss
 - [ ] Design the UI.
 - [ ] Implement the UI and bridge the Javascript and Python together.
 - [ ] Add drive selection dropdown with information about the drive including disc label.
 - [ ] Add information window with details about the DVD.
-- [ ] Add DVD backup support, perhaps using libdvdcss?
 - [ ] Add support for remuxing to Matroka Video (MKV) with MkvToolnix.
 - [ ] Add the ability to choose to remux by Title ID's.
 - [ ] Add the ability to choose to remux by VOB ID, and VOB CELL's.
