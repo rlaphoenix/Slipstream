@@ -24,8 +24,8 @@ REQUIRES_PYTHON = ">=3.6.0"
 # What packages are required for this module to be executed?
 REQUIRED = [
   # general
-  "pyyaml>=5.3",
   "appdirs>=1.4.3",
+  "tqdm>=4.46.1",
   # cef
   "cefpython3>=66.0",
   "pyobjc; sys_platform == 'darwin'",
@@ -34,7 +34,12 @@ REQUIRED = [
   "requests>=2.23.0",
   "python-status>=1.0.1",
   # parsing, syntax, and validators
-  "validate_email>=1.3"
+  "pyyaml>=5.3",
+  "validate_email>=1.3",
+  # general disc operations
+  "pycdlib>=1.10.0",
+  # dvd disc operations
+  "pdvdcss>=1.0.6"
 ]
 
 # What packages are optional?

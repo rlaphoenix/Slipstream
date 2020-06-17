@@ -1,20 +1,21 @@
 # std
 import os
-import subprocess
+import datetime
 import array
 import fcntl
 import struct
 import glob
 # pip packages
 from pydvdcss import PyDvdCss
-# slipstream
-from slipstream.helpers import get_mount_path, mount, unmount
+from tqdm import tqdm
+import pycdlib
 
 
 class Dvd:
     def __init__(self):
-        self.dvdcss = None
         self.dev = None
+        self.cdlib = None
+        self.dvdcss = None
         self.reader_position = 0
         self.vob_lba_offsets = []
     
@@ -25,58 +26,85 @@ class Dvd:
         self.dispose()
     
     def dispose(self):
+        if self.cdlib:
+            self.cdlib.close()
         if self.dvdcss:
             self.dvdcss.dispose()
 
     def open(self, dev):
-        if self.dvdcss:
+        if self.dvdcss or self.cdlib:
             raise ValueError("Slipstream.Dvd: A disc has already been opened.")
         self.dev = dev
+        self.cdlib = pycdlib.PyCdlib()
+        self.cdlib.open(dev)
         self.dvdcss = PyDvdCss()
         self.dvdcss.open(dev)
+        self.print_primary_descriptor()
     
-    def ensure_mount(self):
-        """
-        Ensure the device is mounted and return the mount path
-        Returns a tuple of:
-        - Mount path
-        - Temp mount (bool)
-        """
-        mnt = get_mount_path(self.dev)
-        tmp_mnt = False
-        if not mnt:
-            # not yet mounted, mount now
-            mnt = mount(self.dev)
-            tmp_mnt = True
-        return mnt, tmp_mnt
-
-    def get_volume_info(self):
-        """
-        Read volume information from disc's 16th sector
-        Returns a tuple of:
-        - Volume Label
-        - First Sector LBA
-        - Last Sector LBA
-        - Disc Size in Bytes
-        """
-        # Read volume information from sector 16
-        self.dvdcss.seek(16)
-        read = self.dvdcss.read(1)
-        if read != 1:
-            raise Exception(
-                "Slipstream.Dvd.get_volume_info: Failed to retrieve volume information."
-            )
-        last_sector = struct.unpack_from("<I", self.dvdcss.buffer, 80)[0] - 1
-        return (
-            # Volume Label
-            self.dvdcss.buffer[40:72].decode().strip(),
-            # First Sector LBA
-            0,
-            # Last Sector LBA
-            last_sector,
-            # Disc Size in Bytes
-            (last_sector + 1) * self.dvdcss.SECTOR_SIZE,
+    def print_primary_descriptor(self):
+        pvd = self.cdlib.pvds[0]
+        print(
+            f"\nPrimary Volume Descriptor of `{self.dev}`:\n" +
+            "  " + ("\n  ".join([
+                f"Version: {pvd.version} [file-structure-ver: {pvd.file_structure_version}]",
+                f"Flags: {pvd.flags}",
+                f"Sector Size: {pvd.log_block_size}",
+                f"Total Sectors: {pvd.space_size}",
+                f"Size: {pvd.log_block_size:,} B * {pvd.space_size:,} blocks = {(pvd.log_block_size * pvd.space_size):,}",
+                f"System Identifier: {pvd.system_identifier.decode().strip() or '-'}",
+                f"Volume Identifier: {pvd.volume_identifier.decode().strip() or '-'}",
+                f"Volume Set Identifier: {pvd.volume_set_identifier.decode().strip() or '-'}",
+                f"Publisher Identifier: {pvd.publisher_identifier.record().decode().strip() or '-'}",
+                f"Preparer Identifier: {pvd.preparer_identifier.record().decode().strip() or '-'}",
+                f"Application Identifier: {pvd.application_identifier.record().decode().strip() or '-'}",
+                f"Copyright File Identifier: {pvd.copyright_file_identifier.decode().strip() or '-'}",
+                f"Abstract File Identifier: {pvd.abstract_file_identifier.decode().strip() or '-'}",
+                f"Bibliographic File Identifier: {pvd.bibliographic_file_identifier.decode().strip() or '-'}",
+                "\n  ".join([
+                    (f"Volume {n} Date: {str(d.year).zfill(4)}-{str(d.month).zfill(2)}-{str(d.dayofmonth).zfill(2)} " +
+                    f"{str(d.hour).zfill(2)}:{str(d.minute).zfill(2)}:{str(d.second).zfill(2)}.{d.hundredthsofsecond}" +
+                    " GMT+{d.gmtoffset}") for n, d in [
+                        ("Creation", pvd.volume_creation_date),
+                        ("Expiration", pvd.volume_expiration_date),
+                        ("Effective", pvd.volume_effective_date)
+                    ]
+                ]),
+                f"Escape Sequences: {pvd.escape_sequences}",
+                f"Set Size: {pvd.set_size}",
+                f"Sequence Number: {pvd.seqnum}",
+                f"Path Table Size: {pvd.path_tbl_size}",
+                f"Path Table Location (little-endian): {pvd.path_table_location_le}",
+                f"Path Table Location (big-endian): {pvd.path_table_location_be}",
+                f"Path Table Location [opt] (little-endian): {pvd.optional_path_table_location_le}",
+                f"Path Table Location [opt] (big-endian): {pvd.optional_path_table_location_be}",
+                f"Reserved for Application: {'--' if pvd.application_use == bytearray(512) else pvd.application_use}"
+            ])) + "\n"
         )
+    
+    def get_files(self, path="/", no_versions=True):
+        """
+        Read and list file paths directly from the disc device file system
+        which doesn't require the device to be mounted
+
+        Returns a tuple generator of the file path which will be
+        absolute-paths relative to the root of the device, the Logical
+        Block Address (LBA), and the Size (in sectors).
+        """
+        for child in self.cdlib.list_children(iso_path=path):
+            file_path = child.file_identifier().decode()
+            # skip the `.` and `..` paths, we cont care.
+            if file_path in [".", ".."]:
+                continue
+            # remove the semicolon and version number, we dont care.
+            if no_versions and ";" in file_path:
+                file_path = file_path.split(";")[0]
+            # join it to root to be absolute
+            file_path = os.path.join("/", path, file_path)
+            # get lba
+            lba = child.extent_location()
+            # get size in sectors
+            size = int(child.get_data_length() / self.dvdcss.SECTOR_SIZE)
+            yield file_path, lba, size
     
     def get_vob_lbas(self, crack_keys=False):
         """
@@ -85,25 +113,11 @@ class Dvd:
         """
         # Create an array for holding the title data
         lba_data = []
-        # Ensure device is mounted to read files
-        mnt, tmp_mnt = self.ensure_mount()
-        # Loop all VOB files in disc
-        for vob in glob.glob(os.path.join(mnt, "VIDEO_TS/*.VOB")):
-            # load file's descriptor
-            fd = os.open(vob, os.O_RDONLY)
-            # get file's lba
-            lba = array.array("I", [0])
-            fcntl.ioctl(fd, 1, lba, True)
-            lba = lba[0]
-            # get file's size
-            size = os.lseek(fd, 0, os.SEEK_END)
-            if size % self.dvdcss.SECTOR_SIZE:
-                raise Exception(
-                    f"Slipstream.Dvd.get_vob_lbas: Oh no, for some reason {os.path.basename(vob)} isn't divisable by {self.dvdcss.SECTOR_SIZE}"
-                )
-            size = int(size / self.dvdcss.SECTOR_SIZE)
-            # close file descriptor
-            os.close(fd)
+        # Loop all files in disc:/VIDEO_TS
+        for vob, lba, size in self.get_files("/VIDEO_TS"):
+            # we only want vob files
+            if os.path.splitext(vob)[-1] != ".VOB":
+                continue
             # get title key
             if crack_keys:
                 print(f"Slipstream.Dvd.get_vob_lbas: Getting title key for {os.path.basename(vob)} at sector {lba}")
@@ -113,19 +127,19 @@ class Dvd:
                     )
             # add data to title offsets
             lba_data.append((lba, size))
-        # Unmount device if it was temp mounted
-        if tmp_mnt:
-            unmount(self.dev)
         # Return lba data
         return lba_data
 
     def create_backup(self):
-        # Retrieve volume information
-        (volume_label, first_lba, last_lba, disc_size) = self.get_volume_info()
-        fn = f"{volume_label}.ISO"
-        fn_tmp = f"{volume_label}.tmp"
+        # Print primary volume descriptor information
+        pvd = self.cdlib.pvds[0]
+        pvd.volume_identifier = pvd.volume_identifier.decode().strip()
+        fn = f"{pvd.volume_identifier}.ISO"
+        fn_tmp = f"{pvd.volume_identifier}.tmp"
+        first_lba = 0
+        last_lba = pvd.space_size
+        disc_size = pvd.space_size * self.dvdcss.SECTOR_SIZE
         print(
-            f"{self.dev}: {volume_label}\n"
             f"Reading sectors {first_lba} to {last_lba} with sector size {self.dvdcss.SECTOR_SIZE}.\n"
             f"Length: {last_lba + 1} sectors, {disc_size} bytes.\n"
             f'Saving to "{fn}"...'
@@ -135,12 +149,11 @@ class Dvd:
         self.vob_lba_offsets = self.get_vob_lbas(crack_keys=True)
         if not self.vob_lba_offsets:
             raise Exception("Slipstream.Dvd.create_backup: Failed to retrive CSS keys.")
-        # Create a nifty data-monitor based progress bar that also works as a file write handle
-        # todo ; pv is possibly linux only?
-        f = subprocess.Popen(
-            f"pv -p -e -r -s {disc_size} > {fn_tmp}", shell=True, stdin=subprocess.PIPE
-        ).stdin
-        # Read through all the sectors in a memory effecient manner
+        # Create a file write handle to temp file
+        f = open(fn_tmp, "wb")
+        # Create a TQDM progress bar
+        t = tqdm(total=last_lba+1, unit="sectors")
+        # Read through all the sectors in a memory efficient manner
         current_lba = first_lba
         while current_lba <= last_lba:
             # get the maximum sectors to read at once
@@ -151,10 +164,12 @@ class Dvd:
                 raise Exception("Slipstream.Dvd.create_backup: An unexpected read error occured.")
             # write the buffer to output file
             f.write(self.dvdcss.buffer)
-            # incremement the current sector
+            # incremement the current sector and update TQDM progress bar
             current_lba += read_sectors
-        # Close data-monitor progress bar as we are finished
+            t.update(read_sectors)
+        # Close TQDM progress bar
         f.close()
+        t.close()
         # Rename temp file to final filename
         os.rename(fn_tmp, fn)
         # Tell the user some output information
