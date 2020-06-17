@@ -39,7 +39,8 @@ REQUIRED = [
   # general disc operations
   "pycdlib>=1.10.0",
   # dvd disc operations
-  "pdvdcss>=1.0.6"
+  "pydvdcss>=1.0.6",
+  "pydvdid>1.1"
 ]
 
 # What packages are optional?

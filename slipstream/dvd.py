@@ -9,6 +9,7 @@ import glob
 from pydvdcss import PyDvdCss
 from tqdm import tqdm
 import pycdlib
+import pydvdid
 
 
 class Dvd:
@@ -18,6 +19,7 @@ class Dvd:
         self.dvdcss = None
         self.reader_position = 0
         self.vob_lba_offsets = []
+        self.crcid = None
     
     def __enter__(self):
         return self
@@ -30,6 +32,7 @@ class Dvd:
             self.cdlib.close()
         if self.dvdcss:
             self.dvdcss.dispose()
+        self.__init__()  # reset everything
 
     def open(self, dev):
         if self.dvdcss or self.cdlib:
@@ -40,6 +43,9 @@ class Dvd:
         self.dvdcss = PyDvdCss()
         self.dvdcss.open(dev)
         self.print_primary_descriptor()
+        # get disc crc id (aka DVD Id)
+        self.crcid = str(pydvdid.compute(dev))
+        print(f"DVD CRC ID (aka DVD ID): {self.crcid}\n")
     
     def print_primary_descriptor(self):
         pvd = self.cdlib.pvds[0]
