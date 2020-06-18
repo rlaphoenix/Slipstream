@@ -82,4 +82,4 @@ if __package_obj__:
 # file paths
 __config_file__ = os.path.join(__user_dir__, "config.yml")
 __icon_file__ = os.path.join(__static_dir__, "icon.png")
-__ui_index__ = "https://google.com"  # prefix with `file://` for local file
+__ui_index__ = "http://localhost:8000/"  # prefix with `file://` for local file

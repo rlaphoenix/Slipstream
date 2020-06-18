@@ -1,20 +1,53 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Slipstream - The most informative Home-media backup solution.
+Copyright (C) 2020 PHOENiX
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+~~~
+
+Class file that handles all DVD operations including loading,
+reading, seeking, backing up, and more.
+"""
+
 # std
 import os
+import json
+import base64
+from datetime import datetime
+
 # pip packages
 from pydvdcss import PyDvdCss
 from tqdm import tqdm
 import pycdlib
 import pydvdid
+from dateutil.tz import tzoffset
+
+# slipstream
+import slipstream.__version__ as meta
 
 
 class Dvd:
     def __init__(self):
         self.dev = None
+        self.ready = False
         self.cdlib = None
         self.dvdcss = None
         self.reader_position = 0
         self.vob_lba_offsets = []
-        self.crcid = None
     
     def __enter__(self):
         return self
@@ -30,57 +63,98 @@ class Dvd:
         self.__init__()  # reset everything
 
     def open(self, dev):
+        """
+        Open the device as a DVD with pycdlib and libdvdcss.
+
+        pycdlib will be used to identify and extract information.
+        libdvdcss will be used for reading, writing, and decrypting.
+        """
         if self.dvdcss or self.cdlib:
-            raise ValueError("Slipstream.Dvd: A disc has already been opened.")
+            if dev != self.dev:
+                # dispose, and continue loading the new disc
+                self.dispose()
+            else:
+                raise ValueError("Slipstream.Dvd: This disc has already been opened.")
         self.dev = dev
         self.cdlib = pycdlib.PyCdlib()
-        self.cdlib.open(dev)
+        self.cdlib.open("\\\\.\\" + dev if meta.__windows__ else dev)
         self.dvdcss = PyDvdCss()
         self.dvdcss.open(dev)
-        self.print_primary_descriptor()
-        # get disc crc id (aka DVD Id)
-        self.crcid = str(pydvdid.compute(dev))
-        print(f"DVD CRC ID (aka DVD ID): {self.crcid}\n")
+        self.ready = True
     
-    def print_primary_descriptor(self):
+    def is_ready(self, js):
+        """
+        Simple function just to be able to check if this Dvd
+        instance is ready to be used for reading and what not.
+
+        Cefpython cannot export the Properties of Dvd, so this
+        is the next best way of doing it.
+        """
+        js.Call(self.ready)
+    
+    def compute_crc_id(self, js=None):
+        """
+        Get the CRC64 checksum known as the Media Player DVD ID.
+        The algorithm used is the exact same one used by Micrososft's
+        old Windows Media Center.
+        """
+        crcid = str(pydvdid.compute(self.dev))
+        print(f"CRC64 DVD ID: {crcid}\n")
+        if js:
+            js.Call(crcid)
+        return crcid
+    
+    def get_primary_descriptor(self, js=None):
+        """
+        Get's and returns the Primary Volume Descriptor of the
+        disc in a more accessible and parsed format.
+        """
         pvd = self.cdlib.pvds[0]
-        print(
-            f"\nPrimary Volume Descriptor of `{self.dev}`:\n" +
-            "  " + ("\n  ".join([
-                f"Version: {pvd.version} [file-structure-ver: {pvd.file_structure_version}]",
-                f"Flags: {pvd.flags}",
-                f"Sector Size: {pvd.log_block_size}",
-                f"Total Sectors: {pvd.space_size}",
-                f"Size: {pvd.log_block_size:,} B * {pvd.space_size:,} blocks = {(pvd.log_block_size * pvd.space_size):,}",
-                f"System Identifier: {pvd.system_identifier.decode().strip() or '-'}",
-                f"Volume Identifier: {pvd.volume_identifier.decode().strip() or '-'}",
-                f"Volume Set Identifier: {pvd.volume_set_identifier.decode().strip() or '-'}",
-                f"Publisher Identifier: {pvd.publisher_identifier.record().decode().strip() or '-'}",
-                f"Preparer Identifier: {pvd.preparer_identifier.record().decode().strip() or '-'}",
-                f"Application Identifier: {pvd.application_identifier.record().decode().strip() or '-'}",
-                f"Copyright File Identifier: {pvd.copyright_file_identifier.decode().strip() or '-'}",
-                f"Abstract File Identifier: {pvd.abstract_file_identifier.decode().strip() or '-'}",
-                f"Bibliographic File Identifier: {pvd.bibliographic_file_identifier.decode().strip() or '-'}",
-                "\n  ".join([
-                    (f"Volume {n} Date: {str(d.year).zfill(4)}-{str(d.month).zfill(2)}-{str(d.dayofmonth).zfill(2)} " +
-                    f"{str(d.hour).zfill(2)}:{str(d.minute).zfill(2)}:{str(d.second).zfill(2)}.{d.hundredthsofsecond}" +
-                    " GMT+{d.gmtoffset}") for n, d in [
-                        ("Creation", pvd.volume_creation_date),
-                        ("Expiration", pvd.volume_expiration_date),
-                        ("Effective", pvd.volume_effective_date)
-                    ]
-                ]),
-                f"Escape Sequences: {pvd.escape_sequences}",
-                f"Set Size: {pvd.set_size}",
-                f"Sequence Number: {pvd.seqnum}",
-                f"Path Table Size: {pvd.path_tbl_size}",
-                f"Path Table Location (little-endian): {pvd.path_table_location_le}",
-                f"Path Table Location (big-endian): {pvd.path_table_location_be}",
-                f"Path Table Location [opt] (little-endian): {pvd.optional_path_table_location_le}",
-                f"Path Table Location [opt] (big-endian): {pvd.optional_path_table_location_be}",
-                f"Reserved for Application: {'--' if pvd.application_use == bytearray(512) else pvd.application_use}"
-            ])) + "\n"
-        )
+        def date_conv(d):
+            if not d.year:
+                return None
+            return datetime(
+                year=d.year, month=d.month, day=d.dayofmonth,
+                hour=d.hour, minute=d.minute, second=d.second, microsecond=d.hundredthsofsecond,
+                # offset the timezone, since ISO's dates are offsets of GMT in 15 minute intervals, we
+                # need to calculate that but in seconds to pass to tzoffset.
+                tzinfo=tzoffset("GMT", (15 * d.gmtoffset) * 60)
+            )
+        pvd = {
+            "version": pvd.version,
+            "version_fs": pvd.file_structure_version,
+            "flags": pvd.flags,
+            "sector_size": pvd.log_block_size,
+            "total_sectors": pvd.space_size,
+            "size": pvd.log_block_size * pvd.space_size,
+            "system_id": pvd.system_identifier.decode().strip() or None,
+            "volume_id": pvd.volume_identifier.decode().strip() or None,
+            "volume_set_id": pvd.volume_set_identifier.decode().strip() or None,
+            "publisher_id": pvd.publisher_identifier.record().decode().strip() or None,
+            "preparer_id": pvd.preparer_identifier.record().decode().strip() or None,
+            "application_id": pvd.application_identifier.record().decode().strip() or None,
+            "copyright_file_id": pvd.copyright_file_identifier.decode().strip() or None,
+            "abstract_file_id": pvd.abstract_file_identifier.decode().strip() or None,
+            "bibliographic_file_id": pvd.bibliographic_file_identifier.decode().strip() or None,
+            "creation_date": date_conv(pvd.volume_creation_date),
+            "expiration_date": date_conv(pvd.volume_expiration_date),
+            "effective_date": date_conv(pvd.volume_effective_date),
+            "escape_seq": pvd.escape_sequences,
+            "set_size": pvd.set_size,
+            "seq_num": pvd.seqnum,
+            "path_tbl_size": pvd.path_tbl_size,
+            "path_table_location_le": pvd.path_table_location_le,
+            "path_table_location_be": pvd.path_table_location_be,
+            "optional_path_table_location_le": pvd.optional_path_table_location_le,
+            "optional_path_table_location_be": pvd.optional_path_table_location_be,
+            "application_reserve": None if pvd.application_use == bytearray(512) else pvd.application_use
+        }
+        print(f"Primary Volume Descriptor: {pvd}")
+        if js:
+            # cefpython complaints it's too big for an `int`
+            pvd["size"] = str(pvd["size"])
+            js.Call(pvd)
+        return pvd
     
     def get_files(self, path="/", no_versions=True):
         """

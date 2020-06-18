@@ -32,7 +32,7 @@ class KeyboardHandler(object):
         if event["type"] == 3:
             # CTRL+SHIFT+I - Open Dev Tools
             if event["modifiers"] == 6 and event["native_key_code"] == 31:
-                self.browser_frame.ui_handler.browser.ShowDevTools()
+                self.browser_frame.browser.ShowDevTools()
             # CTRL+SHIFT+D - Enable Debug Mode
             if event["modifiers"] == 6 and event["native_key_code"] == 40:
                 builtins.DBG = not builtins.DBG

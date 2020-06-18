@@ -63,4 +63,4 @@ class LoadHandler(object):
     def OnLoadError(self, browser, frame, error_code, error_text_out, **_):
         if browser.GetIdentifier() != 1:
             return  # this is a href hook, we don't care
-        raise exceptions.SlipstreamUiError()
+        #raise exceptions.SlipstreamUiError()
