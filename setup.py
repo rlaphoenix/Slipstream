@@ -36,10 +36,11 @@ REQUIRED = [
   # parsing, syntax, and validators
   "pyyaml>=5.3",
   "validate_email>=1.3",
+  "python-dateutil>=2.8.1",
   # general disc operations
   "pycdlib>=1.10.0",
   # dvd disc operations
-  "pydvdcss>=1.0.6",
+  "pydvdcss>=1.0.7.post0",
   "pydvdid>1.1"
 ]
 
@@ -149,9 +150,10 @@ class PackCommand(Command):
     status("Ensuring PyInstaller is available…")
     os.system("{0} -m pip install --user --upgrade pyinstaller".format(sys.executable))
     status("Packing with PyInstaller…")
+    sep = ";" if meta.__windows__ else ":"
     sub = subprocess.Popen([
       "pyinstaller", "--clean", "-F", "slipstream/__init__.py",
-      "--add-data", "slipstream/static:static", "--add-data", f"{get_package_paths('cefpython3')[1]}:cefpython3",
+      "--add-data", f"slipstream/static{sep}static", "--add-data", get_package_paths("cefpython3")[1].replace("\\", "/") + f"{sep}.",
       "--hidden-import", "pkg_resources.py2_warn", "-n", "Slipstream"
     ])
     sub.communicate()
