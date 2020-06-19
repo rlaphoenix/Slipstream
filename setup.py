@@ -196,7 +196,7 @@ setup(
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: Implementation :: PyPy",
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Natural Language :: English",
     "Intended Audience :: End Users/Desktop",
     "Operating System :: OS Independent",

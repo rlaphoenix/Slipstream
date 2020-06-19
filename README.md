@@ -1,26 +1,58 @@
-# Slipstream
+<p>&nbsp;</p><p>&nbsp;</p>
 
-The most informative Home-media backup solution.  
-Slipstream is a home-media REMUX-ing and backup software with a wide array of features.
+<p align="center"><strong>Slipstream</strong> is the most informative Home-media backup solution.</p>
 
-<p align="center">
-<a href="https://python.org"><img src="https://img.shields.io/badge/python-3.6%2B-informational?style=flat-square" /></a>
-<a href="https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/rlaPHOENiX/Slipstream?style=flat-square" /></a>
-<a href="https://github.com/rlaPHOENiX/Slipstream/issues"><img alt="issues" src="https://img.shields.io/github/issues/rlaPHOENiX/Slipstream?style=flat-square" /></a>
-<a href="http://makeapullrequest.com"><img alt="pr's welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /></a>
-<br>
-<a href="https://ko-fi.com/W7W01KX2G"><img alt="support me" src="https://www.ko-fi.com/img/githubbutton_sm.svg" /></a>
-</p>
+<p>&nbsp;</p><p>&nbsp;</p>
 
-## To-do
+---
 
-- [X] Craft GUI with Chromium Embedded Framework (CEF).
-- [X] Create a file based settings system.
-- [X] Implement a quick and simple way to build, pack with PyInstaller, upload, and install.
-- [X] Add DVD backup support, using libdvdcss.
-- [X] Implement the UI and bridge the Javascript and Python together.
-- [X] Add drive selection option with information about the drive including disc label.
-- [X] Add information window with details about the DVD ISO.
+<p>&nbsp;</p><p>&nbsp;</p>
+
+Slipstream goal is to provide user's a dead simple process for backing up their legally owned home-media to a wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable package. It's trying to be different to the other solutions out there by providing as much information about the home-media as one could possibly need, while being stupid simple to use.
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+<span align="center">
+
+[![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
+[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/pslipstream)](https://pypi.python.org/pypi/pslipstream)
+[![Python versions](https://img.shields.io/pypi/pyversions/pslipstream)](https://pypi.python.org/pypi/pslipstream)
+[![PyPI status](https://img.shields.io/pypi/status/pslipstream)](https://pypi.python.org/pypi/pslipstream)
+[![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/issues)
+![Python version tests](https://github.com/rlaPHOENiX/Slipstream/workflows/Version%20tests/badge.svg?branch=master)
+
+[![Support me on ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01KX2G)
+
+</span>
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+# Call for designers
+
+This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute one (or all :O) to this project, please do!  
+Not begging for a billion dollar design, just something that's unique and shows off the project well.
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+# Quick Installation
+
+    python -m pip install --user pslipstream
+
+If you wish to manually install from source, take a look at [Building](#building) below.
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+# To-do
+
+- [x] Craft GUI with Chromium Embedded Framework (CEF).
+- [x] Create a file based settings system.
+- [x] Implement a quick and simple way to build, pack with PyInstaller, upload, and install.
+- [x] Add DVD backup support, using libdvdcss.
+- [x] Implement the UI and bridge the Javascript and Python together.
+- [x] Add drive selection option with information about the drive including disc label.
+- [x] Add information window with details about the DVD ISO.
 - [ ] Add information window with details about the DVD-Video data, like Layer count, titles, languages, subtitles, codecs, e.t.c.
 - [ ] Add support for remuxing to Matroka Video (MKV) with MkvToolnix.
 - [ ] Add the ability to choose to remux by Title ID's.
@@ -28,15 +60,13 @@ Slipstream is a home-media REMUX-ing and backup software with a wide array of fe
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 - [ ] Add Blu-ray backup support, using libaacs.
 
-## Quick Installation
+<p>&nbsp;</p><p>&nbsp;</p>
 
-    python -m pip install --user pslipstream
-
-If you wish to manually install from source, take a look at [Building](#building) below.
-
-## Usage
+# Usage
 
 To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu.
+
+<p>&nbsp;</p><p>&nbsp;</p>
 
 ## Building
 

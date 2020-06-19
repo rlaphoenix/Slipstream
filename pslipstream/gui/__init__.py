@@ -80,7 +80,6 @@ class Gui(tk.Frame):
         self.browser_frame = BrowserFrame(self, url=url, js_bindings=self.js_bindings)
         self.browser_frame.grid(row=0, column=0, sticky=(tk.N + tk.S + tk.E + tk.W))
         self.browser = self.browser_frame.browser
-        self.ui_handler = self.browser_frame.ui_handler
         tk.Grid.rowconfigure(self, 0, weight=1)
         tk.Grid.columnconfigure(self, 0, weight=1)
         # Pack MainFrame

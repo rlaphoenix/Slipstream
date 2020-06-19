@@ -24,6 +24,7 @@ import argparse
 import builtins as g
 import webbrowser
 import requests
+import hashlib
 
 # slipstream
 import pslipstream.__version__ as meta
@@ -38,18 +39,24 @@ def main():
     # Parse Arguments
     ArgParser = argparse.ArgumentParser()
     ArgParser.add_argument(
+        "--dev",
+        nargs="*",
+        required=False,
+        help="This isn't a debug mode, it's mainly for internally switching data, don't use this unless you know what they do!!",
+    )
+    ArgParser.add_argument(
+        "--dbg",
+        action="store_true",
+        default=False,
+        required=False,
+        help="Debug mode, may have increased logging that could hurt performance, don't enable unless you debugging.",
+    )
+    ArgParser.add_argument(
         "--license",
         action="store_true",
         default=False,
         required=False,
         help="View license details",
-    )
-    ArgParser.add_argument(
-        "--dev",
-        action="store_true",
-        default=False,
-        required=False,
-        help="This isn't a debug mode, it's mainly for internally switching data based on dev/prod env.",
     )
     ArgParser.add_argument(
         "--cli",
@@ -69,29 +76,44 @@ def main():
     args = ArgParser.parse_args()
 
     # Initialize custom global variables
-    g.LOG = Log()
-    g.PROG = Progress()
-    g.DBG = False
+    # These need to be global to be accessed more easily
+    # throughout the code, otherwise id have to deal with messy
+    # imports and/or passing it from function to function
+    g.LOG = Log()  # Logger, everything written here gets print()'d and sent to GUI
+    g.PROG = Progress()  # Progress Bar, controls only the GUI's progress bar
+    g.DBG = args.dbg  # Debug switch, enables debugging specific code and logging
     g.CFG = Config(meta.__config_file__)
     g.CFG.load()
 
     # Print License if asked
     if args.license:
         if not os.path.exists("LICENSE"):
-            print(requests.get("https://www.gnu.org/licenses/gpl-3.0.txt").text)
-        with open("LICENSE", "rt", "utf-8") as f:
-            print(f.read())
+            # download the license from the official source if not found locally
+            md5 = hashlib.md5()
+            lic_url = "https://www.gnu.org/licenses/gpl-3.0.txt"
+            lic = requests.get(lic_url).text
+            md5.update(lic.encode("utf-8"))
+            if md5.hexdigest() != "1ebbd3e34237af26da5dc08a4e440465":
+                # this is just to ensure that the license file content doesn't change or
+                # fail to download or get re-routed or mitm'd e.t.c. It's important for a
+                # license to display correctly!
+                print(
+                    "License file was not found locally (pesky redistributors! >:L), but "
+                    "it also failed to download :(\nIf you would like to read the LICENSE"
+                    f", more information can be found here: {lic_url}"
+                )
+            else:
+                print(lic)
+        else:
+            with open("LICENSE", mode="rt", encoding="utf-8") as f:
+                print(f.read())
         exit(0)
 
     # Get and Print Runtime Details
     g.LOG.write(get_runtime_details() + "\n")
-    print(g.LOG.read_all())
 
     # Let's get to it
-    if args.cli:
-        CLI_ROUTE(args)
-    else:
-        GUI_ROUTE(args)
+    (CLI_ROUTE if args.cli else GUI_ROUTE)(args)
 
 
 def get_runtime_details():
@@ -116,7 +138,14 @@ def get_runtime_details():
 def GUI_ROUTE(args):
     # set ui index location based on environment
     if args.dev:
-        meta.__ui_index__ = "http://localhost:8000/"
+        port = None
+        if "ui-build" in args.dev:
+            # gatsby build && gatsby serve
+            port = 9000
+        elif "ui-develop" in args.dev:
+            # gatsby develop
+            port = 8000
+        meta.__ui_index__ = f"http://localhost:{port}/"
     else:
         meta.__ui_index__ = "https://phoenix-slipstream.netlify.app/"
     # create gui, and fire it up

@@ -24,7 +24,6 @@ import webbrowser
 from cefpython3 import cefpython as cef
 # slipstream
 import pslipstream.exceptions as exceptions
-from pslipstream.gui.bridge import Bridge
 
 
 class LoadHandler(object):
@@ -45,7 +44,6 @@ class LoadHandler(object):
         if browser.GetIdentifier() != 1:
             return  # this is a href hook, we don't care
         if not is_loading:
-            self.browser_frame.bridge = Bridge(browser)
             # js bindings
             if self.browser_frame.js_bindings:
                 js_bindings_ = cef.JavascriptBindings(bindToFrames=False, bindToPopups=False)
@@ -58,7 +56,7 @@ class LoadHandler(object):
                 if "functions" in self.browser_frame.js_bindings:
                     for function_ in self.browser_frame.js_bindings["functions"]:
                         js_bindings_.SetFunction(function_["name"], function_["item"])
-                self.browser_frame.bridge.browser.SetJavascriptBindings(js_bindings_)
+                self.browser_frame.browser.SetJavascriptBindings(js_bindings_)
             # browser dom ready
             # ...
 

@@ -41,7 +41,6 @@ class BrowserFrame(tk.Frame):
         self.on_hotkey = on_hotkey
         self.closing = False
         self.browser = None
-        self.ui_handler = None
         tk.Frame.__init__(self, master)
         self.bind("<FocusIn>", self.on_focus_in)
         self.bind("<FocusOut>", self.on_focus_out)
