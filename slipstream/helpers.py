@@ -25,15 +25,12 @@ being specific enough to be in a class.
 
 # std
 import subprocess
+import threading
+import queue
 
 # pip packages
 from pycdlib import PyCdlib
 
-# slipstream
-from slipstream.dvd import Dvd
-
-
-device_instances = {}
 
 def list_devices():
     """
@@ -74,12 +71,33 @@ def get_volume_id(device):
 def get_device_list(js):
     js.Call(sorted(list_devices(), key=lambda d: d["volid"] or "", reverse=True))
 
-def load_device(device):
-    dvd = Dvd()
-    dvd.open(device)
-    device_instances[device] = dvd
+def asynchronous(f, daemon=True, auto_start=False):
 
-def get_device(device, js):
-    if device not in device_instances:
-        return None
-    js.Call(device_instances[device])
+    def wrapped_f(q, *args, **kwargs):
+        """
+        this function calls the decorated function and puts the
+        result in a queue
+        """
+        ret = f(*args, **kwargs)
+        q.put(ret)
+
+    def wrap(*args, **kwargs):
+        """
+        this is the function returned from the decorator. It fires off
+        wrapped_f in a new thread and returns the thread object with
+        the result queue attached
+        """
+
+        q = queue.Queue()
+
+        t = threading.Thread(target=wrapped_f, args=(q,)+args, kwargs=kwargs)
+        t.daemon = daemon
+        if auto_start:
+            t.start()
+        t.result_queue = q
+        return t
+
+    return wrap
+
+def asynchronous_auto(f):
+    return asynchronous(f, auto_start=True)

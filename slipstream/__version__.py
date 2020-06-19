@@ -40,10 +40,10 @@ __title__ = "Slipstream"
 __title_pkg__ = __title__.lower()
 __description__ = "The most informative Home-media backup solution."
 __url__ = "https://github.com/rlaPHOENiX/Slipstream"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 __author__ = "PHOENiX"
 __author_email__ = "rlaphoenix@pm.me"
-__min_size__ = "1400x440"  # todo ; move this to config file
+__min_size__ = "1200x440"  # todo ; move this to config file
 __package_obj__ = None
 try:
   __package_obj__ = pkg_resources.Requirement.parse(f"{__title_pkg__}=={__version__}")

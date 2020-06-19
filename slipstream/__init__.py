@@ -29,14 +29,11 @@ import requests
 import slipstream.__version__ as meta
 from slipstream.config import Config
 from slipstream.gui import Gui
-from slipstream.helpers import get_device_list, load_device, get_device
+from slipstream.helpers import get_device_list
 from slipstream.dvd import Dvd
 
 
 def main():
-
-    # Print Copyright
-    print(meta.__copyright_paragraph__ + "\n")
 
     # Parse Arguments
     ArgParser = argparse.ArgumentParser()
@@ -65,6 +62,8 @@ def main():
     args = ArgParser.parse_args()
 
     # Initialize custom global variables
+    g.LOG = Log()
+    g.PROG = Progress()
     g.DBG = False
     g.CFG = Config(meta.__config_file__)
     g.CFG.load()
@@ -77,46 +76,58 @@ def main():
             print(f.read())
         exit(0)
 
-    # Print Runtime Details
-    print(
-        "\n".join(
-            [
-                f":: {meta.__title__} v{meta.__version__}",
-                f"{meta.__description__}",
-                f"{meta.__url__}",
-                f":: {'DEBUG' if g.DBG else 'Standard'} MODE",
-                f":: {meta.__platform__} {meta.__architecture__} (Python v{meta.__py_version__})",
-                f":: CEF Runtime: {meta.__cef_version__}",
-                f":: User Directory: {meta.__user_dir__}",
-                f":: Static Directory: {meta.__static_dir__}",
-            ]
-        )
-    )
+    # Get and Print Runtime Details
+    g.LOG.write(get_runtime_details() + "\n")
+    print(g.LOG.read_all())
 
+    # Let's get to it
     if args.cli:
         CLI_ROUTE(args)
     else:
         GUI_ROUTE(args)
 
 
-def GUI_ROUTE(args):
+def get_runtime_details():
+    return "\n".join(
+        [
+            meta.__copyright_paragraph__,
+            "",
+            f"{meta.__title__} v{meta.__version__}",
+            meta.__description__,
+            meta.__url__,
+            "",
+            f":: {'DEBUG' if g.DBG else 'Standard'} MODE",
+            f":: {meta.__platform__} {meta.__architecture__} (Python v{meta.__py_version__})",
+            f":: CEF Runtime: {meta.__cef_version__}",
+            f":: User Directory: {meta.__user_dir__}",
+            f":: Static Directory: {meta.__static_dir__}",
+        ]
+    )
 
-    Gui(
+
+
+def GUI_ROUTE(args):
+    g.GUI = Gui(
         url=meta.__ui_index__,
         icon=meta.__icon_file__,
         js_bindings={
-            "properties": [{"name": "config", "item": g.CFG.settings}],
-            "objects": [{"name": "dvd", "item": Dvd()}],
+            "properties": [
+                {"name": "config", "item": g.CFG.settings},
+            ],
+            "objects": [
+                {"name": "dvd", "item": Dvd()},
+                {"name": "log", "item": g.LOG},
+                {"name": "progress", "item": g.PROG},
+            ],
             "functions": [
                 {"name": "pyDelete", "item": os.remove},
                 {"name": "pyHref", "item": lambda url: webbrowser.open(url)},
                 {"name": "configSave", "item": g.CFG.save},
                 {"name": "getDeviceList", "item": get_device_list},
-                {"name": "loadDevice", "item": load_device},
-                {"name": "getDevice", "item": get_device},
             ],
         },
-    ).mainloop()
+    )
+    g.GUI.mainloop()
 
 
 def CLI_ROUTE(args):
@@ -124,6 +135,41 @@ def CLI_ROUTE(args):
     dvd = Dvd()
     dvd.open(args.device)
     dvd.create_backup()
+
+
+class Log:
+    def __init__(self):
+        self.entries = []
+        self.js = None
+        self.max_entries = 100
+
+    def write(self, entry, echo=True):
+        self.entries.append(entry)
+        while len(self.entries) > self.max_entries:
+            self.entries.pop(0)
+        if echo:
+            print(entry.strip())
+        if self.js:
+            # update js log
+            self.read_all()
+    
+    def set_js(self, js):
+        self.js = js
+        self.read_all()  # get initial log
+
+    def read_all(self, js=None):
+        entries = "\n".join(self.entries).strip()
+        if self.js:
+            self.js.Call(entries)
+        return entries
+
+class Progress:
+    def __init__(self):
+        self.progress = 0
+        self.c = None
+    
+    def set_c(self, js):
+        self.c = js
 
 
 if __name__ == "__main__":

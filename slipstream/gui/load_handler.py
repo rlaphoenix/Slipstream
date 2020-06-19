@@ -59,6 +59,8 @@ class LoadHandler(object):
                     for function_ in self.browser_frame.js_bindings["functions"]:
                         js_bindings_.SetFunction(function_["name"], function_["item"])
                 self.browser_frame.bridge.browser.SetJavascriptBindings(js_bindings_)
+            # browser dom ready
+            # ...
 
     def OnLoadError(self, browser, frame, error_code, error_text_out, **_):
         if browser.GetIdentifier() != 1:

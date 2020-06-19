@@ -32,16 +32,16 @@ REQUIRED = [
   "appkit; sys_platform == 'darwin'",
   # http and such
   "requests>=2.23.0",
-  "python-status>=1.0.1",
   # parsing, syntax, and validators
   "pyyaml>=5.3",
-  "validate_email>=1.3",
   "python-dateutil>=2.8.1",
   # general disc operations
   "pycdlib>=1.10.0",
   # dvd disc operations
   "pydvdcss>=1.0.7.post0",
-  "pydvdid>1.1"
+  "git+https://github.com/rlaPHOENiX/pydvdid.git",  # fork + update
+  # build related
+  "pyinstaller"  # provide no version to let the user decide
 ]
 
 # What packages are optional?
@@ -104,10 +104,6 @@ class UploadCommand(Command):
 
     status("Uploading the package to PyPI via Twine…")
     os.system("twine upload dist/*")
-
-    status("Pushing git tags…")
-    os.system("git tag v{0}".format(meta.__version__))
-    os.system("git push --tags")
 
     sys.exit()
 
@@ -202,7 +198,7 @@ setup(
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: Implementation :: PyPy",
-    "Development Status :: 1 - Planning",
+    "Development Status :: 2 - Pre-Alpha",
     "Natural Language :: English",
     "Intended Audience :: End Users/Desktop",
     "Operating System :: OS Independent",
