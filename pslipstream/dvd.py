@@ -38,8 +38,8 @@ import pydvdid
 from dateutil.tz import tzoffset
 
 # slipstream
-import slipstream.__version__ as meta
-from slipstream.helpers import asynchronous_auto
+import pslipstream.__version__ as meta
+from pslipstream.helpers import asynchronous_auto
 
 
 class Dvd:

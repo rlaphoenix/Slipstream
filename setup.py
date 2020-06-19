@@ -15,10 +15,9 @@ from setuptools import find_packages, setup, Command
 
 from PyInstaller.utils.hooks import get_package_paths
 
-import slipstream.__version__ as meta
+import pslipstream.__version__ as meta
 
 # Package meta-data. Most of it is loaded from ./{name}/__version__.py
-NAME = meta.__title_pkg__
 REQUIRES_PYTHON = ">=3.6.0"
 
 # What packages are required for this module to be executed?
@@ -39,7 +38,7 @@ REQUIRED = [
   "pycdlib>=1.10.0",
   # dvd disc operations
   "pydvdcss>=1.0.7.post0",
-  "git+https://github.com/rlaPHOENiX/pydvdid.git",  # fork + update
+  #"git+git://github.com/rlaPHOENiX/pydvdid.git#egg=pydvdid",  # fork + update
   # build related
   "PyInstaller"  # provide no version to let the user decide
 ]
@@ -163,7 +162,7 @@ class PackCommand(Command):
 
 # Where the magic happens:
 setup(
-  name="p-slipstream",
+  name=meta.__title_pkg__,
   version=meta.__version__,
   description=meta.__description__,
   long_description=long_description,
@@ -177,14 +176,13 @@ setup(
     "Source": 'https://github.com/rlaPHOENiX/Slipstream',
   },
   packages=find_packages(),
-  py_modules=[NAME],
-  entry_points={"console_scripts": [f'{NAME}={NAME}.__init__:main']},
+  entry_points={"console_scripts": [f'{meta.__title_pkg__}={meta.__title_pkg__}.__init__:main']},
   install_requires=REQUIRED,
   extras_require=EXTRAS,
   include_package_data=True,
   package_data={
-    "": ["LICENSE", "HISTORY.md"],
-    NAME: ["static/*"]
+    "": ["LICENSE", "HISTORY.md", "static/*"],
+    #meta.__title_pkg__: ["static/*"]
   },
   license=meta.__license__,
   classifiers=[

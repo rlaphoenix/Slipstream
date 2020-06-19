@@ -4,7 +4,7 @@ The most informative Home-media backup solution.
 Slipstream is a home-media REMUX-ing and backup software with a wide array of features.
 
 <p align="center">
-<a href="https://python.org"><img src="https://img.shields.io/badge/python-3.7%2B-informational?style=flat-square" /></a>
+<a href="https://python.org"><img src="https://img.shields.io/badge/python-3.6%2B-informational?style=flat-square" /></a>
 <a href="https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/rlaPHOENiX/Slipstream?style=flat-square" /></a>
 <a href="https://github.com/rlaPHOENiX/Slipstream/issues"><img alt="issues" src="https://img.shields.io/github/issues/rlaPHOENiX/Slipstream?style=flat-square" /></a>
 <a href="http://makeapullrequest.com"><img alt="pr's welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /></a>
@@ -30,13 +30,13 @@ Slipstream is a home-media REMUX-ing and backup software with a wide array of fe
 
 ## Quick Installation
 
-    python -m pip install --user slipstream
+    python -m pip install --user pslipstream
 
 If you wish to manually install from source, take a look at [Building](#building) below.
 
 ## Usage
 
-To run Slipstream, type `slipstream` into Terminal, App Launcher, or Start Menu.
+To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu.
 
 ## Building
 

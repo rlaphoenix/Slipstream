@@ -24,9 +24,9 @@ import tkinter as tk
 # pip packages
 from cefpython3 import cefpython as cef
 # slipstream
-import slipstream.__version__ as meta
-import slipstream.exceptions as exceptions
-from slipstream.gui.browser_frame import BrowserFrame
+import pslipstream.__version__ as meta
+import pslipstream.exceptions as exceptions
+from pslipstream.gui.browser_frame import BrowserFrame
 
 
 class Gui(tk.Frame):

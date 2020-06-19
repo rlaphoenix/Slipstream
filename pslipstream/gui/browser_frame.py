@@ -25,10 +25,10 @@ import ctypes
 # pip packages
 from cefpython3 import cefpython as cef
 # slipstream
-import slipstream.exceptions as exceptions
-from slipstream.gui.focus_handler import FocusHandler
-from slipstream.gui.keyboard_handler import KeyboardHandler
-from slipstream.gui.load_handler import LoadHandler
+import pslipstream.exceptions as exceptions
+from pslipstream.gui.focus_handler import FocusHandler
+from pslipstream.gui.keyboard_handler import KeyboardHandler
+from pslipstream.gui.load_handler import LoadHandler
 
 
 class BrowserFrame(tk.Frame):

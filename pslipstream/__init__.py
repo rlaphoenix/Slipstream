@@ -26,11 +26,11 @@ import webbrowser
 import requests
 
 # slipstream
-import slipstream.__version__ as meta
-from slipstream.config import Config
-from slipstream.gui import Gui
-from slipstream.helpers import get_device_list
-from slipstream.dvd import Dvd
+import pslipstream.__version__ as meta
+from pslipstream.config import Config
+from pslipstream.gui import Gui
+from pslipstream.helpers import get_device_list
+from pslipstream.dvd import Dvd
 
 
 def main():

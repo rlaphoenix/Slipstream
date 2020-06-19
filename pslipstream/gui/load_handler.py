@@ -23,8 +23,8 @@ import webbrowser
 # pip packages
 from cefpython3 import cefpython as cef
 # slipstream
-import slipstream.exceptions as exceptions
-from slipstream.gui.bridge import Bridge
+import pslipstream.exceptions as exceptions
+from pslipstream.gui.bridge import Bridge
 
 
 class LoadHandler(object):

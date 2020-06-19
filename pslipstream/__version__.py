@@ -37,7 +37,7 @@ from appdirs import user_data_dir
 
 # general
 __title__ = "Slipstream"
-__title_pkg__ = __title__.lower()
+__title_pkg__ = "pslipstream"
 __description__ = "The most informative Home-media backup solution."
 __url__ = "https://github.com/rlaPHOENiX/Slipstream"
 __version__ = "0.1.0"
@@ -77,6 +77,8 @@ if __package_obj__:
   try:
     __static_dir__ = pkg_resources.resource_filename(__package_obj__, f"{__title_pkg__}/static")
   except pkg_resources.DistributionNotFound:
+    pass
+  except pkg_resources.VersionConflict:
     pass
 
 # file paths
