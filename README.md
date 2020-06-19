@@ -21,7 +21,7 @@ Slipstream goal is to provide user's a dead simple process for backing up their 
 [![PyPI status](https://img.shields.io/pypi/status/pslipstream)](https://pypi.python.org/pypi/pslipstream)
 [![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/issues)
-![Python version tests](https://github.com/rlaPHOENiX/Slipstream/workflows/Version%20tests/badge.svg?branch=master)
+![Build](https://github.com/rlaPHOENiX/Slipstream/workflows/Build/badge.svg?branch=master)
 
 [![Support me on ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01KX2G)
 
