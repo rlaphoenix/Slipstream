@@ -163,7 +163,7 @@ class PackCommand(Command):
 
 # Where the magic happens:
 setup(
-  name=NAME,
+  name="p-slipstream",
   version=meta.__version__,
   description=meta.__description__,
   long_description=long_description,
