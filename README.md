@@ -8,7 +8,7 @@
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
-Slipstream goal is to provide user's a dead simple process for backing up their legally owned home-media to a wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable package. It's trying to be different to the other solutions out there by providing as much information about the home-media as one could possibly need, while being stupid simple to use.
+Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable package. It's trying to be different from the other solutions out there by providing as much information about the home-media as one could need while being stupid simple to use.
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
@@ -32,7 +32,7 @@ Slipstream goal is to provide user's a dead simple process for backing up their 
 # Call for designers
 
 This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute one (or all :O) to this project, please do!  
-Not begging for a billion dollar design, just something that's unique and shows off the project well.
+Not begging for a billion-dollar design, just something unique that shows off the project well.
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
@@ -40,7 +40,7 @@ Not begging for a billion dollar design, just something that's unique and shows 
 
     python -m pip install --user pslipstream
 
-If you wish to manually install from source, take a look at [Building](#building) below.
+If you wish to manually install from the source, take a look at [Building](#building) below.
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
@@ -70,17 +70,18 @@ To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu
 
 ## Building
 
-> Note:
-> Make sure you use Python version 3.x (`python --version`). Some environments may use `python` for Python version 2.x and `python3` for Python version 3.x so make sure you use the right one from here on in all the following build commands.
-
+    python -m pip install git+git://github.com/rlaPHOENiX/pydvdid.git#egg=pydvdid
     git clone https://github.com/rlaPHOENiX/Slipstream.git
     cd Slipstream
+
+> Note:
 
 Now you have three options, `dist`, `pack`, or `install`:
 
 - `dist`, Build the source into a package file that's shareable and installable with pip, will be in /dist:  
   `python setup.py dist`
 - `pack`, Build and pack the source with PyInstaller, resulting in a single portable binary file, will be in /dist:  
+  `python -m pip install PyInstaller`  
   `python setup.py pack`
 - `install`, Build the source and install it with pip, essentially the same result as [Quick Installation](#installation) but without PyPI.org:  
   `python -m pip install --user .`

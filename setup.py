@@ -38,14 +38,11 @@ REQUIRED = [
   "pycdlib>=1.10.0",
   # dvd disc operations
   "pydvdcss>=1.0.7.post0",
-  #"git+git://github.com/rlaPHOENiX/pydvdid.git#egg=pydvdid",  # fork + update
-  # build related
-  "PyInstaller"  # provide no version to let the user decide
+  "pydvdid>1.1"  # 1.2 can be found on my fork: github.com/rlaPHOENiX/pydvdid
 ]
-
-# What packages are optional?
 EXTRAS = {
-  # 'fancy feature': ['django'],
+  # build related
+  "packing support" : ["PyInstaller"]  # provide no version to let the user decide
 }
 
 # The rest you shouldn't have to touch too much :)
