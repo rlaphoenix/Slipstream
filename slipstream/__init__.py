@@ -45,6 +45,13 @@ def main():
         help="View license details",
     )
     ArgParser.add_argument(
+        "--dev",
+        action="store_true",
+        default=False,
+        required=False,
+        help="This isn't a debug mode, it's mainly for internally switching data based on dev/prod env.",
+    )
+    ArgParser.add_argument(
         "--cli",
         action="store_true",
         default=False,
@@ -107,6 +114,12 @@ def get_runtime_details():
 
 
 def GUI_ROUTE(args):
+    # set ui index location based on environment
+    if args.dev:
+        meta.__ui_index__ = "http://localhost:8000/"
+    else:
+        meta.__ui_index__ = "https://phoenix-slipstream.netlify.app/"
+    # create gui, and fire it up
     g.GUI = Gui(
         url=meta.__ui_index__,
         icon=meta.__icon_file__,

@@ -41,7 +41,7 @@ REQUIRED = [
   "pydvdcss>=1.0.7.post0",
   "git+https://github.com/rlaPHOENiX/pydvdid.git",  # fork + update
   # build related
-  "pyinstaller"  # provide no version to let the user decide
+  "PyInstaller"  # provide no version to let the user decide
 ]
 
 # What packages are optional?
