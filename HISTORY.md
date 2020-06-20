@@ -4,7 +4,11 @@
 
 **Improvements**
 
-- Add version to window title
+- Add version to window title.
+
+**Bug fixes**
+
+- Reset the progress bar on Dvd dispose.
 
 ## 0.1.6
 

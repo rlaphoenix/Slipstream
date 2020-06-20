@@ -63,6 +63,7 @@ class Dvd:
         if self.dvdcss:
             self.dvdcss.dispose()
         self.__init__()  # reset everything
+        g.PROGRESS.c.Call(0)
         g.LOG.write("Closed and disposed device...\n")
 
     @asynchronous_auto
