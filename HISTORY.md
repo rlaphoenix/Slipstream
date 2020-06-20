@@ -4,6 +4,12 @@
 
 N/A
 
+## 0.1.4
+
+**Bug fixes**
+
+- Move `setup_commands/pack.py`'s PyInstaller imports to inside the `run()` function, so it only attempts the import if the pack command is used.
+
 ## 0.1.3
 
 **Bug fixes**

@@ -2,7 +2,6 @@ import os
 import subprocess
 import sys
 
-from PyInstaller.utils.hooks import get_package_paths
 from setuptools import Command
 
 import meta
@@ -23,6 +22,7 @@ class PackCommand(Command):
 
     @staticmethod
     def run():
+        from PyInstaller.utils.hooks import get_package_paths
         build_clean()
         print_bold("Ensuring supported environment…")
         if not meta.__windows__ and not meta.__linux__ and not meta.__darwin__:
