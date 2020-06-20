@@ -26,11 +26,13 @@ import webbrowser
 
 import requests
 from appdirs import user_data_dir
+
 try:
     from cefpython3 import cefpython as cef
 except Exception as e:
     if str(e).startswith("Python version not supported: 3.8"):
         import site
+
         raise ImportError(
             "Oh no, cefpython is *still* not supporting 3.8 officially!! >:((\n"
             f"Not to worry, just open '{site.getsitepackages()[0]}/cefpython3/__init__.py' and "
@@ -50,6 +52,11 @@ from pslipstream.progress import Progress
 
 
 def main():
+    # Prepare Metadata
+    meta.__cef_version__ = cef.GetVersion()
+    meta.__user_dir__ = user_data_dir(meta.__title_pkg__, meta.__author__)
+    meta.__config_file__ = os.path.join(meta.__user_dir__, "config.yml")
+
     # Initialize custom global variables
     g.ARGS = get_arguments()
     g.LOG = Log()  # Logger, everything written here gets print()'d and sent to GUI
@@ -78,11 +85,6 @@ def main():
             with open("LICENSE", mode="rt", encoding="utf-8") as f:
                 print(f.read())
         exit(0)
-
-    # Prepare Metadata
-    meta.__cef_version__ = cef.GetVersion()
-    meta.__user_dir__ = user_data_dir(meta.__title_pkg__, meta.__author__)
-    meta.__config_file__ = os.path.join(meta.__user_dir__, "config.yml")
 
     # Get and Print Runtime Details
     g.LOG.write(get_runtime_details() + "\n")

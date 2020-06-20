@@ -4,6 +4,12 @@
 
 N/A
 
+## 0.1.5
+
+**Bug fixes**
+
+- Deal with `main()`'s metadata preparation BEFORE dealing with global variables, as meta is used in the globals.
+
 ## 0.1.4
 
 **Bug fixes**
