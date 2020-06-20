@@ -2,7 +2,9 @@
 
 ## master
 
-N/A
+**Improvements**
+
+- Add version to window title
 
 ## 0.1.6
 

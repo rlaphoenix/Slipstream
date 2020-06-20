@@ -66,7 +66,7 @@ class Gui(tk.Frame):
         tk.Frame.__init__(self, root)
         # Configure Window
         # noinspection PyUnresolvedReferences
-        self.master.title(meta.__title__)
+        self.master.title(f"{meta.__title__} v{meta.__version__}")
         # noinspection PyUnresolvedReferences
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         # noinspection PyUnresolvedReferences
