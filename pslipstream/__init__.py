@@ -178,7 +178,7 @@ def gui():
             "objects": [
                 {"name": "dvd", "item": Dvd()},
                 {"name": "log", "item": g.LOG},
-                {"name": "progress", "item": g.PROG},
+                {"name": "progress", "item": g.PROGRESS},
             ],
             "functions": [
                 {"name": "pyDelete", "item": os.remove},

@@ -45,8 +45,7 @@ def list_devices():
         "fwver": scsi[-2],
         "loc": scsi[-1],
         "volid": get_volume_id(scsi[-1])
-    } for scsi in lsscsi]
-    lsscsi = [scsi for scsi in lsscsi if scsi["type"] not in ["disk"]]
+    } for scsi in lsscsi if scsi[0] not in ["disk"]]
     return lsscsi
 
 

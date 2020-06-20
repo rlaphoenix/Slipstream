@@ -4,6 +4,13 @@
 
 N/A
 
+## 0.1.6
+
+**Bug fixes**
+
+- Update two old `g.PROG` references to `g.PROGRESS` references.
+- Properly filter "disk" devices from device list helper.
+
 ## 0.1.5
 
 **Bug fixes**

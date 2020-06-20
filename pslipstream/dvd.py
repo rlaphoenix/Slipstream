@@ -282,7 +282,7 @@ class Dvd:
                 # increment the current sector and update the tqdm progress bar
                 current_lba += read_sectors
                 # write progress to GUI log
-                g.PROG.c.Call((current_lba / last_lba) * 100)
+                g.PROGRESS.c.Call((current_lba / last_lba) * 100)
                 # write progress to CLI log
                 t.update(read_sectors)
             # Close file and tqdm progress bar
