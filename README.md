@@ -70,7 +70,6 @@ To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu
 
 ## Building
 
-    python -m pip install git+git://github.com/rlaPHOENiX/pydvdid.git#egg=pydvdid
     git clone https://github.com/rlaPHOENiX/Slipstream.git
     cd Slipstream
 

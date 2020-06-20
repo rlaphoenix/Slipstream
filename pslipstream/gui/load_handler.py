@@ -18,20 +18,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-# std
+import builtins as g
 import webbrowser
-# pip packages
-from cefpython3 import cefpython as cef
-# slipstream
-import pslipstream.exceptions as exceptions
+
+from pslipstream.exceptions import SlipstreamUiError
 
 
-class LoadHandler(object):
+class LoadHandler:
 
-    def __init__(self, browser_frame):
-        self.browser_frame = browser_frame
-    
-    def OnLoadStart(self, browser, frame):
+    @staticmethod
+    def OnLoadingStateChange(browser, is_loading, **_):
+        """Called when the loading state has changed."""
+        if browser.GetIdentifier() != 1:
+            return  # this is a href hook, lets just pass
+        if not is_loading:
+            # browser dom ready
+            # ...
+            pass
+
+    @staticmethod
+    def OnLoadStart(browser, frame):
         """Called when loading starts."""
         # hook and open in users browser instead of inside App
         if browser.GetIdentifier() != 1:
@@ -39,28 +45,13 @@ class LoadHandler(object):
             browser.CloseBrowser()
             webbrowser.open(frame.GetUrl())
 
-    def OnLoadingStateChange(self, browser, is_loading, **_):
-        """Called when the loading state has changed."""
+    @staticmethod
+    def OnLoadError(browser, **_):
+        """Called when loading errors."""
         if browser.GetIdentifier() != 1:
-            return  # this is a href hook, we don't care
-        if not is_loading:
-            # js bindings
-            if self.browser_frame.js_bindings:
-                js_bindings_ = cef.JavascriptBindings(bindToFrames=False, bindToPopups=False)
-                if "properties" in self.browser_frame.js_bindings:
-                    for property_ in self.browser_frame.js_bindings["properties"]:
-                        js_bindings_.SetProperty(property_["name"], property_["item"])
-                if "objects" in self.browser_frame.js_bindings:
-                    for object_ in self.browser_frame.js_bindings["objects"]:
-                        js_bindings_.SetObject(object_["name"], object_["item"])
-                if "functions" in self.browser_frame.js_bindings:
-                    for function_ in self.browser_frame.js_bindings["functions"]:
-                        js_bindings_.SetFunction(function_["name"], function_["item"])
-                self.browser_frame.browser.SetJavascriptBindings(js_bindings_)
-            # browser dom ready
-            # ...
-
-    def OnLoadError(self, browser, frame, error_code, error_text_out, **_):
-        if browser.GetIdentifier() != 1:
-            return  # this is a href hook, we don't care
-        #raise exceptions.SlipstreamUiError()
+            return  # this is a href, lets just pass
+        if "gatsby-develop" in g.ARGS.dev:
+            # gatsby-develop switch needs this to pass, I believe it's caused by the 404 page check
+            # failing, and because it failed, OnLoadError gets called.
+            return
+        raise SlipstreamUiError()

@@ -18,12 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-# std
 import sys
 import tkinter as tk
-# pip packages
+
 from cefpython3 import cefpython as cef
-# slipstream
+
 import pslipstream.__version__ as meta
 import pslipstream.exceptions as exceptions
 from pslipstream.gui.browser_frame import BrowserFrame
@@ -54,6 +53,7 @@ class Gui(tk.Frame):
         # Assure Tkinter version is supported
         if tk.TkVersion <= 8.5:
             raise exceptions.TkinterVersionError()
+        # noinspection SpellCheckingInspection
         # tell cef about uncaught exceptions, will shutdown
         sys.excepthook = cef.ExceptHook
         # Create Window
@@ -65,9 +65,13 @@ class Gui(tk.Frame):
         tk.Grid.columnconfigure(root, 0, weight=1)
         tk.Frame.__init__(self, root)
         # Configure Window
+        # noinspection PyUnresolvedReferences
         self.master.title(meta.__title__)
+        # noinspection PyUnresolvedReferences
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
+        # noinspection PyUnresolvedReferences
         self.master.bind("<Configure>", self.on_root_configure)
+        # noinspection PyUnresolvedReferences
         # noinspection PyProtectedMember
         self.master.call(
             "wm",
@@ -84,6 +88,7 @@ class Gui(tk.Frame):
         tk.Grid.columnconfigure(self, 0, weight=1)
         # Pack MainFrame
         self.pack(fill=tk.BOTH, expand=tk.YES)
+        # noinspection SpellCheckingInspection
         # Initialize CEF
         if not cef.Initialize(settings={
             "debug": False,
@@ -110,4 +115,4 @@ class Gui(tk.Frame):
             "no-proxy-server": "",  # avoid using ie set proxy, if they want to system-wide proxy, use vpn
             "allow-file-access-from-files": ""  # so we can use locally stored files for includes on main html file
         }):
-            raise exceptions.CefInitilizationError()
+            raise exceptions.CefInitializationError()

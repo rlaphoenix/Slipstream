@@ -25,10 +25,8 @@ writing of yaml files, ensuring paths exist, ensuring it has read and write
 permissions and such.
 """
 
-# std
 import os.path
 
-# pip packages
 import yaml
 
 
@@ -48,9 +46,9 @@ class Config(object):
     def load(self):
         """Load yaml config file as a dictionary"""
         if (
-            not os.path.exists(self.config_path)
-            or not os.path.isfile(self.config_path)
-            or not os.path.exists(self.config_path)
+                not os.path.exists(self.config_path)
+                or not os.path.isfile(self.config_path)
+                or not os.path.exists(self.config_path)
         ):
             # no config file exists yet, let's create base one
             self.save()

@@ -18,27 +18,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-# std
-import tkinter as tk
-import platform
 import ctypes
-# pip packages
+import platform
+import tkinter as tk
+
 from cefpython3 import cefpython as cef
-# slipstream
+
 import pslipstream.exceptions as exceptions
-from pslipstream.gui.focus_handler import FocusHandler
 from pslipstream.gui.keyboard_handler import KeyboardHandler
 from pslipstream.gui.load_handler import LoadHandler
 
 
 class BrowserFrame(tk.Frame):
 
-    def __init__(self, master, url, js_bindings, on_load=None, on_hotkey=None):
+    def __init__(self, master, url, js_bindings, on_load=None, on_hot_key=None):
         self.js_bindings = js_bindings
         self.platform = platform.system()
         self.url = url
         self.on_load = on_load
-        self.on_hotkey = on_hotkey
+        self.on_hot_key = on_hot_key
         self.closing = False
         self.browser = None
         tk.Frame.__init__(self, master)
@@ -69,9 +67,8 @@ class BrowserFrame(tk.Frame):
                 for function_ in self.js_bindings["functions"]:
                     js_bindings_.SetFunction(function_["name"], function_["item"])
             self.browser.SetJavascriptBindings(js_bindings_)
-        self.browser.SetClientHandler(FocusHandler(self))
-        self.browser.SetClientHandler(KeyboardHandler(self))
-        self.browser.SetClientHandler(LoadHandler(self))
+        self.browser.SetClientHandler(KeyboardHandler())
+        self.browser.SetClientHandler(LoadHandler())
         self.message_loop_work()
 
     def get_window_handle(self):

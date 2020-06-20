@@ -23,22 +23,22 @@ Class file that handles all DVD operations including loading,
 reading, seeking, backing up, and more.
 """
 
-# std
-import os
-import io
-import sys
 import builtins as g
+import os
+import sys
 from datetime import datetime
 
-# pip packages
-from pydvdcss import PyDvdCss
-from tqdm import tqdm
 import pycdlib
+# noinspection PyPackageRequirements
+# need to no inspect it as it doesn't seem to check `dependency_links` in setup.py
 import pydvdid
 from dateutil.tz import tzoffset
+from pydvdcss import PyDvdCss
+from tqdm import tqdm
 
-# slipstream
 import pslipstream.__version__ as meta
+from pslipstream.exceptions import SlipstreamSeekError, SlipstreamDiscInUse, SlipstreamNoKeysObtained, \
+    SlipstreamReadError
 from pslipstream.helpers import asynchronous_auto
 
 
@@ -50,13 +50,13 @@ class Dvd:
         self.dvdcss = None
         self.reader_position = 0
         self.vob_lba_offsets = []
-    
+
     def __enter__(self):
         return self
-    
+
     def __exit__(self, type, value, traceback):
         self.dispose()
-    
+
     def dispose(self):
         if self.cdlib:
             self.cdlib.close()
@@ -72,13 +72,17 @@ class Dvd:
 
         pycdlib will be used to identify and extract information.
         libdvdcss will be used for reading, writing, and decrypting.
+
+        Raises SlipstreamDiscInUse if you try to load the same disc that's
+        already opened. You can open a different disc without an exception as
+        it will automatically dispose the current disc before opening.
         """
         if self.dvdcss or self.cdlib:
             if dev != self.dev:
                 # dispose, and continue loading the new disc
                 self.dispose()
             else:
-                raise ValueError("Slipstream.Dvd: This disc has already been opened.")
+                raise SlipstreamDiscInUse("The specified DVD device is already open in this instance.")
         self.dev = dev
         g.LOG.write(f"Opening {dev} as a DVD...")
         self.cdlib = pycdlib.PyCdlib()
@@ -91,7 +95,7 @@ class Dvd:
         g.LOG.write(f"DVD opened and ready...\n")
         if js:
             js.Call()
-    
+
     def is_ready(self, js):
         """
         Simple function just to be able to check if this Dvd
@@ -101,20 +105,19 @@ class Dvd:
         is the next best way of doing it.
         """
         js.Call(self.ready)
-    
+
     @asynchronous_auto
     def compute_crc_id(self, js=None):
         """
         Get the CRC64 checksum known as the Media Player DVD ID.
-        The algorithm used is the exact same one used by Micrososft's
-        old Windows Media Center.
+        The algorithm used is the exact same one used by Microsoft's old Windows Media Center.
         """
-        crcid = str(pydvdid.compute(self.dev))
-        g.LOG.write(f"Got CRC64 DVD ID: {crcid}\n")
+        crc = str(pydvdid.compute(self.dev))
+        g.LOG.write(f"Got CRC64 DVD ID: {crc}\n")
         if js:
-            js.Call(crcid)
-        return crcid
-    
+            js.Call(crc)
+        return crc
+
     @asynchronous_auto
     def get_primary_descriptor(self, js=None):
         """
@@ -122,16 +125,18 @@ class Dvd:
         disc in a more accessible and parsed format.
         """
         pvd = self.cdlib.pvds[0]
-        def date_conv(d):
+
+        def date_convert(d):
             if not d.year:
                 return None
             return datetime(
                 year=d.year, month=d.month, day=d.dayofmonth,
                 hour=d.hour, minute=d.minute, second=d.second, microsecond=d.hundredthsofsecond,
                 # offset the timezone, since ISO's dates are offsets of GMT in 15 minute intervals, we
-                # need to calculate that but in seconds to pass to tzoffset.
+                # need to calculate that but in seconds to pass to `tzoffset`.
                 tzinfo=tzoffset("GMT", (15 * d.gmtoffset) * 60)
             )
+
         pvd = {
             "version": pvd.version,
             "version_fs": pvd.file_structure_version,
@@ -148,10 +153,11 @@ class Dvd:
             "copyright_file_id": pvd.copyright_file_identifier.decode().strip() or None,
             "abstract_file_id": pvd.abstract_file_identifier.decode().strip() or None,
             "bibliographic_file_id": pvd.bibliographic_file_identifier.decode().strip() or None,
-            "creation_date": date_conv(pvd.volume_creation_date),
-            "expiration_date": date_conv(pvd.volume_expiration_date),
-            "effective_date": date_conv(pvd.volume_effective_date),
-            "escape_seq": f"00 * {len(pvd.escape_sequences)}" if pvd.escape_sequences == bytearray(len(pvd.escape_sequences)) else pvd.escape_sequences,
+            "creation_date": date_convert(pvd.volume_creation_date),
+            "expiration_date": date_convert(pvd.volume_expiration_date),
+            "effective_date": date_convert(pvd.volume_effective_date),
+            "escape_seq": f"00 * {len(pvd.escape_sequences)}" if pvd.escape_sequences == bytearray(
+                len(pvd.escape_sequences)) else pvd.escape_sequences,
             "set_size": pvd.set_size,
             "seq_num": pvd.seqnum,
             "path_tbl_size": pvd.path_tbl_size,
@@ -167,7 +173,7 @@ class Dvd:
             pvd["size"] = str(pvd["size"])
             js.Call(pvd)
         return pvd
-    
+
     def get_files(self, path="/", no_versions=True):
         """
         Read and list file paths directly from the disc device file system
@@ -179,10 +185,10 @@ class Dvd:
         """
         for child in self.cdlib.list_children(iso_path=path):
             file_path = child.file_identifier().decode()
-            # skip the `.` and `..` paths, we cont care.
+            # skip the `.` and `..` paths
             if file_path in [".", ".."]:
                 continue
-            # remove the semicolon and version number, we dont care.
+            # remove the semicolon and version number
             if no_versions and ";" in file_path:
                 file_path = file_path.split(";")[0]
             # join it to root to be absolute
@@ -193,12 +199,13 @@ class Dvd:
             size = int(child.get_data_length() / self.dvdcss.SECTOR_SIZE)
             g.LOG.write(f"Found title file: {file_path}, lba: {lba}, size: {size}")
             yield file_path, lba, size
-    
+
     def get_vob_lbas(self, crack_keys=False):
         """
         Get the LBA data for all VOB files in disc.
         Optionally seek with SEEK_KEY flag to obtain keys.
-        Raises an IOError on seek failures.
+
+        Raises SlipstreamSeekError on seek failures.
         """
         # Create an array for holding the title data
         lba_data = []
@@ -212,8 +219,9 @@ class Dvd:
                 if lba == self.dvdcss.seek(lba, self.dvdcss.SEEK_KEY):
                     g.LOG.write(f"Got title key for {vob}")
                 else:
-                    raise IOError(
-                        f"Slipstream.Dvd.get_vob_lbas: Failed to crack title key for {os.path.basename(vob)} at sector {lba}"
+                    raise SlipstreamSeekError(
+                        f"Failed to seek the disc to {lba} while attempting to "
+                        f"crack the title key for {os.path.basename(vob)}"
                     )
             # add data to title offsets
             lba_data.append((lba, size))
@@ -225,7 +233,9 @@ class Dvd:
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
-        Raises an IOError on read or key cracking failures.
+
+        Raises SlipstreamNoKeysObtained if no CSS keys were obtained when needed.
+        Raises SlipstreamReadError on unexpected read errors.
         """
         try:
             # Notify JS-land we're starting
@@ -245,24 +255,18 @@ class Dvd:
                 f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes.\n"
                 f'Saving to "{fn}"...'
             )
-            # Retrieve CSS keys
-            g.LOG.write("Checking if all CSS keys can be cracked. This might take a while.")
-            try:
+            # Retrieve CSS keys if disc is scrambled
+            if self.dvdcss.is_scrambled():
+                g.LOG.write("DVD is scrambled. Checking if all CSS keys can be cracked. This might take a while.")
                 self.vob_lba_offsets = self.get_vob_lbas(crack_keys=True)
-            except IOError as e:
-                raise IOError(str(e) + "\nSlipstream.Dvd.create_backup: Failed to retrive a CSS key, backup cannot continue.")
+                if not self.vob_lba_offsets:
+                    raise SlipstreamNoKeysObtained("No CSS title keys were returned, unable to decrypt.")
+            else:
+                g.LOG.write("DVD isn't scrambled. CSS title key cracking skipped.")
             # Create a file write handle to temp file
             f = open(fn_tmp, "wb")
             # Create a TQDM progress bar
-            class tqdm_log:
-                """hook to simply intercept tqdm's progress messages and log them."""
-                def write(self, text):
-                    g.LOG.write(text, echo=False)
-                    return sys.stdout.write(text)
-                def flush(self):
-                    sys.stdout.flush()
-
-            t = tqdm(total=last_lba+1, unit="sectors", file=tqdm_log())
+            t = tqdm(total=last_lba + 1, unit="sectors", file=TqdmHook())
             # Read through all the sectors in a memory efficient manner
             current_lba = first_lba
             g.LOG.write(f"Reading sectors {current_lba}->{last_lba}...")
@@ -272,16 +276,16 @@ class Dvd:
                 # read sectors
                 read_sectors = self.read(current_lba, sectors)
                 if read_sectors < 0:
-                    raise IOError("Slipstream.Dvd.create_backup: An unexpected read error occured.")
+                    raise SlipstreamReadError(f"An unexpected read error occurred reading {current_lba}->{sectors}")
                 # write the buffer to output file
                 f.write(self.dvdcss.buffer)
-                # incremement the current sector and update TQDM progress bar
+                # increment the current sector and update the tqdm progress bar
                 current_lba += read_sectors
                 # write progress to GUI log
                 g.PROG.c.Call((current_lba / last_lba) * 100)
                 # write progress to CLI log
                 t.update(read_sectors)
-            # Close file and TQDM progress bar
+            # Close file and tqdm progress bar
             f.close()
             t.close()
             # Rename temp file to final filename
@@ -295,14 +299,14 @@ class Dvd:
             # Notify js-land were done
             if js:
                 js.Call(False)
-    
+
     def read(self, first_lba, sectors):
         """
         Efficiently read an amount of sectors from the disc while supporting decryption
         with libdvdcss (pydvdcss).
 
         Returns the amount of sectors read.
-        Raises an IOError on read or seek failures.
+        Raises a SlipstreamSeekError on Seek Failures and SlipstreamReadError on Read Failures.
         """
 
         # we need to seek to the first sector. Otherwise we get faulty data.
@@ -316,17 +320,19 @@ class Dvd:
             titleStart = vob_lba_offset[0]
             titleEnd = titleStart + vob_lba_offset[1] - 1
 
-            # update key when entrering a new title
+            # update key when entering a new title
             # FIXME: we also need this if we seek into a new title (not only the start of the title)
             if titleStart == first_lba:
                 enteredTitle = needToSeek = inTitle = True
 
-            if first_lba < titleStart and first_lba + sectors > titleStart:
+            # if first_lba < titleStart and first_lba + sectors > titleStart:
+            if first_lba < titleStart < first_lba + sectors:
                 # read range will read beyond or on a title,
                 # let's read up to right before the next title start
                 sectors = titleStart - first_lba
 
-            if first_lba < titleEnd and first_lba + sectors > titleEnd:
+            # if first_lba < titleEnd and first_lba + sectors > titleEnd:
+            if first_lba < titleEnd < first_lba + sectors:
                 # read range will read beyond or on a title,
                 # let's read up to right before the next title start
                 sectors = titleEnd - first_lba + 1
@@ -345,7 +351,7 @@ class Dvd:
             # refresh the key status for this sector's data
             self.reader_position = self.dvdcss.seek(first_lba, flags)
             if self.reader_position != first_lba:
-                raise IOError(f"Slipstream.Dvd.read: seek to {first_lba} failed, it seeked to {self.reader_position}")
+                raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
 
         flags = self.dvdcss.NOFLAGS
         if inTitle:
@@ -353,7 +359,23 @@ class Dvd:
 
         ret = self.dvdcss.read(sectors, flags)
         if ret != sectors:
-            raise IOError(f"Slipstream.Dvd.read: unexpected read failure for {first_lba}-{first_lba+sectors}")
+            raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         self.reader_position += ret
 
         return ret
+
+
+class TqdmHook:
+    """hook to simply intercept tqdm's progress messages and log them."""
+
+    @staticmethod
+    def write(text):
+        # log the tqdm progress message
+        g.LOG.write(text, echo=False)
+        # return it to stdout
+        return sys.stdout.write(text)
+
+    @staticmethod
+    def flush():
+        # return it to stdout, we don't need to flush the log
+        sys.stdout.flush()

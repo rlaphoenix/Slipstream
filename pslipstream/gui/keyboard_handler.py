@@ -18,23 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-# std
-import builtins
 
+class KeyboardHandler:
 
-class KeyboardHandler(object):
-
-    def __init__(self, browser_frame):
-        self.browser_frame = browser_frame
-
-    def OnKeyEvent(self, browser, event, **_):
+    @staticmethod
+    def OnKeyEvent(browser, event, **_):
         """Called after the renderer and javascript in the page has had a chance to handle the event."""
         if event["type"] == 3:
             # CTRL+SHIFT+I - Open Dev Tools
             if event["modifiers"] == 6 and event["native_key_code"] == 31:
-                self.browser_frame.browser.ShowDevTools()
-            # CTRL+SHIFT+D - Enable Debug Mode
-            if event["modifiers"] == 6 and event["native_key_code"] == 40:
-                builtins.DBG = not builtins.DBG
-                self.browser_frame.ui_handler.set_variable("window.jsScope.debug_mode", builtins.DBG)
-                self.browser_frame.ui_handler.popup(f"{'Enabled' if builtins.DBG else 'Disabled'} debug mode!")
+                browser.ShowDevTools()

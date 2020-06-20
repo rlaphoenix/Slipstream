@@ -22,13 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Various small simple helper functions to do a quick task while not
 being specific enough to be in a class.
 """
-
-# std
+import queue
 import subprocess
 import threading
-import queue
 
-# pip packages
 from pycdlib import PyCdlib
 
 
@@ -38,20 +35,20 @@ def list_devices():
     """
     lsscsi = subprocess.check_output(["lsscsi"]).decode().splitlines()
     lsscsi = [x[9:].strip() for x in lsscsi]
-    scsis = []
-    for scsi in lsscsi:
-        if scsi.startswith("disk "):
-            continue
-        scsi = [x for x in scsi.split(" ") if x]
-        scsis.append({
-            "type": scsi[0],
-            "make": scsi[1],
-            "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi)-2)]),
-            "fwver": scsi[-2],
-            "loc": scsi[-1],
-            "volid": get_volume_id(scsi[-1])
-        })
-    return scsis
+
+    lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
+    # noinspection SpellCheckingInspection
+    lsscsi = [{
+        "type": scsi[0],
+        "make": scsi[1],
+        "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
+        "fwver": scsi[-2],
+        "loc": scsi[-1],
+        "volid": get_volume_id(scsi[-1])
+    } for scsi in lsscsi]
+    lsscsi = [scsi for scsi in lsscsi if scsi["type"] not in ["disk"]]
+    return lsscsi
+
 
 def get_volume_id(device):
     """
@@ -63,16 +60,19 @@ def get_volume_id(device):
     try:
         cdlib.open(device)
     except OSError as e:
+        # noinspection SpellCheckingInspection
         if "Errno 123" in str(e):
+            # no disc inserted
             return None
         raise
     return cdlib.pvds[0].volume_identifier.decode().strip()
 
+
 def get_device_list(js):
     js.Call(sorted(list_devices(), key=lambda d: d["volid"] or "", reverse=True))
 
-def asynchronous(f, daemon=True, auto_start=False):
 
+def asynchronous(f, daemon=True, auto_start=False):
     def wrapped_f(q, *args, **kwargs):
         """
         this function calls the decorated function and puts the
@@ -90,7 +90,7 @@ def asynchronous(f, daemon=True, auto_start=False):
 
         q = queue.Queue()
 
-        t = threading.Thread(target=wrapped_f, args=(q,)+args, kwargs=kwargs)
+        t = threading.Thread(target=wrapped_f, args=(q,) + args, kwargs=kwargs)
         t.daemon = daemon
         if auto_start:
             t.start()
@@ -98,6 +98,7 @@ def asynchronous(f, daemon=True, auto_start=False):
         return t
 
     return wrap
+
 
 def asynchronous_auto(f):
     return asynchronous(f, auto_start=True)

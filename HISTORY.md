@@ -4,9 +4,24 @@
 
 N/A
 
+## 0.1.2
+
+**Improvements**
+- Huge code cleanup throughout the entire repository.
+- Remove a bunch of unnecessary GUI related calls and code.
+- Remove unnecessary PyInstaller call in the release github workflow.
+- Added instructions (one-liner change) on supporting `cefpython3` for python 3.8. It will show the instructions when it detects it failed the import.
+
+**Bug fixes**
+
+- Fix setup.py pack, move PyInstall imports from start of setup.py to inside PackCommand class, get folder name from `__title_pkg__` meta
+- Move the need to import appdirs and cefpython3 in `__version__.py` to `__init__.main()` since its used by setup.py, causing a circular dependency
+- Add pydvdid to requirements via `dependency_links` allowing it to auto install pydvdid>1.1 (my fork)
+- Change build github workflow to use Py 3.7 as cefpython3 doesn't have proper support for 3.8 yet. It can run on Python 3.8, but you need to make a one line edit to it, which I don't know a correct way of doing that with Github Actions.
+
 ## 0.1.1
 
-**Bugfixes**
+**Bug fixes**
 
 - Fix and add a checksum check to --license to ensure it loads correctly or not at all.
 - Fix a problem with devicelist that caused it to get the device list every render.
