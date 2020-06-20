@@ -23,7 +23,7 @@ import tkinter as tk
 
 from cefpython3 import cefpython as cef
 
-import pslipstream.__version__ as meta
+import meta
 import pslipstream.exceptions as exceptions
 from pslipstream.gui.browser_frame import BrowserFrame
 

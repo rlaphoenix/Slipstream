@@ -40,7 +40,7 @@ except Exception as e:
         )
     raise
 
-import pslipstream.__version__ as meta
+import meta
 from pslipstream.config import Config
 from pslipstream.dvd import Dvd
 from pslipstream.gui import Gui

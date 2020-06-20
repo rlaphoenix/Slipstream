@@ -4,9 +4,16 @@
 
 N/A
 
+## 0.1.3
+
+**Bug fixes**
+
+- Move `pslipstream.__version__` to `meta.py` so that `setup.py` doesn't try and import the entire pslipstream module.
+
 ## 0.1.2
 
 **Improvements**
+
 - Huge code cleanup throughout the entire repository.
 - Remove a bunch of unnecessary GUI related calls and code.
 - Remove unnecessary PyInstaller call in the release github workflow.

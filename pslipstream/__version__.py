@@ -20,96 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ~~~
 
 Metadata used throughout the application.
-By calculating all the metadata in __version__.py, it allows us
+By calculating all the metadata in meta.py, it allows us
 to easily expose the information to the user via import as well as
 throughout the code by importing only what we want.
 """
 
-import datetime
-import os
-import platform
-
-import pkg_resources
-
-# general
-__title__ = "Slipstream"
-__title_pkg__ = "pslipstream"
-__description__ = "The most informative Home-media backup solution."
-__url__ = "https://github.com/rlaPHOENiX/Slipstream"
-__version__ = "0.1.2"
-__author__ = "PHOENiX"
-__author_email__ = "rlaphoenix@pm.me"
-__min_size__ = "1200x440"
-__package_obj__ = None
-try:
-    __package_obj__ = pkg_resources.Requirement.parse(f"{__title_pkg__}=={__version__}")
-except pkg_resources.DistributionNotFound:
-    pass
-
-# build configuration
-__py_ver_support__ = ">=3.6"
-# noinspection SpellCheckingInspection
-__req_packages__ = [
-    # general
-    "appdirs>=1.4.3",
-    "tqdm>=4.46.1",
-    # cef
-    "cefpython3>=66.0",
-    "pyobjc; sys_platform == 'darwin'",
-    "AppKit; sys_platform == 'darwin'",
-    # http and such
-    "requests>=2.23.0",
-    # parsing, syntax, and validators
-    "pyyaml>=5.3",
-    "python-dateutil>=2.8.1",
-    # general disc operations
-    "pycdlib>=1.10.0",
-    # dvd disc operations
-    "pydvdcss>=1.0.7.post0",
-]
-# noinspection SpellCheckingInspection
-__req_links__ = [
-    # dvd disc operations
-    "https://github.com/rlaPHOENiX/pydvdid.git#egg=pydvdid"  # fork
-]
-# noinspection SpellCheckingInspection
-__opt_packages__ = {
-    # build related
-    "packing support": ["PyInstaller"]  # provide no version to let the user decide
-}
-
-# environment
-__cef_version__ = None  # gotten on main()
-__py_version__ = platform.python_version()
-__architecture__ = platform.architecture()[0]
-__platform__ = platform.system()
-__windows__ = __platform__ == "Windows"
-__linux__ = __platform__ == "Linux"
-__darwin__ = __platform__ == "Darwin"
-
-# licensing and copyright
-__license__ = "GPLv3"
-__copyright__ = f"Copyright (C) {datetime.datetime.now().year} {__author__}"
-__copyright_paragraph__ = "\n".join([
-    f"{__title__}  {__copyright__}",
-    "This program comes with ABSOLUTELY NO WARRANTY.",
-    "This is free software, and you are welcome to redistribute it",
-    f"under certain conditions; type '{__title_pkg__} --license' for details."
-])
-
-# directories
-__root_dir__ = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-__user_dir__ = None  # gotten on main()
-__static_dir__ = os.path.join(__root_dir__, "static")
-if __package_obj__:
-    try:
-        __static_dir__ = pkg_resources.resource_filename(__package_obj__, f"{__title_pkg__}/static")
-    except pkg_resources.DistributionNotFound:
-        pass
-    except pkg_resources.VersionConflict:
-        pass
-
-# file paths
-__config_file__ = None  # gotten on main()
-__icon_file__ = os.path.join(__static_dir__, "icon.png")
-__ui_index__ = None  # prefix with `file://` for local file
+from meta import *

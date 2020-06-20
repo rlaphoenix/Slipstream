@@ -2,7 +2,7 @@ import os
 import sys
 from shutil import rmtree
 
-import pslipstream.__version__ as meta
+import meta
 
 
 def print_bold(s):

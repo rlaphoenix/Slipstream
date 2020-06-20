@@ -36,7 +36,7 @@ from dateutil.tz import tzoffset
 from pydvdcss import PyDvdCss
 from tqdm import tqdm
 
-import pslipstream.__version__ as meta
+import meta
 from pslipstream.exceptions import SlipstreamSeekError, SlipstreamDiscInUse, SlipstreamNoKeysObtained, \
     SlipstreamReadError
 from pslipstream.helpers import asynchronous_auto

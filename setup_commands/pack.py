@@ -5,7 +5,7 @@ import sys
 from PyInstaller.utils.hooks import get_package_paths
 from setuptools import Command
 
-import pslipstream.__version__ as meta
+import meta
 from setup_commands import build_clean, print_bold
 
 

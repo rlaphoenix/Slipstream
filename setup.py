@@ -13,7 +13,7 @@ import os
 from setuptools import find_packages, setup
 
 # slipstream
-import pslipstream.__version__ as meta
+import meta
 from setup_commands.dist import DistCommand
 from setup_commands.pack import PackCommand
 from setup_commands.upload import UploadCommand
