@@ -29,9 +29,7 @@ import sys
 from datetime import datetime
 
 import pycdlib
-# noinspection PyPackageRequirements
-# need to no inspect it as it doesn't seem to check `dependency_links` in setup.py
-import pydvdid
+import rlapydvdid
 from dateutil.tz import tzoffset
 from pydvdcss import PyDvdCss
 from tqdm import tqdm
@@ -113,7 +111,7 @@ class Dvd:
         Get the CRC64 checksum known as the Media Player DVD ID.
         The algorithm used is the exact same one used by Microsoft's old Windows Media Center.
         """
-        crc = str(pydvdid.compute(self.dev))
+        crc = str(rlapydvdid.compute(self.dev))
         g.LOG.write(f"Got CRC64 DVD ID: {crc}\n")
         if js:
             js.Call(crc)
