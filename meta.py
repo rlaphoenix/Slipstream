@@ -66,11 +66,7 @@ __req_packages__ = [
     "pycdlib>=1.10.0",
     # dvd disc operations
     "pydvdcss>=1.0.7.post0",
-]
-# noinspection SpellCheckingInspection
-__req_links__ = [
-    # dvd disc operations
-    "https://github.com/rlaPHOENiX/pydvdid.git#egg=pydvdid"  # fork
+    "pydvdid @ git+https://git@github.com/rlaPHOENiX/pydvdid@master"  # fork
 ]
 # noinspection SpellCheckingInspection
 __opt_packages__ = {
