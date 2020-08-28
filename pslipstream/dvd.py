@@ -56,13 +56,13 @@ class Dvd:
         self.dispose()
 
     def dispose(self):
+        g.LOG.write(f"Disposing Dvd object...")
         if self.cdlib:
             self.cdlib.close()
         if self.dvdcss:
             self.dvdcss.dispose()
         self.__init__()  # reset everything
         g.PROGRESS.c.Call(0)
-        g.LOG.write("Closed and disposed device...\n")
 
     @asynchronous_auto
     def open(self, dev, js=None):

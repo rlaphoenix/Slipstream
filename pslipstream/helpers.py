@@ -71,7 +71,7 @@ def get_volume_id(device):
             return "! Error occurred reading disc..."
         raise
     volume_id = cdlib.pvds[0].volume_identifier.decode().strip()
-    g.LOG.write(f"Device {device} found with Disc labeled \"{volume_id}\".")
+    g.LOG.write(f"Device {device} has disc labeled \"{volume_id}\".")
     return volume_id
 
 
