@@ -13,46 +13,44 @@ import os
 from setuptools import find_packages, setup
 
 # slipstream
-import meta
+import pslipstream.cfg as cfg
 from setup_commands.dist import DistCommand
 from setup_commands.pack import PackCommand
 from setup_commands.upload import UploadCommand
 
 # Import the README and use it as the long-description.
 try:
-    with io.open(os.path.join(meta.__root_dir__, "README.md"), encoding="utf-8") as f:
+    with io.open(os.path.join(cfg.root_dir, "README.md"), encoding="utf-8") as f:
         long_description = ("\n" + f.read(), "text/markdown")
 except FileNotFoundError:
-    long_description = (meta.__description__, "text/plain")
+    long_description = (cfg.description, "text/plain")
 
 # Where the magic happens:
 setup(
-    name=meta.__title_pkg__,
-    version=meta.__version__,
-    description=meta.__description__,
+    name=cfg.title_pkg,
+    version=cfg.version,
+    description=cfg.description,
     long_description=long_description[0],
     long_description_content_type=long_description[1],
-    author=meta.__author__,
-    author_email=meta.__author_email__,
-    python_requires=meta.__py_ver_support__,
-    url=meta.__url__,
+    author=cfg.author,
+    author_email=cfg.author_email,
+    python_requires=cfg.py_ver_support,
+    url=cfg.url,
     project_urls={
         # todo ; "Documentation": '...',
         "Source": "https://github.com/rlaPHOENiX/Slipstream",
     },
     packages=find_packages(),
     entry_points={
-        "console_scripts": [f"{meta.__title_pkg__}={meta.__title_pkg__}.__init__:main"]
+        "console_scripts": [f"{cfg.title_pkg}={cfg.title_pkg}.__init__:main"]
     },
-    install_requires=meta.__req_packages__,
-    dependency_links=meta.__req_links__,
-    extras_require=meta.__opt_packages__,
+    install_requires=cfg.req_packages,
+    extras_require=cfg.opt_packages,
     include_package_data=True,
     package_data={
-        "": ["LICENSE", "HISTORY.md", "static/*"],
-        # meta.__title_pkg__: ["static/*"]
+        "": ["LICENSE", "README.md", "HISTORY.md", "static/*"]
     },
-    license=meta.__license__,
+    license=cfg.licence,
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers

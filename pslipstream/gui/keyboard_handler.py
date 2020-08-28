@@ -21,8 +21,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class KeyboardHandler:
 
-    @staticmethod
-    def OnKeyEvent(browser, event, **_):
+    # Important: Functions cannot be static!
+
+    def OnKeyEvent(self, browser, event, **_):
         """Called after the renderer and javascript in the page has had a chance to handle the event."""
         if event["type"] == 3:
             # CTRL+SHIFT+I - Open Dev Tools

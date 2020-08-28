@@ -42,7 +42,7 @@ except Exception as e:
         )
     raise
 
-import meta
+import pslipstream.cfg as cfg
 from pslipstream.config import Config
 from pslipstream.dvd import Dvd
 from pslipstream.gui import Gui
@@ -53,16 +53,16 @@ from pslipstream.progress import Progress
 
 def main():
     # Prepare Metadata
-    meta.__cef_version__ = cef.GetVersion()
-    meta.__user_dir__ = user_data_dir(meta.__title_pkg__, meta.__author__)
-    meta.__config_file__ = os.path.join(meta.__user_dir__, "config.yml")
+    cfg.cef_version = cef.GetVersion()
+    cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
+    cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
 
     # Initialize custom global variables
     g.ARGS = get_arguments()
     g.LOG = Log()  # Logger, everything written here gets print()'d and sent to GUI
     g.PROGRESS = Progress()  # Progress Bar, controls only the GUI's progress bar.
     g.DBG = g.ARGS.dbg  # Debug switch, enables debugging specific code and logging
-    g.CFG = Config(meta.__config_file__)
+    g.CFG = Config(cfg.config_file)
     g.CFG.load()
 
     # Print License if asked
@@ -139,17 +139,17 @@ def get_arguments():
 def get_runtime_details():
     return "\n".join(
         [
-            meta.__copyright_paragraph__,
+            cfg.copyright_paragraph,
             "",
-            f"{meta.__title__} v{meta.__version__}",
-            meta.__description__,
-            meta.__url__,
+            f"{cfg.title} v{cfg.version}",
+            cfg.description,
+            cfg.url,
             "",
             f":: {'DEBUG' if g.DBG else 'Standard'} MODE",
-            f":: {meta.__platform__} {meta.__architecture__} (Python v{meta.__py_version__})",
-            f":: CEF Runtime: {meta.__cef_version__}",
-            f":: User Directory: {meta.__user_dir__}",
-            f":: Static Directory: {meta.__static_dir__}",
+            f":: {cfg.platform} {cfg.architecture} (Python v{cfg.py_version})",
+            f":: CEF Runtime: {cfg.cef_version}",
+            f":: User Directory: {cfg.user_dir}",
+            f":: Static Directory: {cfg.static_dir}",
         ]
     )
 
@@ -164,13 +164,13 @@ def gui():
         elif "ui-develop" in g.ARGS.dev:
             # gatsby develop
             port = 8000
-        meta.__ui_index__ = "http://localhost:" + str(port)
+        cfg.ui_index = "http://localhost:" + str(port)
     else:
-        meta.__ui_index__ = "https://phoenix-slipstream.netlify.app"
+        cfg.ui_index = "https://phoenix-slipstream.netlify.app"
     # create gui, and fire it up
     g.GUI = Gui(
-        url=meta.__ui_index__,
-        icon=meta.__icon_file__,
+        url=cfg.ui_index,
+        icon=cfg.icon_file,
         js_bindings={
             "properties": [
                 {"name": "config", "item": g.CFG.settings},

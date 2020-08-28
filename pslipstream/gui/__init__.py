@@ -23,7 +23,7 @@ import tkinter as tk
 
 from cefpython3 import cefpython as cef
 
-import meta
+import pslipstream.cfg as cfg
 import pslipstream.exceptions as exceptions
 from pslipstream.gui.browser_frame import BrowserFrame
 
@@ -58,7 +58,7 @@ class Gui(tk.Frame):
         sys.excepthook = cef.ExceptHook
         # Create Window
         root = tk.Tk()
-        root.geometry(meta.__min_size__)
+        root.geometry(cfg.min_size)
         root.update()
         root.minsize(root.winfo_width(), root.winfo_height())
         tk.Grid.rowconfigure(root, 0, weight=1)
@@ -66,7 +66,7 @@ class Gui(tk.Frame):
         tk.Frame.__init__(self, root)
         # Configure Window
         # noinspection PyUnresolvedReferences
-        self.master.title(f"{meta.__title__} v{meta.__version__}")
+        self.master.title(f"{cfg.title} v{cfg.version}")
         # noinspection PyUnresolvedReferences
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         # noinspection PyUnresolvedReferences
@@ -109,7 +109,7 @@ class Gui(tk.Frame):
             "persist_session_cookies": False,
             "persist_user_preferences": False,
             "remote_debugging_port": -1,
-            "product_version": f"Slipstream/{meta.__version__}",  # user agent for the UI
+            "product_version": f"Slipstream/{cfg.version}",  # user agent for the UI
             "background_color": 0xff202225
         }, switches={
             "no-proxy-server": "",  # avoid using ie set proxy, if they want to system-wide proxy, use vpn

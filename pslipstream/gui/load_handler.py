@@ -26,8 +26,9 @@ from pslipstream.exceptions import SlipstreamUiError
 
 class LoadHandler:
 
-    @staticmethod
-    def OnLoadingStateChange(browser, is_loading, **_):
+    # Important: Functions cannot be static!
+
+    def OnLoadingStateChange(self, browser, is_loading, **_):
         """Called when the loading state has changed."""
         if browser.GetIdentifier() != 1:
             return  # this is a href hook, lets just pass
@@ -36,8 +37,7 @@ class LoadHandler:
             # ...
             pass
 
-    @staticmethod
-    def OnLoadStart(browser, frame):
+    def OnLoadStart(self, browser, frame):
         """Called when loading starts."""
         # hook and open in users browser instead of inside App
         if browser.GetIdentifier() != 1:
@@ -45,8 +45,7 @@ class LoadHandler:
             browser.CloseBrowser()
             webbrowser.open(frame.GetUrl())
 
-    @staticmethod
-    def OnLoadError(browser, **_):
+    def OnLoadError(self, browser, **_):
         """Called when loading errors."""
         if browser.GetIdentifier() != 1:
             return  # this is a href, lets just pass

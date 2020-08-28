@@ -32,24 +32,24 @@ import platform
 import pkg_resources
 
 # general
-__title__ = "Slipstream"
-__title_pkg__ = "pslipstream"
-__description__ = "The most informative Home-media backup solution."
-__url__ = "https://github.com/rlaPHOENiX/Slipstream"
-__version__ = "0.1.6"
-__author__ = "PHOENiX"
-__author_email__ = "rlaphoenix@pm.me"
-__min_size__ = "1200x440"
-__package_obj__ = None
+title = "Slipstream"
+title_pkg = "pslipstream"
+description = "The most informative Home-media backup solution."
+url = "https://github.com/rlaPHOENiX/Slipstream"
+version = "0.1.6"
+author = "PHOENiX"
+author_email = "rlaphoenix@pm.me"
+min_size = "1200x440"
+package_obj = None
 try:
-    __package_obj__ = pkg_resources.Requirement.parse(f"{__title_pkg__}=={__version__}")
+    package_obj = pkg_resources.Requirement.parse(f"{title_pkg}=={version}")
 except pkg_resources.DistributionNotFound:
     pass
 
 # build configuration
-__py_ver_support__ = ">=3.6"
+py_ver_support = ">=3.6"
 # noinspection SpellCheckingInspection
-__req_packages__ = [
+req_packages = [
     # general
     "appdirs>=1.4.4",
     "tqdm>=4.46.1",
@@ -69,43 +69,43 @@ __req_packages__ = [
     "pydvdid @ git+https://git@github.com/rlaPHOENiX/pydvdid@master"  # fork
 ]
 # noinspection SpellCheckingInspection
-__opt_packages__ = {
+opt_packages = {
     # build related
     "packing support": ["PyInstaller"]  # provide no version to let the user decide
 }
 
 # environment
-__cef_version__ = None  # gotten on main()
-__py_version__ = platform.python_version()
-__architecture__ = platform.architecture()[0]
-__platform__ = platform.system()
-__windows__ = __platform__ == "Windows"
-__linux__ = __platform__ == "Linux"
-__darwin__ = __platform__ == "Darwin"
+cef_version = None  # gotten on main()
+py_version = platform.python_version()
+architecture = platform.architecture()[0]
+platform = platform.system()
+windows = platform == "Windows"
+linux = platform == "Linux"
+darwin = platform == "Darwin"
 
 # licensing and copyright
-__license__ = "GPLv3"
-__copyright__ = f"Copyright (C) {datetime.datetime.now().year} {__author__}"
-__copyright_paragraph__ = "\n".join([
-    f"{__title__}  {__copyright__}",
+licence = "GPLv3"
+copyright_line = f"Copyright (C) {datetime.datetime.now().year} {author}"
+copyright_paragraph = "\n".join([
+    f"{title}  {copyright_line}",
     "This program comes with ABSOLUTELY NO WARRANTY.",
     "This is free software, and you are welcome to redistribute it",
-    f"under certain conditions; type '{__title_pkg__} --license' for details."
+    f"under certain conditions; type '{title_pkg} --license' for details."
 ])
 
 # directories
-__root_dir__ = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-__user_dir__ = None  # gotten on main()
-__static_dir__ = os.path.join(__root_dir__, "static")
-if __package_obj__:
+root_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+user_dir = None  # gotten on main()
+static_dir = os.path.join(root_dir, "static")
+if package_obj:
     try:
-        __static_dir__ = pkg_resources.resource_filename(__package_obj__, f"{__title_pkg__}/static")
+        static_dir = pkg_resources.resource_filename(package_obj, f"{title_pkg}/static")
     except pkg_resources.DistributionNotFound:
         pass
     except pkg_resources.VersionConflict:
         pass
 
 # file paths
-__config_file__ = None  # gotten on main()
-__icon_file__ = os.path.join(__static_dir__, "icon.png")
-__ui_index__ = None  # prefix with `file://` for local file
+config_file = None  # gotten on main()
+icon_file = os.path.join(static_dir, "icon.png")
+ui_index = None  # prefix with `file://` for local file

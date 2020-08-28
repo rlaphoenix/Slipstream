@@ -2,7 +2,7 @@ import os
 import sys
 from shutil import rmtree
 
-import meta
+import pslipstream.cfg as cfg
 
 
 def print_bold(s):
@@ -13,11 +13,11 @@ def print_bold(s):
 def build_clean():
     print_bold("Removing previous builds…")
     try:
-        rmtree(os.path.join(meta.__root_dir__, "dist"))
+        rmtree(os.path.join(cfg.root_dir, "dist"))
     except OSError:
         pass
     try:
-        rmtree(os.path.join(meta.__root_dir__, "build"))
+        rmtree(os.path.join(cfg.root_dir, "build"))
     except OSError:
         pass
 

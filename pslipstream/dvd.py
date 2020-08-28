@@ -36,7 +36,7 @@ from dateutil.tz import tzoffset
 from pydvdcss import PyDvdCss
 from tqdm import tqdm
 
-import meta
+import pslipstream.cfg as cfg
 from pslipstream.exceptions import SlipstreamSeekError, SlipstreamDiscInUse, SlipstreamNoKeysObtained, \
     SlipstreamReadError
 from pslipstream.helpers import asynchronous_auto
@@ -87,7 +87,7 @@ class Dvd:
         self.dev = dev
         g.LOG.write(f"Opening {dev} as a DVD...")
         self.cdlib = pycdlib.PyCdlib()
-        self.cdlib.open("\\\\.\\" + dev if meta.__windows__ else dev)
+        self.cdlib.open("\\\\.\\" + dev if cfg.windows else dev)
         g.LOG.write(f"Initialised pycdlib instance successfully...")
         self.dvdcss = PyDvdCss()
         self.dvdcss.open(dev)

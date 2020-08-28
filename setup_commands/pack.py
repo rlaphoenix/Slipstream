@@ -4,7 +4,7 @@ import sys
 
 from setuptools import Command
 
-import meta
+import pslipstream.cfg as cfg
 from setup_commands import build_clean, print_bold
 
 
@@ -25,7 +25,7 @@ class PackCommand(Command):
         from PyInstaller.utils.hooks import get_package_paths
         build_clean()
         print_bold("Ensuring supported environment…")
-        if not meta.__windows__ and not meta.__linux__ and not meta.__darwin__:
+        if not cfg.windows and not cfg.linux and not cfg.darwin:
             print("Sorry! Only Windows, Linux and Darwin platforms are supported.")
             sys.exit(1)
         print_bold("Ensuring PyInstaller is available…")
@@ -33,15 +33,15 @@ class PackCommand(Command):
             "{0} -m pip install --user --upgrade pyinstaller".format(sys.executable)
         )
         print_bold("Packing with PyInstaller…")
-        sep = ";" if meta.__windows__ else ":"
+        sep = ";" if cfg.windows else ":"
         sub = subprocess.Popen(
             [
                 "pyinstaller",
                 "--clean",
                 "-F",
-                f"{meta.__title_pkg__}/__init__.py",
+                f"{cfg.title_pkg}/__init__.py",
                 "--add-data",
-                f"{meta.__title_pkg__}/static{sep}static",
+                f"{cfg.title_pkg}/static{sep}static",
                 "--add-data",
                 get_package_paths("cefpython3")[1].replace("\\", "/")
                 + f"{sep}.",
