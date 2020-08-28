@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Various small simple helper functions to do a quick task while not
 being specific enough to be in a class.
 """
+import builtins as g
 import queue
 import subprocess
 import threading
@@ -37,7 +38,6 @@ def list_devices():
     lsscsi = [x[9:].strip() for x in lsscsi]
 
     lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
-    # noinspection SpellCheckingInspection
     lsscsi = [{
         "type": scsi[0],
         "make": scsi[1],
@@ -60,11 +60,19 @@ def get_volume_id(device):
         cdlib.open(device)
     except OSError as e:
         # noinspection SpellCheckingInspection
-        if "Errno 123" in str(e):
+        if "[Errno 123]" in str(e):
             # no disc inserted
+            g.LOG.write(f"Device {device} has no disc inserted.")
             return None
+        # noinspection SpellCheckingInspection
+        if "[Errno 5]" in str(e):
+            # Input/output error
+            g.LOG.write(f"Device {device} had an I/O error.")
+            return "! Error occurred reading disc..."
         raise
-    return cdlib.pvds[0].volume_identifier.decode().strip()
+    volume_id = cdlib.pvds[0].volume_identifier.decode().strip()
+    g.LOG.write(f"Device {device} found with Disc labeled \"{volume_id}\".")
+    return volume_id
 
 
 def get_device_list(js):
