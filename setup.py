@@ -41,7 +41,7 @@ setup(
     },
     packages=find_packages(),
     entry_points={
-        "console_scripts": [f"{cfg.title_pkg}={cfg.title_pkg}.__init__:main"]
+        "console_scripts": [f"{cfg.title_pkg}={cfg.title_pkg}.slipstream:main"]
     },
     install_requires=cfg.req_packages,
     extras_require=cfg.opt_packages,
