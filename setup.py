@@ -16,7 +16,6 @@ from setuptools import find_packages, setup
 import pslipstream.cfg as cfg
 from setup_commands.dist import DistCommand
 from setup_commands.pack import PackCommand
-from setup_commands.upload import UploadCommand
 
 # Import the README and use it as the long-description.
 try:
@@ -71,5 +70,5 @@ setup(
         "Topic :: Multimedia :: Video :: Conversion",
     ],
     # $ setup.py publish support.
-    cmdclass={"dist": DistCommand, "pack": PackCommand, "upload": UploadCommand},
+    cmdclass={"dist": DistCommand, "pack": PackCommand},
 )

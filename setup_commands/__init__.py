@@ -25,8 +25,6 @@ def build_clean():
 def build():
     build_clean()
     print_bold("Ensuring an up-to-date environment…")
-    os.system(
-        "{0} -m pip install --user --upgrade setuptools wheel".format(sys.executable)
-    )
+    os.system("{0} -m pip install --user --upgrade setuptools wheel".format(sys.executable))
     print_bold("Building Source and Wheel (universal) distribution…")
     os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
