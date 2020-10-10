@@ -31,7 +31,7 @@ from datetime import datetime
 import pycdlib
 import rlapydvdid
 from dateutil.tz import tzoffset
-from pydvdcss import PyDvdCss
+from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm
 
 import pslipstream.cfg as cfg
@@ -87,7 +87,7 @@ class Dvd:
         self.cdlib = pycdlib.PyCdlib()
         self.cdlib.open("\\\\.\\" + dev if cfg.windows else dev)
         g.LOG.write(f"Initialised pycdlib instance successfully...")
-        self.dvdcss = PyDvdCss()
+        self.dvdcss = DvdCss()
         self.dvdcss.open(dev)
         g.LOG.write(f"Initialised pydvdcss instance successfully...")
         self.ready = True
