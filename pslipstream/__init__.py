@@ -166,7 +166,7 @@ def gui():
             port = 8000
         cfg.ui_index = "http://localhost:" + str(port)
     else:
-        cfg.ui_index = "https://phoenix-slipstream.netlify.app"
+        cfg.ui_index = "https://slipstream-ui.vercel.app"
     # create gui, and fire it up
     g.GUI = Gui(
         url=cfg.ui_index,
