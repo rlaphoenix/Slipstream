@@ -47,7 +47,7 @@ except pkg_resources.DistributionNotFound:
     pass
 
 # build configuration
-py_ver_support = "3.6, 3.7"
+py_ver_support = ">=3.6, <=3.7"
 # noinspection SpellCheckingInspection
 req_packages = [
     # general
