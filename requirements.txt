@@ -9,3 +9,4 @@ tqdm>=4.50.2
 PyYAML>=5.3.1
 requests>=2.24.0
 appdirs>=1.4.4
+pywin32>=228; os_name == "nt"

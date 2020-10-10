@@ -27,26 +27,42 @@ import queue
 import subprocess
 import threading
 
+import pslipstream.cfg as cfg
 from pycdlib import PyCdlib
+
+if cfg.windows:
+    from win32 import win32api, win32file
 
 
 def list_devices():
     """
     Lists all devices provided by lsscsi
     """
-    lsscsi = subprocess.check_output(["lsscsi"]).decode().splitlines()
-    lsscsi = [x[9:].strip() for x in lsscsi]
+    if cfg.windows:
+        drives = [
+            rf"\\.\{d[:-1]}" for d in win32api.GetLogicalDriveStrings().split('\x00')[:-1]
+            if win32file.GetDriveType(d) == win32file.DRIVE_CDROM
+        ]
+        print(drives)
+        drives = [{
+            "loc": d,
+            "volid": get_volume_id(d)
+        } for d in drives]
+        return drives
+    if cfg.linux:
+        lsscsi = subprocess.check_output(["lsscsi"]).decode().splitlines()
+        lsscsi = [x[9:].strip() for x in lsscsi]
 
-    lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
-    lsscsi = [{
-        "type": scsi[0],
-        "make": scsi[1],
-        "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
-        "fwver": scsi[-2],
-        "loc": scsi[-1],
-        "volid": get_volume_id(scsi[-1])
-    } for scsi in lsscsi if scsi[0] not in ["disk"]]
-    return lsscsi
+        lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
+        lsscsi = [{
+            "type": scsi[0],
+            "make": scsi[1],
+            "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
+            "fwver": scsi[-2],
+            "loc": scsi[-1],
+            "volid": get_volume_id(scsi[-1])
+        } for scsi in lsscsi if scsi[0] not in ["disk"]]
+        return lsscsi
 
 
 def get_volume_id(device):
@@ -57,7 +73,7 @@ def get_volume_id(device):
     """
     cdlib = PyCdlib()
     try:
-        cdlib.open(device)
+        cdlib.open(device, "rb")
     except OSError as e:
         # noinspection SpellCheckingInspection
         if "[Errno 123]" in str(e):
