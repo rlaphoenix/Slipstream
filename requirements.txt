@@ -1,0 +1,11 @@
+setuptools>=50.3.0
+future>=0.18.2
+cefpython3>=66.0
+pycdlib>=1.11.0
+rlapydvdid>=1.2
+python-dateutil>=2.8.1
+pydvdcss>=1.0.7.post0
+tqdm>=4.50.2
+PyYAML>=5.3.1
+requests>=2.24.0
+appdirs>=1.4.4
