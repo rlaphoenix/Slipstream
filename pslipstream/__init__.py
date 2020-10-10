@@ -27,20 +27,7 @@ import webbrowser
 import requests
 from appdirs import user_data_dir
 
-try:
-    from cefpython3 import cefpython as cef
-except Exception as e:
-    if str(e).startswith("Python version not supported: 3.8"):
-        import site
-
-        raise ImportError(
-            "Oh no, cefpython is *still* not supporting 3.8 officially!! >:((\n"
-            f"Not to worry, just open '{site.getsitepackages()[0]}/cefpython3/__init__.py' and "
-            "change `elif sys.version_info[:2] == (3, 7):` (near ln60) to "
-            "`elif sys.version_info[:2] in [(3, 7), (3, 8)]:`\n"
-            "Once done, it will work fine on Python 3.8 :)"
-        )
-    raise
+from cefpython3 import cefpython as cef
 
 import pslipstream.cfg as cfg
 from pslipstream.config import Config

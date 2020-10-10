@@ -36,7 +36,7 @@ title = "Slipstream"
 title_pkg = "pslipstream"
 description = "The most informative Home-media backup solution."
 url = "https://github.com/rlaPHOENiX/Slipstream"
-version = "0.2.0"
+version = "0.2.1"
 author = "PHOENiX"
 author_email = "rlaphoenix@pm.me"
 min_size = "1200x440"
@@ -47,7 +47,7 @@ except pkg_resources.DistributionNotFound:
     pass
 
 # build configuration
-py_ver_support = ">=3.6"
+py_ver_support = "3.6, 3.7"
 # noinspection SpellCheckingInspection
 req_packages = [
     # general
