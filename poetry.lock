@@ -105,10 +105,28 @@ dev = ["py-make (>=0.1.0)", "twine", "wheel"]
 notebook = ["ipywidgets (>=6)"]
 telegram = ["requests"]
 
+[[package]]
+name = "wmi"
+version = "1.5.1"
+description = "Windows Management Instrumentation"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pywin32 = "*"
+
+[package.extras]
+all = ["pytest", "wheel", "twine", "sphinx"]
+dev = ["pytest", "sphinx", "wheel", "twine"]
+docs = ["sphinx"]
+package = ["wheel", "twine"]
+tests = ["pytest"]
+
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.6"
-content-hash = "3d6e48c662e46499e17a91f12b8db1cfa131ff743fdf017072cbe4d81f7acaf6"
+python-versions = ">=3.6,<3.10"
+content-hash = "8f02211601ad13d062430d07cbb4898b62cc31953a15d70f0993f0e1c371be54"
 
 [metadata.files]
 appdirs = [
@@ -124,10 +142,7 @@ cefpython3 = [
     {file = "cefpython3-66.1-py2.py3-none-win32.whl", hash = "sha256:3cf0dc13b4e9aa1c7f028e7f1bfe4e7fca6e677f18574f4ef9346f5d48853f51"},
     {file = "cefpython3-66.1-py2.py3-none-win_amd64.whl", hash = "sha256:afe1bcde78cbd3790370f4a51cbca37de8bff761de0452f8b8a3b22971bed82a"},
 ]
-pycdlib = [
-    {file = "pycdlib-1.11.0-py2.py3-none-any.whl", hash = "sha256:0f96afc8cd71355f341473b64d1414c33ec1307e3e712e86e8df34d633c913f9"},
-    {file = "pycdlib-1.11.0.tar.gz", hash = "sha256:89ae9944084195a8a5e62279bf4c2e026abed3465f8ad931a77af97a05f8d63d"},
-]
+pycdlib = []
 pydvdcss = [
     {file = "pydvdcss-1.1.0-py3-none-any.whl", hash = "sha256:eb3cb17f9177c49de996119b4b1672cdecb02d55e75eec6d53cbcd8b420bb4c6"},
     {file = "pydvdcss-1.1.0.tar.gz", hash = "sha256:783f3b5821fd6d0f1c90ea0a0f2f3650adea973f56fb66ce0142343b547496b2"},
@@ -192,4 +207,8 @@ six = [
 tqdm = [
     {file = "tqdm-4.60.0-py2.py3-none-any.whl", hash = "sha256:daec693491c52e9498632dfbe9ccfc4882a557f5fa08982db1b4d3adbe0887c3"},
     {file = "tqdm-4.60.0.tar.gz", hash = "sha256:ebdebdb95e3477ceea267decfc0784859aa3df3e27e22d23b83e9b272bf157ae"},
+]
+wmi = [
+    {file = "WMI-1.5.1-py2.py3-none-any.whl", hash = "sha256:1d6b085e5c445141c475476000b661f60fff1aaa19f76bf82b7abb92e0ff4942"},
+    {file = "WMI-1.5.1.tar.gz", hash = "sha256:b6a6be5711b1b6c8d55bda7a8befd75c48c12b770b9d227d31c1737dbf0d40a6"},
 ]

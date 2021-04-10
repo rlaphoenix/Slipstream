@@ -18,6 +18,7 @@ appdirs = "^1.4.4"
 tqdm = "^4.46.1"
 PyYAML = "^5.4.1"
 pywin32 = {version = "228", platform = "win32"}
+WMI = {version = "^1.5.1", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
 
