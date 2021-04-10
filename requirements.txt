@@ -1,6 +1,7 @@
 setuptools>=50.3.0
 future>=0.18.2
-cefpython3>=66.0
+cefpython3>=66.1; os_name == "nt"
+cefpython3>=66.0; os_name != "nt"
 pycdlib>=1.11.0
 rlapydvdid>=1.2
 python-dateutil>=2.8.1
