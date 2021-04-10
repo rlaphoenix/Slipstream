@@ -13,6 +13,7 @@ pydvdcss = "^1.0.7.post0"
 rlapydvdid = "^1.2"
 appdirs = "^1.4.4"
 tqdm = "^4.46.1"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 
