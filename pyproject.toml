@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "pslipstream"
+version = "0.1.0"
+description = "The most informative Home-media backup solution."
+authors = ["PHOENiX <rlaphoenix@pm.me>"]
+license = "GPLv3"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+cefpython3 = "66.1"
+pycdlib = "^1.11.0"
+pydvdcss = "^1.0.7.post0"
+rlapydvdid = "^1.2"
+appdirs = "^1.4.4"
+tqdm = "^4.46.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

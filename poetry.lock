@@ -1,0 +1,114 @@
+[[package]]
+name = "appdirs"
+version = "1.4.4"
+description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "cefpython3"
+version = "66.1"
+description = "GUI toolkit for embedding a Chromium widget in desktop applications"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pycdlib"
+version = "1.11.0"
+description = "Pure python ISO manipulation library"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pydvdcss"
+version = "1.1.0"
+description = "Python wrapper for VideoLAN's libdvdcss."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "python-dateutil"
+version = "2.8.1"
+description = "Extensions to the standard Python datetime module"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
+name = "rlapydvdid"
+version = "1.2"
+description = "Fork by rlaPHOENiX of, A pure Python implementation of the Windows API IDvdInfo2::GetDiscID method, as used by Windows Media Center to compute a 'practically unique' 64-bit CRC for metadata retrieval."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycdlib = ">=1.10.0"
+python-dateutil = ">=2.8.1"
+
+[[package]]
+name = "six"
+version = "1.15.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
+name = "tqdm"
+version = "4.60.0"
+description = "Fast, Extensible Progress Meter"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+
+[package.extras]
+dev = ["py-make (>=0.1.0)", "twine", "wheel"]
+notebook = ["ipywidgets (>=6)"]
+telegram = ["requests"]
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.6"
+content-hash = "6c76dce062fa2f60fd4cbdabb936eacc9f6ed600ddc864f25f83dd6063e1dd11"
+
+[metadata.files]
+appdirs = [
+    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
+    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
+]
+cefpython3 = [
+    {file = "cefpython3-66.1-py2.py3-none-win32.whl", hash = "sha256:3cf0dc13b4e9aa1c7f028e7f1bfe4e7fca6e677f18574f4ef9346f5d48853f51"},
+    {file = "cefpython3-66.1-py2.py3-none-win_amd64.whl", hash = "sha256:afe1bcde78cbd3790370f4a51cbca37de8bff761de0452f8b8a3b22971bed82a"},
+]
+pycdlib = [
+    {file = "pycdlib-1.11.0-py2.py3-none-any.whl", hash = "sha256:0f96afc8cd71355f341473b64d1414c33ec1307e3e712e86e8df34d633c913f9"},
+    {file = "pycdlib-1.11.0.tar.gz", hash = "sha256:89ae9944084195a8a5e62279bf4c2e026abed3465f8ad931a77af97a05f8d63d"},
+]
+pydvdcss = [
+    {file = "pydvdcss-1.1.0-py3-none-any.whl", hash = "sha256:eb3cb17f9177c49de996119b4b1672cdecb02d55e75eec6d53cbcd8b420bb4c6"},
+    {file = "pydvdcss-1.1.0.tar.gz", hash = "sha256:783f3b5821fd6d0f1c90ea0a0f2f3650adea973f56fb66ce0142343b547496b2"},
+]
+python-dateutil = [
+    {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
+    {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
+]
+rlapydvdid = [
+    {file = "rlapydvdid-1.2-py2.py3-none-any.whl", hash = "sha256:bf7f985260173931958a5beec5780a90f00ebc9d8ef178d8c4d654ce267ff413"},
+    {file = "rlapydvdid-1.2.tar.gz", hash = "sha256:ae23ea1daf96c0f3473af52c40dbb73d82496b2151d99f563890bb300829be60"},
+]
+six = [
+    {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
+    {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
+]
+tqdm = [
+    {file = "tqdm-4.60.0-py2.py3-none-any.whl", hash = "sha256:daec693491c52e9498632dfbe9ccfc4882a557f5fa08982db1b4d3adbe0887c3"},
+    {file = "tqdm-4.60.0.tar.gz", hash = "sha256:ebdebdb95e3477ceea267decfc0784859aa3df3e27e22d23b83e9b272bf157ae"},
+]
