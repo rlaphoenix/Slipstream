@@ -31,7 +31,7 @@ import pslipstream.cfg as cfg
 from pycdlib import PyCdlib
 
 if cfg.windows:
-    from win32 import win32api, win32file
+    import wmi
 
 
 def list_devices():
@@ -39,15 +39,16 @@ def list_devices():
     Lists all devices provided by lsscsi
     """
     if cfg.windows:
-        drives = [
-            rf"\\.\{d[:-1]}" for d in win32api.GetLogicalDriveStrings().split('\x00')[:-1]
-            if win32file.GetDriveType(d) == win32file.DRIVE_CDROM
-        ]
-        print(drives)
+        c = wmi.WMI()
+        drives = c.Win32_CDROMDrive()
         drives = [{
-            "loc": d,
-            "volid": get_volume_id(d)
-        } for d in drives]
+            # "type": ?
+            "make": x.name.split(" ")[0],
+            "model": x.name.split(" ")[1],
+            "fwver": x.mfrAssignedRevisionLevel,
+            "loc": rf"\\.\{x.drive}:\\",
+            "volid": x.volumeName
+        } for x in drives]
         return drives
     if cfg.linux:
         lsscsi = subprocess.check_output(["lsscsi"]).decode().splitlines()
