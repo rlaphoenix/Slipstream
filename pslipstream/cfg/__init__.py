@@ -54,7 +54,8 @@ req_packages = [
     "appdirs>=1.4.4",
     "tqdm>=4.46.1",
     # cef
-    "cefpython3==66.0",
+    "cefpython3==66.1; os_name == 'nt'",
+    "cefpython3==66.0; os_name != 'nt'",
     "pyobjc; sys_platform == 'darwin'",
     "AppKit; sys_platform == 'darwin'",
     # http and such
