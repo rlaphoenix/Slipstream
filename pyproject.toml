@@ -6,7 +6,7 @@ authors = ["PHOENiX <rlaphoenix@pm.me>"]
 license = "GPLv3"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.6,<3.10"
 cefpython3 = [
     {version = "66.0", markers = "sys_platform != 'win32'"},
     {version = "66.1", markers = "sys_platform == 'win32'"},
