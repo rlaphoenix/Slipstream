@@ -60,8 +60,6 @@ req_packages = [
     "AppKit; sys_platform == 'darwin'",
     # windows api
     "pywin32>=228; os_name == 'nt'",
-    # http and such
-    "requests>=2.24.0",
     # parsing, syntax, and validators
     "PyYAML>=5.3.1",
     "python-dateutil>=2.8.1",

@@ -20,11 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
 import builtins as g
-import hashlib
 import os
 import webbrowser
 
-import requests
 from appdirs import user_data_dir
 
 from cefpython3 import cefpython as cef
@@ -55,19 +53,10 @@ def main():
     # Print License if asked
     if g.ARGS.license:
         if not os.path.exists("LICENSE"):
-            # download the license from the official source if not found locally
-            lic_url = "https://www.gnu.org/licenses/gpl-3.0.txt"
-            lic_text = requests.get(lic_url).text
-            # noinspection SpellCheckingInspection
-            expected_md5 = "1ebbd3e34237af26da5dc08a4e440465"
-            computed_md5 = hashlib.md5(lic_text.encode("utf-8")).hexdigest()
-            if computed_md5 != expected_md5:
-                print(
-                    "License file was not found locally and it also failed to download :(\n"
-                    f"If you would like to read the LICENSE file, head over to {lic_url}"
-                )
-            else:
-                print(lic_text)
+            print(
+                "License file was not found locally, please ensure this is a licensed distribution.\n"
+                "The license can be found at gnu.org: https://www.gnu.org/licenses/gpl-3.0.txt"
+            )
         else:
             with open("LICENSE", mode="rt", encoding="utf-8") as f:
                 print(f.read())
