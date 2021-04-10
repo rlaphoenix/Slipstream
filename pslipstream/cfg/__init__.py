@@ -58,6 +58,8 @@ req_packages = [
     "cefpython3==66.0; os_name != 'nt'",
     "pyobjc; sys_platform == 'darwin'",
     "AppKit; sys_platform == 'darwin'",
+    # windows api
+    "pywin32>=228; os_name == 'nt'",
     # http and such
     "requests>=2.24.0",
     # parsing, syntax, and validators
