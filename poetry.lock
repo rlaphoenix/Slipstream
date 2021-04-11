@@ -46,6 +46,17 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "pyside6"
+version = "6.0.3"
+description = "Python bindings for the Qt cross-platform application and UI framework"
+category = "main"
+optional = false
+python-versions = ">=3.6, <3.10"
+
+[package.dependencies]
+shiboken6 = "6.0.3"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.1"
 description = "Extensions to the standard Python datetime module"
@@ -83,6 +94,14 @@ python-versions = "*"
 [package.dependencies]
 pycdlib = ">=1.10.0"
 python-dateutil = ">=2.8.1"
+
+[[package]]
+name = "shiboken6"
+version = "6.0.3"
+description = "Python / C++ bindings helper module"
+category = "main"
+optional = false
+python-versions = ">=3.6, <3.10"
 
 [[package]]
 name = "six"
@@ -126,7 +145,7 @@ tests = ["pytest"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<3.10"
-content-hash = "8f02211601ad13d062430d07cbb4898b62cc31953a15d70f0993f0e1c371be54"
+content-hash = "1c88ebfb98ef8c78c3ec03b6023ba050f9d148c220d8a39a358d0b79912730d7"
 
 [metadata.files]
 appdirs = [
@@ -146,6 +165,12 @@ pycdlib = []
 pydvdcss = [
     {file = "pydvdcss-1.1.0-py3-none-any.whl", hash = "sha256:eb3cb17f9177c49de996119b4b1672cdecb02d55e75eec6d53cbcd8b420bb4c6"},
     {file = "pydvdcss-1.1.0.tar.gz", hash = "sha256:783f3b5821fd6d0f1c90ea0a0f2f3650adea973f56fb66ce0142343b547496b2"},
+]
+pyside6 = [
+    {file = "PySide6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-abi3-macosx_10_14_x86_64.whl", hash = "sha256:d763540fafae44ca8a5114cdd3546913666d83a2874da173ee86b534fd13af59"},
+    {file = "PySide6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-abi3-macosx_10_15_x86_64.whl", hash = "sha256:a4b34fb7022ef7dc290ef0e954c2c9eea572da1d64d32742d0f1eaaeab8500ac"},
+    {file = "PySide6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-abi3-manylinux1_x86_64.whl", hash = "sha256:5a491256b6a2166e1ee0b9e4a0180436ba1a7bb893adca4921fac026d8636d80"},
+    {file = "PySide6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-none-win_amd64.whl", hash = "sha256:8c40ef4c0fa6db5e91fb8434f3747ad39fa5e72364c5d52cf2e69ab2c90987b7"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
@@ -199,6 +224,12 @@ pyyaml = [
 rlapydvdid = [
     {file = "rlapydvdid-1.2-py2.py3-none-any.whl", hash = "sha256:bf7f985260173931958a5beec5780a90f00ebc9d8ef178d8c4d654ce267ff413"},
     {file = "rlapydvdid-1.2.tar.gz", hash = "sha256:ae23ea1daf96c0f3473af52c40dbb73d82496b2151d99f563890bb300829be60"},
+]
+shiboken6 = [
+    {file = "shiboken6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-abi3-macosx_10_14_x86_64.whl", hash = "sha256:5f69e15d8bc5003a283c5e8fb52e4f6f0d546964611095c7fdf2d255682ba01d"},
+    {file = "shiboken6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-abi3-macosx_10_15_x86_64.whl", hash = "sha256:459c50a36bfc2de3ade47494ced3d87e9e4bfea3d36919cfb81b9fccf73d641c"},
+    {file = "shiboken6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-abi3-manylinux1_x86_64.whl", hash = "sha256:3e5d2719b8607c1eef224c552e4f02af4e2be1000e40ff8653f4be9cbc4bc75e"},
+    {file = "shiboken6-6.0.3-6.0.3-cp36.cp37.cp38.cp39-none-win_amd64.whl", hash = "sha256:8fff1cbea0c6469c8a88394c7783c5054b9f4eea5ca9e0aa159f8a6835d5b578"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

@@ -19,6 +19,7 @@ tqdm = "^4.46.1"
 PyYAML = "^5.4.1"
 pywin32 = {version = "228", platform = "win32"}
 WMI = {version = "^1.5.1", platform = "win32"}
+PySide6 = "^6.0.3"
 
 [tool.poetry.dev-dependencies]
 
