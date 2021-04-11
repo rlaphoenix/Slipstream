@@ -103,17 +103,3 @@ class UI(QMainWindow):
 
         self.thread.start()
         self.thread.finished.connect(lambda: self.widget.statusbar.showMessage(f"Loaded {len(self.devices)} devices"))
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setStyle("fusion")
-    with open(os.path.join(os.path.dirname(__file__), "style.qss"), "rt", encoding="utf8") as f:
-        app.setStyleSheet(f.read())
-
-    ui = UI()
-    ui.show()
-
-    ui.load_devices()
-
-    sys.exit(app.exec_())

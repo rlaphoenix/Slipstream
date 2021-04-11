@@ -21,7 +21,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import argparse
 import builtins as g
 import os
+import sys
 
+from PySide6.QtWidgets import QApplication
 from appdirs import user_data_dir
 
 from cefpython3 import cefpython as cef
@@ -30,6 +32,7 @@ import pslipstream.cfg as cfg
 from pslipstream.config import Config
 from pslipstream.log import Log
 from pslipstream.progress import Progress
+from pslipstream.ui.main import UI
 
 
 def main():
@@ -127,4 +130,14 @@ def get_runtime_details():
 
 
 if __name__ == "__main__":
-    main()
+    app = QApplication(sys.argv)
+    app.setStyle("fusion")
+    with open(cfg.root_dir / "ui" / "style.qss", "rt", encoding="utf8") as f:
+        app.setStyleSheet(f.read())
+
+    ui = UI()
+    ui.show()
+
+    ui.load_devices()
+
+    sys.exit(app.exec_())
