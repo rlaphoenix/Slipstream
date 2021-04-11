@@ -35,12 +35,13 @@ class Devices(QtCore.QObject):
 
 class UI(QMainWindow):
 
-    def __init__(self):
-        super(UI, self).__init__()
+    def __init__(self, parent=None):
+        super(UI, self).__init__(parent)
         ui_loader = QUiLoader()
         ui_file = QtCore.QFile(os.path.join(os.path.dirname(__file__), "form.ui"))
         ui_file.open(QtCore.QFile.ReadOnly)
-        self.widget = ui_loader.load(ui_file, self)
+        self.widget = ui_loader.load(ui_file, parent)
+        self.widget.setWindowFlags(QtCore.Qt.Window)
         ui_file.close()
 
         self.devices = []
