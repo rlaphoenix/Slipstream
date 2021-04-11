@@ -46,7 +46,7 @@ def list_devices():
             "make": x.name.split(" ")[0],
             "model": x.name.split(" ")[1],
             "fwver": x.mfrAssignedRevisionLevel,
-            "loc": rf"\\.\{x.drive}:\\",
+            "loc": x.drive,  # e.g. "D:"
             "volid": x.volumeName
         } for x in drives]
         return drives

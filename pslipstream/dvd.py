@@ -85,7 +85,7 @@ class Dvd:
         self.dev = dev
         g.LOG.write(f"Opening {dev} as a DVD...")
         self.cdlib = pycdlib.PyCdlib()
-        self.cdlib.open("\\\\.\\" + dev if cfg.windows else dev)
+        self.cdlib.open(rf"\\.\{dev}" if cfg.windows else dev)
         g.LOG.write(f"Initialised pycdlib instance successfully...")
         self.dvdcss = DvdCss()
         self.dvdcss.open(dev)
