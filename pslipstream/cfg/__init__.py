@@ -95,9 +95,9 @@ copyright_paragraph = "\n".join([
 ])
 
 # directories
-root_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+root_dir = Path(os.path.abspath(os.path.dirname(__file__))).parent
 user_dir = None  # gotten on main()
-static_dir = os.path.join(root_dir, "static")
+static_dir = root_dir / "static"
 if package_obj:
     try:
         static_dir = pkg_resources.resource_filename(package_obj, f"{title_pkg}/static")

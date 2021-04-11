@@ -5,26 +5,17 @@
 # Note: To use the 'upload' functionality of this file, you must:
 #   $ pipenv install twine --dev
 
-# std
-import io
-import os
-
-# pip packages
 from setuptools import find_packages, setup
 
-# slipstream
 import pslipstream.cfg as cfg
 from setup_commands.dist import DistCommand
 from setup_commands.pack import PackCommand
 
-# Import the README and use it as the long-description.
 try:
-    with io.open(os.path.join(cfg.root_dir, "README.md"), encoding="utf-8") as f:
-        long_description = ("\n" + f.read(), "text/markdown")
+    long_description = ("\n" + (cfg.root_dir / "README.md").read_text("utf8"), "text/markdown")
 except FileNotFoundError:
     long_description = (cfg.description, "text/plain")
 
-# Where the magic happens:
 setup(
     name=cfg.title_pkg,
     version=cfg.version,
