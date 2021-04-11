@@ -64,12 +64,14 @@ class UI(QMainWindow):
         """))
 
         self.widget.backupButton.hide()
+        self.widget.discInfoFrame.hide()
         self.clear_device_list()  # clear example buttons
 
         self.widget.refreshIcon.clicked.connect(self.load_devices)
         self.widget.refreshIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "refresh.svg")))
         self.widget.discIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "music-disc-with-luster.svg")))
         self.widget.logIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "align.svg")))
+        self.widget.infoIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "info-circle.svg")))
 
     def show(self):
         self.widget.show()
@@ -81,6 +83,10 @@ class UI(QMainWindow):
 
     def load_device(self, device: dict):
         self.device = device
+        # load device, get info, add to disc info section
+        self.widget.backupButton.show()
+        self.widget.discInfoFrame.show()
+
     def load_devices(self):
         self.clear_device_list()
 
