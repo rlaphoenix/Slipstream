@@ -9,6 +9,8 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QPushButton
 
+from pslipstream import cfg
+
 
 class Devices(QtCore.QObject):
     finished = QtCore.Signal()
@@ -63,7 +65,11 @@ class UI(QMainWindow):
 
         self.widget.backupButton.hide()
         self.clear_device_list()  # clear example buttons
+
         self.widget.refreshIcon.clicked.connect(self.load_devices)
+        self.widget.refreshIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "refresh.svg")))
+        self.widget.discIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "music-disc-with-luster.svg")))
+        self.widget.logIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "align.svg")))
 
     def show(self):
         self.widget.show()
