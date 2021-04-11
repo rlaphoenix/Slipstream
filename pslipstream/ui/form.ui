@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>assets/img/music-disc-with-luster.svg</normaloff>assets/img/music-disc-with-luster.svg</iconset>
+    <normaloff>../static/img/music-disc-with-luster.svg</normaloff>../static/img/music-disc-with-luster.svg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">* {
@@ -133,7 +133,7 @@ QScrollBar:handle:vertical {
            </size>
           </property>
           <property name="pixmap">
-           <pixmap>assets/img/music-disc-with-luster.svg</pixmap>
+           <pixmap>../static/img/music-disc-with-luster.svg</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -165,7 +165,7 @@ QScrollBar:handle:vertical {
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>assets/img/refresh.svg</normaloff>assets/img/refresh.svg</iconset>
+            <normaloff>../static/img/refresh.svg</normaloff>../static/img/refresh.svg</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -352,7 +352,7 @@ QPushButton:hover:pressed {
            </size>
           </property>
           <property name="pixmap">
-           <pixmap>assets/img/align.svg</pixmap>
+           <pixmap>../static/img/align.svg</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
