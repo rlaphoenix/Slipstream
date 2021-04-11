@@ -1,14 +1,12 @@
-# This Python file uses the following encoding: utf-8
 import sys
 import os
 import inspect
-from typing import List
 import wmi
 import pythoncom
 
 
 from PySide6 import QtCore, QtGui
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 from PySide6.QtUiTools import QUiLoader
 
 
@@ -33,6 +31,7 @@ class Devices(QtCore.QObject):
             "volid": x.volumeName
         } for x in drives])
         self.finished.emit()
+
 
 class UI(QMainWindow):
 
