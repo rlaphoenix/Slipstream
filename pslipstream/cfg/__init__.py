@@ -28,6 +28,7 @@ throughout the code by importing only what we want.
 import datetime
 import os
 import platform
+from pathlib import Path
 
 import pkg_resources
 
