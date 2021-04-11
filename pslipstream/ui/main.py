@@ -73,6 +73,8 @@ class UI(QMainWindow):
             if isinstance(device, QPushButton):
                 device.setParent(None)
 
+    def load_device(self, device: dict):
+        self.device = device
     def load_devices(self):
         self.clear_device_list()
 
@@ -92,6 +94,7 @@ class UI(QMainWindow):
             for device in devices:
                 button = QPushButton("%s\n%s - %s" % (device["volid"] or "No disc inserted...", device["make"], device["model"]))
                 button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                button.clicked.connect(lambda: self.load_device(device))
                 if not device["volid"]:
                     button.setEnabled(False)
                 device_list.insertWidget(0, button)
