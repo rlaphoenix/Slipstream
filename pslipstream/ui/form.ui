@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>UI</string>
+   <string>Slipstream</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>assets/img/music-disc-with-luster.svg</normaloff>assets/img/music-disc-with-luster.svg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">* {
