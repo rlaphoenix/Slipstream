@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import argparse
 import builtins as g
 import os
-import webbrowser
 
 from appdirs import user_data_dir
 
@@ -29,9 +28,6 @@ from cefpython3 import cefpython as cef
 
 import pslipstream.cfg as cfg
 from pslipstream.config import Config
-from pslipstream.dvd import Dvd
-from pslipstream.gui import Gui
-from pslipstream.helpers import get_device_list
 from pslipstream.log import Log
 from pslipstream.progress import Progress
 
@@ -128,49 +124,6 @@ def get_runtime_details():
             f":: Static Directory: {cfg.static_dir}",
         ]
     )
-
-
-def gui():
-    # set ui index location based on environment
-    if g.ARGS.dev:
-        port = None
-        if "ui-build" in g.ARGS.dev:
-            # gatsby build && gatsby serve
-            port = 9000
-        elif "ui-develop" in g.ARGS.dev:
-            # gatsby develop
-            port = 8000
-        cfg.ui_index = "http://localhost:" + str(port)
-    else:
-        cfg.ui_index = "https://slipstream-ui.vercel.app"
-    # create gui, and fire it up
-    g.GUI = Gui(
-        url=cfg.ui_index,
-        icon=cfg.icon_file,
-        js_bindings={
-            "properties": [
-                {"name": "config", "item": g.CFG.settings},
-            ],
-            "objects": [
-                {"name": "dvd", "item": Dvd()},
-                {"name": "log", "item": g.LOG},
-                {"name": "progress", "item": g.PROGRESS},
-            ],
-            "functions": [
-                {"name": "pyDelete", "item": os.remove},
-                {"name": "pyHref", "item": lambda url: webbrowser.open(url)},
-                {"name": "configSave", "item": g.CFG.save},
-                {"name": "getDeviceList", "item": get_device_list},
-            ],
-        },
-    )
-    g.GUI.mainloop()
-
-
-def cli():
-    d = Dvd()
-    d.open(g.ARGS.device)
-    d.create_backup()
 
 
 if __name__ == "__main__":
