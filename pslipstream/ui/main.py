@@ -1,13 +1,13 @@
-import sys
-import os
 import inspect
-import wmi
+import os
+from pathlib import Path
+
 import pythoncom
-
-
+import wmi
 from PySide6 import QtCore, QtGui
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
+from PySide6.QtGui import QPixmap
 from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QMainWindow, QPushButton
 
 
 class Devices(QtCore.QObject):
@@ -92,12 +92,17 @@ class UI(QMainWindow):
         def add_device_buttons(devices):
             device_list = self.widget.deviceListDevices_2.layout()
             for device in devices:
-                button = QPushButton("%s\n%s - %s" % (device["volid"] or "No disc inserted...", device["make"], device["model"]))
+                button = QPushButton("{volume}\n{make} - {model}".format(
+                    volume=device["volid"],
+                    make=device["make"],
+                    model=device["model"]
+                ))
                 button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
                 button.clicked.connect(lambda: self.load_device(device))
                 if not device["volid"]:
                     button.setEnabled(False)
                 device_list.insertWidget(0, button)
+
         self.worker.result.connect(lambda devices: setattr(self, "devices", devices))
         self.worker.result.connect(add_device_buttons)
 
