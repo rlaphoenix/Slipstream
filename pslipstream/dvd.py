@@ -25,7 +25,6 @@ reading, seeking, backing up, and more.
 
 import logging
 import os
-import sys
 from datetime import datetime
 
 import pycdlib
