@@ -68,8 +68,8 @@ class UI(QMainWindow):
 
         self.widget.refreshIcon.clicked.connect(self.load_devices)
         self.widget.refreshIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "refresh.svg")))
-        self.widget.discIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "music-disc-with-luster.svg")))
-        self.widget.logIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "align.svg")))
+        self.widget.discIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "music-disc-with-luster.svg")))
+        self.widget.logIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "align.svg")))
 
     def show(self):
         self.widget.show()
