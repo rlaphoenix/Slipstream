@@ -56,6 +56,7 @@ class UI(QMainWindow):
 
         self.widget.backupButton.hide()
         self.widget.discInfoFrame.hide()
+        self.widget.progressBar.hide()
         self.clear_device_list()  # clear example buttons
 
         self.widget.refreshIcon.clicked.connect(self.load_devices)
