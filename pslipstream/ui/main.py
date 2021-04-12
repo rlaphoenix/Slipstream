@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 
@@ -7,6 +8,7 @@ from PySide6 import QtCore, QtGui
 from PySide6.QtGui import QPixmap
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QPushButton
+from pycdlib import PyCdlib
 
 from pslipstream import cfg
 
@@ -46,10 +48,34 @@ class Worker(QtCore.QObject):
                 "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
                 "fwver": scsi[-2],
                 "loc": scsi[-1],
-                "volid": scsi[-1]  # TODO: get_volume_id(scsi[-1])
+                "volid": self.get_volume_id(scsi[-1])
             } for scsi in lsscsi])
             self.finished.emit(len(lsscsi))
             return
+
+    @QtCore.Slot(str)
+    def get_volume_id(self, device: str):
+        """Get the Volume Identifier for a device."""
+        log = logging.getLogger("cdlib")
+        log.info("Getting Volume ID for {device}")
+        cdlib = PyCdlib()
+        try:
+            cdlib.open(device, "rb")
+        except OSError as e:
+            # noinspection SpellCheckingInspection
+            if "[Errno 123]" in str(e):
+                # no disc inserted
+                log.info(f"Device {device} has no disc inserted.")
+                return None
+            # noinspection SpellCheckingInspection
+            if "[Errno 5]" in str(e):
+                # Input/output error
+                log.error(f"Device {device} had an I/O error.")
+                return "! Error occurred reading disc..."
+            raise
+        volume_id = cdlib.pvds[0].volume_identifier.decode().strip()
+        log.info(f"Device {device} has disc labeled \"{volume_id}\".")
+        return volume_id
 
 
 class UI(QMainWindow):
