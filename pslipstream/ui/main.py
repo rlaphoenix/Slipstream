@@ -20,7 +20,6 @@ class Worker(QtCore.QObject):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    @QtCore.Slot(list)
     def scan_devices(self):
         if cfg.windows:
             # noinspection PyUnresolvedReferences
