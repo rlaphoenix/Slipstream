@@ -18,7 +18,7 @@ class Worker(QtCore.QObject):
         super().__init__(*args, **kwargs)
 
     @QtCore.Slot(list)
-    def getDevices(self):
+    def get_devices(self):
         pythoncom.CoInitialize()  # important!
         c = wmi.WMI()
         drives = c.Win32_CDROMDrive()
@@ -83,7 +83,7 @@ class UI(QMainWindow):
         self.worker.moveToThread(self.thread)
 
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage("Loading devices..."))
-        self.thread.started.connect(self.worker.getDevices)
+        self.thread.started.connect(self.worker.get_devices)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
