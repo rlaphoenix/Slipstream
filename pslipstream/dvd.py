@@ -42,7 +42,7 @@ from pslipstream.helpers import asynchronous_auto
 class Dvd:
     def __init__(self):
         self.log = logging.getLogger("Dvd")
-        self.dev = None
+        self.device = None
         self.ready = False
         self.cdlib = None
         self.dvdcss = None
@@ -76,12 +76,12 @@ class Dvd:
         it will automatically dispose the current disc before opening.
         """
         if self.dvdcss or self.cdlib:
-            if dev != self.dev:
+            if dev != self.device:
                 # dispose, and continue loading the new disc
                 self.dispose()
             else:
                 raise SlipstreamDiscInUse("The specified DVD device is already open in this instance.")
-        self.dev = dev
+        self.device = dev
         self.log.info(f"Opening '{dev}'...")
         self.cdlib = pycdlib.PyCdlib()
         self.cdlib.open(rf"\\.\{dev}" if cfg.windows else dev)
@@ -105,7 +105,7 @@ class Dvd:
         Get the CRC64 checksum known as the Media Player DVD ID.
         The algorithm used is the exact same one used by Microsoft's old Windows Media Center.
         """
-        crc = str(rlapydvdid.compute(self.dev))
+        crc = str(rlapydvdid.compute(self.device))
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
@@ -225,7 +225,7 @@ class Dvd:
         Raises SlipstreamReadError on unexpected read errors.
         """
         # Print primary volume descriptor information
-        self.log.info(f"Starting DVD backup for {self.dev}")
+        self.log.info(f"Starting DVD backup for {self.device}")
         pvd = self.cdlib.pvds[0]
         pvd.volume_identifier = pvd.volume_identifier.decode().strip()
         fn = f"{pvd.volume_identifier}.ISO"
