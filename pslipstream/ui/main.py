@@ -44,6 +44,9 @@ class UI(QMainWindow):
         self.widget.setWindowFlags(QtCore.Qt.Window)
         ui_file.close()
 
+        self.thread = None
+        self.worker = None
+
         self.devices = []
 
         self.configure()
