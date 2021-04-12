@@ -23,6 +23,7 @@ Various small simple helper functions to do a quick task while not
 being specific enough to be in a class.
 """
 import builtins as g
+import logging
 import queue
 import subprocess
 import threading
@@ -72,6 +73,7 @@ def get_volume_id(device):
 
     Returns None if there's no disc inserted
     """
+    log = logging.getLogger("cdlib")
     cdlib = PyCdlib()
     try:
         cdlib.open(device, "rb")
@@ -79,16 +81,16 @@ def get_volume_id(device):
         # noinspection SpellCheckingInspection
         if "[Errno 123]" in str(e):
             # no disc inserted
-            g.LOG.write(f"Device {device} has no disc inserted.")
+            log.info(f"Device {device} has no disc inserted.")
             return None
         # noinspection SpellCheckingInspection
         if "[Errno 5]" in str(e):
             # Input/output error
-            g.LOG.write(f"Device {device} had an I/O error.")
+            log.error(f"Device {device} had an I/O error.")
             return "! Error occurred reading disc..."
         raise
     volume_id = cdlib.pvds[0].volume_identifier.decode().strip()
-    g.LOG.write(f"Device {device} has disc labeled \"{volume_id}\".")
+    log.info(f"Device {device} has disc labeled \"{volume_id}\".")
     return volume_id
 
 
