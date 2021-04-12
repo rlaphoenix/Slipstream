@@ -48,6 +48,7 @@ class UI(QMainWindow):
         self.worker = None
 
         self.devices = []
+        self.device = None
 
         self.configure()
 
@@ -73,12 +74,6 @@ class UI(QMainWindow):
             if isinstance(device, QPushButton):
                 # noinspection PyTypeChecker
                 device.setParent(None)
-
-    def load_device(self, device: dict):
-        self.device = device
-        # load device, get info, add to disc info section
-        self.widget.backupButton.show()
-        self.widget.discInfoFrame.show()
 
     def load_devices(self):
         self.clear_device_list()
@@ -113,3 +108,11 @@ class UI(QMainWindow):
 
         self.thread.start()
         self.thread.finished.connect(lambda: self.widget.statusbar.showMessage(f"Loaded {len(self.devices)} devices"))
+
+    def load_device(self, device: dict):
+        self.device = device
+
+        # TODO: load device, get info, add to disc info section
+
+        self.widget.backupButton.show()
+        self.widget.discInfoFrame.show()
