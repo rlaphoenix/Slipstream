@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QMainWindow, QPushButton
 from pslipstream import cfg
 
 
-class Devices(QtCore.QObject):
+class Worker(QtCore.QObject):
     finished = QtCore.Signal()
     result = QtCore.Signal(list)
 
@@ -79,7 +79,7 @@ class UI(QMainWindow):
         self.clear_device_list()
 
         self.thread = QtCore.QThread()
-        self.worker = Devices()
+        self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage("Loading devices..."))
