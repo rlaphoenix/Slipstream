@@ -42,9 +42,6 @@ class PackCommand(Command):
                 f"{cfg.title_pkg}/__init__.py",
                 "--add-data",
                 f"{cfg.title_pkg}/static{sep}static",
-                "--add-data",
-                get_package_paths("cefpython3")[1].replace("\\", "/")
-                + f"{sep}.",
                 "--hidden-import",
                 "pkg_resources.py2_warn",
                 "-n",

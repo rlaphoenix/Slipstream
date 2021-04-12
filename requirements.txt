@@ -1,6 +1,4 @@
 appdirs==1.4.4
-cefpython3==66.0; sys_platform != "win32"
-cefpython3==66.1; sys_platform == "win32"
 pycdlib @ git+https://github.com/clalancette/pycdlib.git@master
 pydvdcss==1.1.0; python_version >= "3.6"
 pyside6==6.0.3; python_version >= "3.6" and python_version < "3.10"
@@ -11,3 +9,4 @@ rlapydvdid==1.2
 shiboken6==6.0.3; python_version >= "3.6" and python_version < "3.10"
 six==1.15.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 tqdm==4.60.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+wmi==1.5.1; sys_platform == "win32"

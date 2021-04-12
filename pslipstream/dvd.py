@@ -96,9 +96,6 @@ class Dvd:
         """
         Simple function just to be able to check if this Dvd
         instance is ready to be used for reading and what not.
-
-        Cefpython cannot export the Properties of Dvd, so this
-        is the next best way of doing it.
         """
         return self.ready
 

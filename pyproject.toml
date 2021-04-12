@@ -7,10 +7,6 @@ license = "GPLv3"
 
 [tool.poetry.dependencies]
 python = ">=3.6,<3.10"
-cefpython3 = [
-    {version = "66.0", markers = "sys_platform != 'win32'"},
-    {version = "66.1", markers = "sys_platform == 'win32'"},
-]
 pycdlib = { git = "https://github.com/clalancette/pycdlib.git" }
 pydvdcss = "^1.0.7.post0"
 rlapydvdid = "^1.2"

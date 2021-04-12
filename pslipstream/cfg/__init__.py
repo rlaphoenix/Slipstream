@@ -54,11 +54,6 @@ req_packages = [
     # general
     "appdirs>=1.4.4",
     "tqdm>=4.46.1",
-    # cef
-    "cefpython3==66.1; os_name == 'nt'",
-    "cefpython3==66.0; os_name != 'nt'",
-    "pyobjc; sys_platform == 'darwin'",
-    "AppKit; sys_platform == 'darwin'",
     # windows api
     "pywin32>=228; os_name == 'nt'",
     # parsing, syntax, and validators
