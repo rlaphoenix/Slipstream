@@ -53,8 +53,8 @@ class Worker(QtCore.QObject):
             self.finished.emit(len(lsscsi))
             return
 
-    @QtCore.Slot(str)
-    def get_volume_id(self, device: str):
+    @staticmethod
+    def get_volume_id(device: str):
         """Get the Volume Identifier for a device."""
         log = logging.getLogger("cdlib")
         log.info("Getting Volume ID for {device}")
