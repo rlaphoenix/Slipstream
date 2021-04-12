@@ -5,7 +5,7 @@ import sys
 from setuptools import Command
 
 import pslipstream.cfg as cfg
-from setup_commands import build_clean, print_bold
+from setup_commands import print_bold, clean
 
 
 class PackCommand(Command):
@@ -22,8 +22,7 @@ class PackCommand(Command):
 
     @staticmethod
     def run():
-        from PyInstaller.utils.hooks import get_package_paths
-        build_clean()
+        clean()
         print_bold("Ensuring supported environment…")
         if not cfg.windows and not cfg.linux and not cfg.darwin:
             print("Sorry! Only Windows, Linux and Darwin platforms are supported.")
@@ -51,6 +50,6 @@ class PackCommand(Command):
         sub.communicate()
         if sub.returncode != 0:
             print("Oh no! PyInstaller failed, code=%s" % sub.returncode)
-            build_clean()
+            clean()
             sys.exit(1)
         sys.exit()
