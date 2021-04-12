@@ -103,11 +103,10 @@ class UI(QMainWindow):
                     button.setEnabled(False)
                 device_list.insertWidget(0, button)
 
-        self.worker.scanned_devices.connect(lambda devices: setattr(self, "devices", devices))
         self.worker.scanned_devices.connect(add_device_buttons)
+        self.thread.finished.connect(lambda n: self.widget.statusbar.showMessage(f"Found {n} devices"))
 
         self.thread.start()
-        self.thread.finished.connect(lambda n: self.widget.statusbar.showMessage(f"Found {n} devices"))
 
     def load_device(self, device: dict):
         self.device = device
