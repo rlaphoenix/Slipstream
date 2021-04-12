@@ -58,10 +58,7 @@ def main():
 
     g.LOG.write(get_runtime_details() + "\n")
 
-    if g.ARGS.cli:
-        cli()
-    else:
-        gui()
+    gui()
 
 
 def gui():
@@ -101,13 +98,6 @@ def get_arguments():
         default=False,
         required=False,
         help="View license details",
-    )
-    ap.add_argument(
-        "--cli",
-        action="store_true",
-        default=False,
-        required=False,
-        help="Setting this stops the GUI from running",
     )
     ap.add_argument(
         "-d",
