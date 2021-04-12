@@ -23,30 +23,27 @@ class PackCommand(Command):
     @staticmethod
     def run():
         clean()
-        print_bold("Ensuring supported environment…")
-        print_bold("Ensuring PyInstaller is available…")
-        os.system(
-            "{0} -m pip install --user --upgrade pyinstaller".format(sys.executable)
-        )
+        print_bold("Ensuring PyInstaller is available and up-to-date…")
+        os.system(f"{sys.executable} -m pip install --user --upgrade pyinstaller")
         print_bold("Packing with PyInstaller…")
         sep = ";" if cfg.windows else ":"
-        sub = subprocess.Popen(
-            [
+        try:
+            subprocess.run([
                 "pyinstaller",
                 "--clean",
-                "-F",
-                f"{cfg.title_pkg}/__init__.py",
-                "--add-data",
-                f"{cfg.title_pkg}/static{sep}static",
-                "--hidden-import",
-                "pkg_resources.py2_warn",
-                "-n",
-                "Slipstream",
-            ]
-        )
-        sub.communicate()
-        if sub.returncode != 0:
-            print("Oh no! PyInstaller failed, code=%s" % sub.returncode)
-            clean()
+                "-F", f"{cfg.title_pkg}/__init__.py",
+                "--add-data", sep.join([
+                    f"{cfg.title_pkg}/static",
+                    "static"
+                ]),
+                "--hidden-import", "pkg_resources.py2_warn",  # TODO: Still needed?
+                "-n", "Slipstream"
+            ], check=True)
+        except subprocess.CalledProcessError as e:
+            print("Oh no! PyInstaller failed, code=%s" % e.returncode)
+            print("Error log:")
+            print(e.stderr)
             sys.exit(1)
+        finally:
+            clean()
         sys.exit()
