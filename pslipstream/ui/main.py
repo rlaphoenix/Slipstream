@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import pythoncom
 import wmi
@@ -19,19 +20,36 @@ class Worker(QtCore.QObject):
 
     @QtCore.Slot(list)
     def scan_devices(self):
-        # noinspection PyUnresolvedReferences
-        pythoncom.CoInitialize()  # important!
-        c = wmi.WMI()
-        drives = c.Win32_CDROMDrive()
-        self.scanned_devices.emit([{
-            # "type": ?
-            "make": x.name.split(" ")[0],
-            "model": x.name.split(" ")[1],
-            "fwver": x.mfrAssignedRevisionLevel,
-            "loc": x.drive,  # e.g. "D:"
-            "volid": x.volumeName
-        } for x in drives])
-        self.finished.emit(len(drives))
+        if cfg.windows:
+            # noinspection PyUnresolvedReferences
+            pythoncom.CoInitialize()  # important!
+            c = wmi.WMI()
+            drives = c.Win32_CDROMDrive()
+            self.scanned_devices.emit([{
+                # "type": ?
+                "make": x.name.split(" ")[0],
+                "model": x.name.split(" ")[1],
+                "fwver": x.mfrAssignedRevisionLevel,
+                "loc": x.drive,  # e.g. "D:"
+                "volid": x.volumeName
+            } for x in drives])
+            self.finished.emit(len(drives))
+            return
+        if cfg.linux:
+            lsscsi = subprocess.check_output(["lsscsi"]).decode().splitlines()
+            lsscsi = [x[9:].strip() for x in lsscsi]
+            lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
+            lsscsi = [x for x in lsscsi if x[0] not in ["disk"]]
+            self.scanned_devices.emit([{
+                "type": scsi[0],
+                "make": scsi[1],
+                "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
+                "fwver": scsi[-2],
+                "loc": scsi[-1],
+                "volid": scsi[-1]  # TODO: get_volume_id(scsi[-1])
+            } for scsi in lsscsi])
+            self.finished.emit(len(lsscsi))
+            return
 
 
 class UI(QMainWindow):
