@@ -36,7 +36,6 @@ from tqdm import tqdm
 import pslipstream.cfg as cfg
 from pslipstream.exceptions import SlipstreamSeekError, SlipstreamDiscInUse, SlipstreamNoKeysObtained, \
     SlipstreamReadError
-from pslipstream.helpers import asynchronous_auto
 
 
 class Dvd:
@@ -63,7 +62,6 @@ class Dvd:
             self.dvdcss.dispose()
         self.__init__()  # reset everything
 
-    @asynchronous_auto
     def open(self, dev):
         """
         Open the device as a DVD with pycdlib and libdvdcss.
@@ -92,7 +90,6 @@ class Dvd:
         self.ready = True
         self.log.info("DVD opened and ready...")
 
-    @asynchronous_auto
     def compute_crc_id(self):
         """
         Get the CRC64 checksum known as the Media Player DVD ID.
@@ -102,7 +99,6 @@ class Dvd:
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
-    @asynchronous_auto
     def get_primary_descriptor(self):
         """
         Get's and returns the Primary Volume Descriptor of the
@@ -208,7 +204,6 @@ class Dvd:
         # Return lba data
         return lba_data
 
-    @asynchronous_auto
     def create_backup(self):
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
