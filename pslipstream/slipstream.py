@@ -136,7 +136,7 @@ if __name__ == "__main__":
     ui = UI()
     ui.show()
 
-    ui.load_devices()
+    ui.scan_devices()
 
     ui.widget.log.append(get_runtime_details())
 
