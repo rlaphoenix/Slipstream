@@ -82,6 +82,7 @@ class Worker(QtCore.QObject):
         return volume_id
 
     def load_device(self, device: dict):
+        pythoncom.CoInitialize()
         dvd = Dvd()  # TODO: assumes disc is a DVD
         dvd.open(device["loc"])
         self.dvd.emit(dvd)
