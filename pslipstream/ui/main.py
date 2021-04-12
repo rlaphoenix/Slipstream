@@ -14,8 +14,8 @@ class Devices(QtCore.QObject):
     finished = QtCore.Signal()
     result = QtCore.Signal(list)
 
-    def __init__(self, parent=None, **kwargs):
-        super().__init__(parent, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     @QtCore.Slot(list)
     def getDevices(self):
