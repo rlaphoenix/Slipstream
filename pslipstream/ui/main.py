@@ -114,5 +114,16 @@ class UI(QMainWindow):
 
         # TODO: load device, get info, add to disc info section
 
+        self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device))
         self.widget.backupButton.show()
         self.widget.discInfoFrame.show()
+
+    def backup_disc(self, device: dict):
+        self.widget.statusbar.showMessage(
+            "Backing up {volume} ({make} - {model})...".format(
+                volume=device["volid"],
+                make=device["make"],
+                model=device["model"]
+            )
+        )
+        self.widget.progressBar.show()
