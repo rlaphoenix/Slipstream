@@ -48,7 +48,6 @@ class UI(QMainWindow):
         self.thread = None
         self.worker = None
 
-        self.devices = []
         self.device = None
 
         self.configure()
