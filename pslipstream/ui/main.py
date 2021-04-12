@@ -48,8 +48,6 @@ class UI(QMainWindow):
         self.thread = None
         self.worker = None
 
-        self.device = None
-
         self.configure()
 
     def configure(self):
@@ -109,7 +107,6 @@ class UI(QMainWindow):
         self.thread.start()
 
     def load_device(self, device: dict):
-        self.device = device
 
         # TODO: load device, get info, add to disc info section
 
