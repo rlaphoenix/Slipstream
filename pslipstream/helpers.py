@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Various small simple helper functions to do a quick task while not
 being specific enough to be in a class.
 """
-import builtins as g
 import logging
 import queue
 import subprocess
