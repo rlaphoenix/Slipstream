@@ -18,7 +18,7 @@ class Worker(QtCore.QObject):
         super().__init__(*args, **kwargs)
 
     @QtCore.Slot(list)
-    def get_devices(self):
+    def scan_devices(self):
         # noinspection PyUnresolvedReferences
         pythoncom.CoInitialize()  # important!
         c = wmi.WMI()
@@ -84,7 +84,7 @@ class UI(QMainWindow):
         self.worker.moveToThread(self.thread)
 
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage("Scanning devices..."))
-        self.thread.started.connect(self.worker.get_devices)
+        self.thread.started.connect(self.worker.scan_devices)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
