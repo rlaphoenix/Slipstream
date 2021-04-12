@@ -92,13 +92,6 @@ class Dvd:
         self.ready = True
         self.log.info("DVD opened and ready...")
 
-    def is_ready(self):
-        """
-        Simple function just to be able to check if this Dvd
-        instance is ready to be used for reading and what not.
-        """
-        return self.ready
-
     @asynchronous_auto
     def compute_crc_id(self):
         """
