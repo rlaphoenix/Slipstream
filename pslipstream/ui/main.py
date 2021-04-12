@@ -15,6 +15,9 @@ from pslipstream.dvd import Dvd
 
 
 class Worker(QtCore.QObject):
+    # input signals
+    device = QtCore.Signal(dict)
+    # output signals
     finished = QtCore.Signal(int)
     scanned_devices = QtCore.Signal(list)
     dvd = QtCore.Signal(Dvd)
@@ -78,9 +81,9 @@ class Worker(QtCore.QObject):
         log.info(f"Device {device} has disc labeled \"{volume_id}\".")
         return volume_id
 
-    def load_device(self, device: str):
+    def load_device(self, device: dict):
         dvd = Dvd()  # TODO: assumes disc is a DVD
-        dvd.open(device)
+        dvd.open(device["loc"])
         self.dvd.emit(dvd)
         self.finished.emit(0)
 
@@ -161,10 +164,12 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
+        self.worker.device.connect(self.worker.load_device)
+
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
             "Loading device %s - %s..." % (device["make"], device["model"])
         ))
-        self.thread.started.connect(lambda: self.worker.load_device(device["loc"]))
+        self.thread.started.connect(lambda: self.worker.device.emit(device))
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
