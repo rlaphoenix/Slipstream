@@ -12,7 +12,7 @@ from pslipstream import cfg
 
 class Worker(QtCore.QObject):
     finished = QtCore.Signal()
-    result = QtCore.Signal(list)
+    scanned_devices = QtCore.Signal(list)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,7 +23,7 @@ class Worker(QtCore.QObject):
         pythoncom.CoInitialize()  # important!
         c = wmi.WMI()
         drives = c.Win32_CDROMDrive()
-        self.result.emit([{
+        self.scanned_devices.emit([{
             # "type": ?
             "make": x.name.split(" ")[0],
             "model": x.name.split(" ")[1],
@@ -104,8 +104,8 @@ class UI(QMainWindow):
                     button.setEnabled(False)
                 device_list.insertWidget(0, button)
 
-        self.worker.result.connect(lambda devices: setattr(self, "devices", devices))
-        self.worker.result.connect(add_device_buttons)
+        self.worker.scanned_devices.connect(lambda devices: setattr(self, "devices", devices))
+        self.worker.scanned_devices.connect(add_device_buttons)
 
         self.thread.start()
         self.thread.finished.connect(lambda: self.widget.statusbar.showMessage(f"Loaded {len(self.devices)} devices"))
