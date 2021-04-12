@@ -11,7 +11,7 @@ from pslipstream import cfg
 
 
 class Worker(QtCore.QObject):
-    finished = QtCore.Signal()
+    finished = QtCore.Signal(int)
     scanned_devices = QtCore.Signal(list)
 
     def __init__(self, *args, **kwargs):
@@ -31,7 +31,7 @@ class Worker(QtCore.QObject):
             "loc": x.drive,  # e.g. "D:"
             "volid": x.volumeName
         } for x in drives])
-        self.finished.emit()
+        self.finished.emit(len(drives))
 
 
 class UI(QMainWindow):
@@ -108,7 +108,7 @@ class UI(QMainWindow):
         self.worker.scanned_devices.connect(add_device_buttons)
 
         self.thread.start()
-        self.thread.finished.connect(lambda: self.widget.statusbar.showMessage(f"Loaded {len(self.devices)} devices"))
+        self.thread.finished.connect(lambda n: self.widget.statusbar.showMessage(f"Found {n} devices"))
 
     def load_device(self, device: dict):
         self.device = device
