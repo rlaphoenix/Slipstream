@@ -24,9 +24,6 @@ class PackCommand(Command):
     def run():
         clean()
         print_bold("Ensuring supported environment…")
-        if not cfg.windows and not cfg.linux and not cfg.darwin:
-            print("Sorry! Only Windows, Linux and Darwin platforms are supported.")
-            sys.exit(1)
         print_bold("Ensuring PyInstaller is available…")
         os.system(
             "{0} -m pip install --user --upgrade pyinstaller".format(sys.executable)
