@@ -38,14 +38,14 @@ def main():
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
 
     # Initialize custom global variables
-    g.ARGS = get_arguments()
+    arguments = get_arguments()
     g.LOG = Log()  # Logger, everything written here gets print()'d and sent to GUI
     g.PROGRESS = Progress()  # Progress Bar, controls only the GUI's progress bar.
-    g.DBG = g.ARGS.dbg  # Debug switch, enables debugging specific code and logging
+    g.DBG = arguments.dbg  # Debug switch, enables debugging specific code and logging
     g.CFG = Config(cfg.config_file)
     g.CFG.load()
 
-    if g.ARGS.license:
+    if arguments.license:
         if not os.path.exists("LICENSE"):
             print(
                 "License file was not found locally, please ensure this is a licensed distribution.\n"
