@@ -56,8 +56,6 @@ def main():
                 print(f.read())
         exit(0)
 
-    g.LOG.write(get_runtime_details() + "\n")
-
     gui()
 
 
