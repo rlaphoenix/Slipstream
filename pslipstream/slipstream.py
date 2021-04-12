@@ -34,7 +34,6 @@ from pslipstream.ui.main import UI
 
 
 def main():
-    # Prepare Metadata
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
 
@@ -46,7 +45,6 @@ def main():
     g.CFG = Config(cfg.config_file)
     g.CFG.load()
 
-    # Print License if asked
     if g.ARGS.license:
         if not os.path.exists("LICENSE"):
             print(
@@ -58,10 +56,8 @@ def main():
                 print(f.read())
         exit(0)
 
-    # Get and Print Runtime Details
     g.LOG.write(get_runtime_details() + "\n")
 
-    # Let's get to it
     if g.ARGS.cli:
         cli()
     else:
