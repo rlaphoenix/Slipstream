@@ -26,8 +26,6 @@ import sys
 from PySide6.QtWidgets import QApplication
 from appdirs import user_data_dir
 
-from cefpython3 import cefpython as cef
-
 import pslipstream.cfg as cfg
 from pslipstream.config import Config
 from pslipstream.log import Log
@@ -37,7 +35,6 @@ from pslipstream.ui.main import UI
 
 def main():
     # Prepare Metadata
-    cfg.cef_version = cef.GetVersion()
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
 

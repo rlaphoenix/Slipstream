@@ -77,7 +77,6 @@ opt_packages = {
 }
 
 # environment
-cef_version = None  # gotten on main()
 py_version = platform.python_version()
 architecture = platform.architecture()[0]
 platform = platform.system()
