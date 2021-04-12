@@ -19,6 +19,7 @@ class Worker(QtCore.QObject):
 
     @QtCore.Slot(list)
     def get_devices(self):
+        # noinspection PyUnresolvedReferences
         pythoncom.CoInitialize()  # important!
         c = wmi.WMI()
         drives = c.Win32_CDROMDrive()
