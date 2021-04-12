@@ -1,6 +1,4 @@
-import inspect
 import os
-from pathlib import Path
 
 import pythoncom
 import wmi
@@ -52,16 +50,6 @@ class UI(QMainWindow):
 
     def configure(self):
         self.widget.setWindowTitle("Slipstream")
-        self.widget.log.append(inspect.cleandoc("""
-        Slipstream  Copyright (C) 2021 PHOENiX
-        This program comes with ABSOLUTELY NO WARRANTY.
-        This is free software, and you are welcome to redistribute it
-        under certain conditions; type 'pslipstream --license' for details.
-
-        Slipstream v0.4.0
-        The most informative Home-media backup solution.
-        https://github.com/rlaPHOENiX/Slipstream
-        """))
 
         self.widget.backupButton.hide()
         self.widget.discInfoFrame.hide()

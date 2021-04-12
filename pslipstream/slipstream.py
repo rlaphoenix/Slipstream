@@ -120,9 +120,7 @@ def get_runtime_details():
             cfg.description,
             cfg.url,
             "",
-            f":: {'DEBUG' if g.DBG else 'Standard'} MODE",
             f":: {cfg.platform} {cfg.architecture} (Python v{cfg.py_version})",
-            f":: CEF Runtime: {cfg.cef_version}",
             f":: User Directory: {cfg.user_dir}",
             f":: Static Directory: {cfg.static_dir}",
         ]
@@ -139,5 +137,7 @@ if __name__ == "__main__":
     ui.show()
 
     ui.load_devices()
+
+    ui.widget.log.append(get_runtime_details())
 
     sys.exit(app.exec_())
