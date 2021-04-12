@@ -11,11 +11,13 @@ from PySide6.QtWidgets import QMainWindow, QPushButton
 from pycdlib import PyCdlib
 
 from pslipstream import cfg
+from pslipstream.dvd import Dvd
 
 
 class Worker(QtCore.QObject):
     finished = QtCore.Signal(int)
     scanned_devices = QtCore.Signal(list)
+    dvd = QtCore.Signal(Dvd)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -75,6 +77,12 @@ class Worker(QtCore.QObject):
         volume_id = cdlib.pvds[0].volume_identifier.decode().strip()
         log.info(f"Device {device} has disc labeled \"{volume_id}\".")
         return volume_id
+
+    def load_device(self, device: str):
+        dvd = Dvd()  # TODO: assumes disc is a DVD
+        dvd.open(device)
+        self.dvd.emit(dvd)
+        self.finished.emit(0)
 
 
 class UI(QMainWindow):
@@ -149,12 +157,29 @@ class UI(QMainWindow):
         self.thread.start()
 
     def load_device(self, device: dict):
+        self.thread = QtCore.QThread()
+        self.worker = Worker()
+        self.worker.moveToThread(self.thread)
 
-        # TODO: load device, get info, add to disc info section
+        self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
+            "Loading device %s - %s..." % (device["make"], device["model"])
+        ))
+        self.thread.started.connect(lambda: self.worker.load_device(device["loc"]))
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+
+        def get_dvd(dvd: Dvd):
+            print(dvd)
+
+        self.worker.dvd.connect(get_dvd)
+
+        self.worker.finished.connect(lambda: self.widget.backupButton.show())
+        self.worker.finished.connect(lambda: self.widget.discInfoFrame.show())
 
         self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device))
-        self.widget.backupButton.show()
-        self.widget.discInfoFrame.show()
+
+        self.thread.start()
 
     def backup_disc(self, device: dict):
         self.widget.statusbar.showMessage(
