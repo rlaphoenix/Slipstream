@@ -71,6 +71,7 @@ class UI(QMainWindow):
     def clear_device_list(self):
         for device in self.widget.deviceListDevices_2.children():
             if isinstance(device, QPushButton):
+                # noinspection PyTypeChecker
                 device.setParent(None)
 
     def load_device(self, device: dict):
