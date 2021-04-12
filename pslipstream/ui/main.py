@@ -129,7 +129,6 @@ class UI(QMainWindow):
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
 
-        @QtCore.Slot(list)
         def add_device_buttons(devices):
             device_list = self.widget.deviceListDevices_2.layout()
             for device in devices:
