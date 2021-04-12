@@ -12,14 +12,8 @@ def print_bold(s):
 
 def build_clean():
     print_bold("Removing previous builds…")
-    try:
-        rmtree(cfg.root_dir / "dist")
-    except OSError:
-        pass
-    try:
-        rmtree(cfg.root_dir / "build")
-    except OSError:
-        pass
+    rmtree(cfg.root_dir / "dist", ignore_errors=True)
+    rmtree(cfg.root_dir / "build", ignore_errors=True)
 
 
 def build():
