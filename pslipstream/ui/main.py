@@ -144,7 +144,7 @@ class UI(QMainWindow):
             device_list = self.widget.deviceListDevices_2.layout()
             for device in devices:
                 button = QPushButton("{volume}\n{make} - {model}".format(
-                    volume=device["volid"],
+                    volume=device["volid"] or "No disc inserted...",
                     make=device["make"],
                     model=device["model"]
                 ))
