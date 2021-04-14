@@ -7,7 +7,7 @@ import wmi
 from PySide6 import QtCore, QtGui
 from PySide6.QtGui import QPixmap
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QPushButton
+from PySide6.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem
 from pycdlib import PyCdlib
 
 from pslipstream import cfg
@@ -176,7 +176,15 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def get_dvd(dvd: Dvd):
-            print(dvd)
+            disc_id = dvd.compute_crc_id()
+            disc_id_tree = QTreeWidgetItem(["Disc ID", disc_id])
+            self.widget.discInfoList.addTopLevelItem(disc_id_tree)
+
+            pvd = dvd.get_primary_descriptor()
+            pvd_tree = QTreeWidgetItem(["Primary Volume Descriptor"])
+            for k, v in pvd.items():
+                pvd_tree.addChild(QTreeWidgetItem([k, repr(v or "NULL")]))
+            self.widget.discInfoList.addTopLevelItem(pvd_tree)
 
         self.worker.dvd.connect(get_dvd)
 
