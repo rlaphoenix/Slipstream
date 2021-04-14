@@ -196,6 +196,8 @@ class UI(QMainWindow):
                 pvd_tree.addChild(QTreeWidgetItem([k, repr(v or "NULL")]))
             self.widget.discInfoList.addTopLevelItem(pvd_tree)
 
+            self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
+
         self.worker.dvd.connect(get_dvd)
 
         self.worker.finished.connect(self.widget.backupButton.show)
@@ -203,8 +205,6 @@ class UI(QMainWindow):
         self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
             "Loaded device %s - %s..." % (device["make"], device["model"])
         ))
-
-        self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device))
 
         self.thread.start()
 
