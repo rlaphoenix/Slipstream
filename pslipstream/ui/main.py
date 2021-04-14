@@ -114,6 +114,8 @@ class UI(QMainWindow):
         self.clear_device_list()  # clear example buttons
 
         self.widget.refreshIcon.clicked.connect(self.scan_devices)
+        self.widget.refreshIcon.clicked.connect(self.widget.discInfoList.clear)
+
         self.widget.refreshIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "refresh.svg")))
         self.widget.discIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "music-disc-with-luster.svg")))
         self.widget.logIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "align.svg")))
