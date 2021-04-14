@@ -167,6 +167,7 @@ class UI(QMainWindow):
 
         self.worker.device.connect(self.worker.load_device)
 
+        self.thread.started.connect(self.widget.discInfoList.clear)
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
             "Loading device %s - %s..." % (device["make"], device["model"])
         ))
@@ -176,6 +177,7 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def get_dvd(dvd: Dvd):
+            self.widget.discInfoList.clear()
             disc_id = dvd.compute_crc_id()
             disc_id_tree = QTreeWidgetItem(["Disc ID", disc_id])
             self.widget.discInfoList.addTopLevelItem(disc_id_tree)
