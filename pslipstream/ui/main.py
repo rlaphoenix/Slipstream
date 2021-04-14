@@ -17,6 +17,7 @@ from pslipstream.dvd import Dvd
 class Worker(QtCore.QObject):
     # input signals
     device = QtCore.Signal(dict)
+    disc = QtCore.Signal(Dvd)
     # output signals
     finished = QtCore.Signal(int)
     scanned_devices = QtCore.Signal(list)
@@ -89,7 +90,7 @@ class Worker(QtCore.QObject):
         self.finished.emit(0)
 
     @staticmethod
-    def create_backup(disc: Dvd):
+    def backup_disc(disc: Dvd):
         disc.create_backup()
 
 
