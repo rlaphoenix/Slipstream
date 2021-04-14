@@ -114,6 +114,8 @@ class UI(QMainWindow):
         self.clear_device_list()  # clear example buttons
 
         self.widget.refreshIcon.clicked.connect(self.scan_devices)
+        self.widget.refreshIcon.clicked.connect(self.widget.backupButton.hide)
+        self.widget.refreshIcon.clicked.connect(self.widget.discInfoFrame.hide)
         self.widget.refreshIcon.clicked.connect(self.widget.discInfoList.clear)
 
         self.widget.refreshIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "refresh.svg")))
@@ -169,6 +171,8 @@ class UI(QMainWindow):
 
         self.worker.device.connect(self.worker.load_device)
 
+        self.thread.started.connect(self.widget.backupButton.hide)
+        self.thread.started.connect(self.widget.discInfoFrame.hide)
         self.thread.started.connect(self.widget.discInfoList.clear)
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
             "Loading device %s - %s..." % (device["make"], device["model"])
