@@ -104,7 +104,6 @@ class Dvd:
         Get's and returns the Primary Volume Descriptor of the
         disc in a more accessible and parsed format.
         """
-        pvd = [x for x in self.cdlib.pvds if x._vd_type == 1]
 
         def date_convert(d):
             if not d.year:
@@ -117,6 +116,7 @@ class Dvd:
                 tzinfo=tzoffset("GMT", (15 * d.gmtoffset) * 60)
             )
 
+        pvd = self.cdlib.pvd
         pvd = {
             "version": pvd.version,
             "version_fs": pvd.file_structure_version,
