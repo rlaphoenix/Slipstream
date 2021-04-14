@@ -88,6 +88,10 @@ class Worker(QtCore.QObject):
         self.dvd.emit(dvd)
         self.finished.emit(0)
 
+    @staticmethod
+    def create_backup(disc: Dvd):
+        disc.create_backup()
+
 
 class UI(QMainWindow):
 
