@@ -410,35 +410,6 @@ QPushButton:hover:pressed {
              <string>Value</string>
             </property>
            </column>
-           <item>
-            <property name="text">
-             <string>Disc ID</string>
-            </property>
-            <property name="text">
-             <string>26185C43A823B688</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Primary Volume Descriptor</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>Volume ID</string>
-             </property>
-             <property name="text">
-              <string>POKEMON</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Some other stuff</string>
-             </property>
-             <property name="text">
-              <string>ye</string>
-             </property>
-            </item>
-           </item>
           </widget>
          </item>
         </layout>
