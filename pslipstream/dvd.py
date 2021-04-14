@@ -95,7 +95,7 @@ class Dvd:
         Get the CRC64 checksum known as the Media Player DVD ID.
         The algorithm used is the exact same one used by Microsoft's old Windows Media Center.
         """
-        crc = str(rlapydvdid.compute(self.device))
+        crc = str(rlapydvdid.compute(self.cdlib))
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
