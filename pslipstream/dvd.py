@@ -104,7 +104,7 @@ class Dvd:
         Get's and returns the Primary Volume Descriptor of the
         disc in a more accessible and parsed format.
         """
-        pvd = self.cdlib.pvds[0]
+        pvd = [x for x in self.cdlib.pvds if x._vd_type == 1]
 
         def date_convert(d):
             if not d.year:
