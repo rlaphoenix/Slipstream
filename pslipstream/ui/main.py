@@ -136,6 +136,7 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
+        self.thread.started.connect(self.widget.progressBar.hide)
         self.thread.started.connect(self.widget.backupButton.hide)
         self.thread.started.connect(self.widget.discInfoFrame.hide)
         self.thread.started.connect(self.widget.discInfoList.clear)
@@ -171,6 +172,7 @@ class UI(QMainWindow):
 
         self.worker.device.connect(self.worker.load_device)
 
+        self.thread.started.connect(self.widget.progressBar.hide)
         self.thread.started.connect(self.widget.backupButton.hide)
         self.thread.started.connect(self.widget.discInfoFrame.hide)
         self.thread.started.connect(self.widget.discInfoList.clear)
