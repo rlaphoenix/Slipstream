@@ -114,9 +114,6 @@ class UI(QMainWindow):
         self.clear_device_list()  # clear example buttons
 
         self.widget.refreshIcon.clicked.connect(self.scan_devices)
-        self.widget.refreshIcon.clicked.connect(self.widget.backupButton.hide)
-        self.widget.refreshIcon.clicked.connect(self.widget.discInfoFrame.hide)
-        self.widget.refreshIcon.clicked.connect(self.widget.discInfoList.clear)
 
         self.widget.refreshIcon.setIcon(QPixmap(str(cfg.root_dir / "static" / "img" / "refresh.svg")))
         self.widget.discIcon.setPixmap(QPixmap(str(cfg.root_dir / "static" / "img" / "music-disc-with-luster.svg")))
@@ -139,6 +136,9 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
+        self.thread.started.connect(self.widget.backupButton.hide)
+        self.thread.started.connect(self.widget.discInfoFrame.hide)
+        self.thread.started.connect(self.widget.discInfoList.clear)
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage("Scanning devices..."))
         self.thread.started.connect(self.worker.scan_devices)
         self.worker.finished.connect(self.thread.quit)
