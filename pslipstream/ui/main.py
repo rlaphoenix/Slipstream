@@ -182,6 +182,9 @@ class UI(QMainWindow):
 
         self.worker.finished.connect(lambda: self.widget.backupButton.show())
         self.worker.finished.connect(lambda: self.widget.discInfoFrame.show())
+        self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
+            "Loaded device %s - %s..." % (device["make"], device["model"])
+        ))
 
         self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device))
 
