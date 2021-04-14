@@ -188,8 +188,8 @@ class UI(QMainWindow):
 
         self.worker.dvd.connect(get_dvd)
 
-        self.worker.finished.connect(lambda: self.widget.backupButton.show())
-        self.worker.finished.connect(lambda: self.widget.discInfoFrame.show())
+        self.worker.finished.connect(self.widget.backupButton.show)
+        self.worker.finished.connect(self.widget.discInfoFrame.show)
         self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
             "Loaded device %s - %s..." % (device["make"], device["model"])
         ))
