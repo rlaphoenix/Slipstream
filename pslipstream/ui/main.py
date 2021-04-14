@@ -213,12 +213,26 @@ class UI(QMainWindow):
 
         self.thread.start()
 
-    def backup_disc(self, device: dict):
-        self.widget.statusbar.showMessage(
-            "Backing up {volume} ({make} - {model})...".format(
-                volume=device["volid"],
-                make=device["make"],
-                model=device["model"]
-            )
-        )
-        self.widget.progressBar.show()
+    def backup_disc(self, device: dict, disc: Dvd):
+        self.thread = QtCore.QThread()
+        self.worker = Worker()
+        self.worker.moveToThread(self.thread)
+
+        self.worker.disc.connect(self.worker.backup_disc)
+
+        self.thread.started.connect(self.widget.progressBar.show)
+        self.thread.started.connect(self.widget.backupButton.hide)
+        self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
+            "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
+        ))
+        self.thread.started.connect(lambda: self.worker.disc.emit(disc))
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+
+        self.worker.finished.connect(self.widget.backupButton.show)
+        self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
+            "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
+        ))
+
+        self.thread.start()
