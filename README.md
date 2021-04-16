@@ -20,9 +20,10 @@ as one could need while being stupid simple to use.
 
 ## Call for designers
 
-This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute one (or all :O) to this project, please do!  
-Not begging for a billion-dollar design, just something unique that shows off the project well.
+This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute
+one (or all :O) to this project, please do!
 
+Not begging for a billion-dollar design, just something unique that shows off the project well.
 
 ## Quick Installation
 
