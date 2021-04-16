@@ -215,7 +215,7 @@ class Dvd:
         # Print primary volume descriptor information
         self.log.info(f"Starting DVD backup for {self.device}")
         pvd = self.cdlib.pvds[0]
-        pvd.volume_identifier = pvd.volume_identifier.decode().strip()
+        pvd.volume_identifier = pvd.volume_identifier.strip(b"\x00").decode()
         fn = f"{pvd.volume_identifier}.ISO"
         fn_tmp = f"{pvd.volume_identifier}.ISO.tmp"
         first_lba = 0
