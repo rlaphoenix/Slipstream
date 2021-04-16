@@ -1,6 +1,10 @@
 appdirs==1.4.4
-pycdlib @ git+https://github.com/clalancette/pycdlib.git@master
-pydvdcss==1.1.0; python_version >= "3.6"
+dunamai==1.5.4; python_version >= "3.5" and python_version < "4.0"
+jinja2==2.11.3; python_version >= "3.5" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.5" and python_version < "4.0" and python_full_version >= "3.5.0"
+markupsafe==1.1.1; python_version >= "3.5" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.5" and python_version < "4.0" and python_full_version >= "3.5.0"
+poetry-dynamic-versioning==0.12.4; python_version >= "3.5" and python_version < "4.0"
+pycdlib @ git+https://github.com/rlaphoenix/pycdlib.git@win32-test
+pydvdcss==1.3.0; python_version >= "3.5" and python_version < "4.0"
 pyside6==6.0.3; python_version >= "3.6" and python_version < "3.10"
 python-dateutil==2.8.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 pywin32==228; sys_platform == "win32"
@@ -8,5 +12,6 @@ pyyaml==5.4.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (p
 rlapydvdid==1.2
 shiboken6==6.0.3; python_version >= "3.6" and python_version < "3.10"
 six==1.15.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
+tomlkit==0.7.0; python_version >= "3.5" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.5" and python_version < "4.0" and python_full_version >= "3.5.0"
 tqdm==4.60.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 wmi==1.5.1; sys_platform == "win32"
