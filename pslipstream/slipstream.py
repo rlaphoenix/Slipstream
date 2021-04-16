@@ -28,7 +28,6 @@ from appdirs import user_data_dir
 
 import pslipstream.cfg as cfg
 from pslipstream.config import Config
-from pslipstream.progress import Progress
 from pslipstream.ui.main import UI
 
 
@@ -38,7 +37,6 @@ def main():
 
     # Initialize custom global variables
     arguments = get_arguments()
-    g.PROGRESS = Progress()  # Progress Bar, controls only the GUI's progress bar.
     g.DBG = arguments.dbg  # Debug switch, enables debugging specific code and logging
     g.CFG = Config(cfg.config_file)
     g.CFG.load()
