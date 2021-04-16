@@ -48,6 +48,10 @@ If you wish to manually install from the source, take a look at [Building](#buil
 
 - [X] Craft GUI with Qt.
 - [x] Create a file based settings system.
+- [x] Add drive selection option.
+- [X] Add Linux support to the drive selection option.
+- [X] Add DVD backup support, using libdvdcss.
+- [X] Add information window with details about the DVD ISO.
 - [x] Write PyInstaller spec file.
 - [ ] Add information window with details about the DVD-Video data, like Layer count, titles, languages, subtitles, codecs, e.t.c.
 - [ ] Add support for remuxing to Matroska Video (MKV) with MKVToolnix.
@@ -55,13 +59,6 @@ If you wish to manually install from the source, take a look at [Building](#buil
 - [ ] Add the ability to choose to remux by VOB ID, and VOB CELL's.
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 - [ ] Add Blu-ray backup support, using libaacs.
-
-## Qt rewrite
-
-- [x] Add back drive selection option.
-- [ ] Add back Linux support to the drive selection option.
-- [ ] Add back DVD backup support, using libdvdcss.
-- [ ] Add back information window with details about the DVD ISO.
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
