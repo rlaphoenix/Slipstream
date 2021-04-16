@@ -155,15 +155,19 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
-        self.thread.started.connect(self.widget.progressBar.hide)
-        self.thread.started.connect(self.widget.backupButton.hide)
-        self.thread.started.connect(self.widget.discInfoFrame.hide)
-        self.thread.started.connect(self.widget.discInfoList.clear)
-        self.thread.started.connect(lambda: self.widget.statusbar.showMessage("Scanning devices..."))
-        self.thread.started.connect(self.worker.scan_devices)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
+
+        def manage_state():
+            self.widget.progressBar.hide()
+            self.widget.backupButton.hide()
+            self.widget.discInfoFrame.hide()
+            self.widget.discInfoList.clear()
+            self.widget.statusbar.showMessage("Scanning devices...")
+
+        def on_finish(n: int):
+            self.widget.statusbar.showMessage("Found %d devices" % n)
 
         def add_device_button(device: dict):
             device_list = self.widget.deviceListDevices_2.layout()
@@ -178,9 +182,11 @@ class UI(QMainWindow):
                 button.setEnabled(False)
             device_list.insertWidget(device_list.count() - 1 if not device["volid"] else 0, button)
 
+        self.thread.started.connect(manage_state)
+        self.worker.finished.connect(on_finish)
         self.worker.scanned_devices.connect(add_device_button)
-        self.worker.finished.connect(lambda n: self.widget.statusbar.showMessage("Found %d devices" % n))
 
+        self.thread.started.connect(self.worker.scan_devices)
         self.thread.start()
 
     def load_device(self, device: dict):
