@@ -33,7 +33,7 @@ class PackCommand(Command):
                     "%s/static" % cfg.title_pkg,
                     "static"
                 ]),
-                "--hidden-import", "PySide6.QtXml",
+                "--hidden-import", "PySide2.QtXml",
                 "-n", "Slipstream"
             ], check=True)
         except subprocess.CalledProcessError as e:
