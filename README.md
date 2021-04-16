@@ -14,7 +14,6 @@ Slipstream's goal is to provide the user's a dead-simple process for backing up 
 [![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/issues)
 ![Build](https://github.com/rlaPHOENiX/Slipstream/workflows/Build/badge.svg?branch=master)
 
-[![Support me on ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01KX2G)
 # Call for designers
 
 This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute one (or all :O) to this project, please do!  
