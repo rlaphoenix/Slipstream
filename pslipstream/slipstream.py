@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import argparse
+import logging
 import os
 import sys
 
@@ -26,17 +27,23 @@ from PySide2.QtWidgets import QApplication
 from appdirs import user_data_dir
 
 import pslipstream.cfg as cfg
+from pslipstream import logger
 from pslipstream.config import Config
 from pslipstream.ui.main import UI
 
 
 def main():
     arguments = get_arguments()
+
+    log = logger.setup("UI", level=logging.DEBUG if arguments.dbg else logging.INFO)
+
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
+    log.debug("Project Config: %s" % cfg)
 
     user_config = Config(cfg.config_file)
     user_config.load()
+    log.debug("User Config: %s" % user_config.settings)
 
     if arguments.license:
         if not os.path.exists("LICENSE"):
