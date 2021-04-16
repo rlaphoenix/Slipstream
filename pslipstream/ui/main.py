@@ -20,6 +20,7 @@ class Worker(QtCore.QObject):
     disc = QtCore.Signal(Dvd)
     # output signals
     finished = QtCore.Signal(int)
+    progress = QtCore.Signal(float)
     scanned_devices = QtCore.Signal(list)
     dvd = QtCore.Signal(Dvd)
 
