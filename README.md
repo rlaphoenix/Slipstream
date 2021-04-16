@@ -68,21 +68,35 @@ To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
-## Building
+## Working with the Source Code
+
+### Install from Source Code
 
     git clone https://github.com/rlaPHOENiX/Slipstream.git
     cd Slipstream
+    python -m pip install --user .
 
-> Note:
+Note however that there are some caveats when installing from Source Code:
 
-Now you have three options, `dist`, `pack`, or `install`:
+- Source Code may have changes that are not yet tested or stable, and may have regressions.
+- Only install from Source-code if you have a reason, e.g. to test changes.
+- Requires [Poetry] as it’s used as the build system backend.
 
-- `dist`, Build the source into a package file that's shareable and installable with pip, will be in /dist:  
-  `python setup.py dist`
-- `pack`, Build and pack the source with PyInstaller, resulting in a single portable binary file, will be in /dist:  
-  `python -m pip install PyInstaller`  
-  `python setup.py pack`
-- `install`, Build the source and install it with pip, essentially the same result as [Quick Installation](#installation) but without PyPI.org:  
-  `python -m pip install --user .`
+This project uses [Poetry] so feel free to use it for its various conveniences like building
+sdist/wheel packages, creating and managing dependencies, virtual environments, and more.
 
-Once built, use it as you please. If you went the `install` route, follow [Usage](#usage).
+  [Poetry]: <https://python-poetry.org/docs/#installation>
+
+### Building source and wheel distributions
+
+    poetry build
+
+You can specify `-f` to build `sdist` or `wheel` only.
+
+### Packing with PyInstaller
+
+    python -m pip install --user pyinstaller
+    poetry run pyinstaller Slipstream.spec
+    .\dist\Slipstream.exe
+
+Feel free to apply any CLI options/switches you feel like, see `pyinstaller -h`.
