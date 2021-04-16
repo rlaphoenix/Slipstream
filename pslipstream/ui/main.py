@@ -237,6 +237,7 @@ class UI(QMainWindow):
         self.thread.start()
 
     def backup_disc(self, device: dict, disc: Dvd):
+        """Backup loaded disc to an ISO file."""
         self.thread = QtCore.QThread()
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
