@@ -246,7 +246,7 @@ class Dvd:
             sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
             # read sectors
             data = self.read(current_lba, sectors)
-            read_sectors = len(data * self.dvdcss.SECTOR_SIZE)
+            read_sectors = len(data) // self.dvdcss.SECTOR_SIZE
             if read_sectors < 0:
                 raise SlipstreamReadError(f"An unexpected read error occurred reading {current_lba}->{sectors}")
             # write the buffer to output file
