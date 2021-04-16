@@ -18,19 +18,19 @@ as one could need while being stupid simple to use.
 [![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/issues)
 ![Build](https://github.com/rlaPHOENiX/Slipstream/workflows/Build/badge.svg?branch=master)
 
-# Call for designers
+## Call for designers
 
 This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute one (or all :O) to this project, please do!  
 Not begging for a billion-dollar design, just something unique that shows off the project well.
 
 
-# Quick Installation
+## Quick Installation
 
     python -m pip install --user pslipstream
 
 If you wish to manually install from the source, take a look at [Building](#building) below.
 
-# To-do
+## To-do
 
 - [X] Craft GUI with Qt.
 - [x] Create a file based settings system.
@@ -46,7 +46,7 @@ If you wish to manually install from the source, take a look at [Building](#buil
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 - [ ] Add Blu-ray backup support, using libaacs.
 
-# Usage
+## Usage
 
 To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu.
 
