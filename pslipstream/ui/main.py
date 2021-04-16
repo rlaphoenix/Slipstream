@@ -85,11 +85,14 @@ class Worker(QtCore.QObject):
         return volume_id
 
     def load_device(self, device: dict):
-        pythoncom.CoInitialize()
-        dvd = Dvd()  # TODO: assumes disc is a DVD
-        dvd.open(device["loc"])
-        self.dvd.emit(dvd)
-        self.finished.emit(0)
+        try:
+            pythoncom.CoInitialize()
+            dvd = Dvd()  # TODO: assumes disc is a DVD
+            dvd.open(device["loc"])
+            self.dvd.emit(dvd)
+            self.finished.emit(0)
+        except Exception as e:
+            self.error.emit(e)
 
     @staticmethod
     def backup_disc(disc: Dvd):
