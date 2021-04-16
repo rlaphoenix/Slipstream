@@ -125,4 +125,4 @@ def get_runtime_details():
 
 
 if __name__ == "__main__":
-    gui()
+    main()
