@@ -1,4 +1,5 @@
 import logging
+import math
 import os
 import subprocess
 import sys
@@ -232,17 +233,19 @@ class UI(QMainWindow):
         self.worker.disc.connect(self.worker.backup_disc)
 
         self.thread.started.connect(self.widget.progressBar.show)
-        self.thread.started.connect(self.widget.backupButton.hide)
+        self.thread.started.connect(lambda: self.widget.backupButton.setEnabled(False))
         self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
             "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
         ))
         self.thread.started.connect(lambda: self.worker.disc.emit(disc))
         self.worker.progress.connect(lambda n: self.widget.progressBar.setValue(n))
+        self.worker.progress.connect(lambda n: self.widget.backupButton.setText("Backing up... %d%%" % math.floor(n)))
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
 
-        self.worker.finished.connect(self.widget.backupButton.show)
+        self.worker.finished.connect(lambda: self.widget.backupButton.setEnabled(True))
+        self.worker.finished.connect(lambda: self.widget.backupButton.setText("Backup"))
         self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
             "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
         ))
