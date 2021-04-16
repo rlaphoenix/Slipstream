@@ -126,6 +126,7 @@ class UI(QMainWindow):
     def configure(self):
         self.widget.setWindowTitle("Slipstream")
 
+        self.widget.backupButton.setEnabled(False)
         self.widget.backupButton.hide()
         self.widget.discInfoFrame.hide()
         self.widget.progressBar.hide()
@@ -213,7 +214,11 @@ class UI(QMainWindow):
             self.widget.discInfoList.clear()
             self.widget.statusbar.showMessage("Loading device %s - %s..." % (device["make"], device["model"]))
 
+            if self.widget.backupButton.isEnabled():
+                self.widget.backupButton.clicked.disconnect()
+
         def on_finish(_: int):
+            self.widget.backupButton.setEnabled(True)
             self.widget.backupButton.show()
             self.widget.discInfoFrame.show()
             self.widget.statusbar.showMessage("Loaded device %s - %s..." % (device["make"], device["model"]))
