@@ -28,7 +28,7 @@ Not begging for a billion-dollar design, just something unique that shows off th
 
     python -m pip install --user pslipstream
 
-If you wish to manually install from the source, take a look at [Building](#building) below.
+If you wish to manually install from the source, take a look at [Building](#building-source-and-wheel-distributions).
 
 ## To-do
 
