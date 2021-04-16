@@ -35,7 +35,7 @@ from pslipstream.ui.main import UI
 def main():
     arguments = get_arguments()
 
-    log = logger.setup("UI", level=logging.DEBUG if arguments.dbg else logging.INFO)
+    log = logger.setup(level=logging.DEBUG if arguments.dbg else logging.INFO, stream_handler=True)
 
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
