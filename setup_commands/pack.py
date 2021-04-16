@@ -23,8 +23,6 @@ class PackCommand(Command):
     @staticmethod
     def run():
         clean()
-        print_bold("Ensuring PyInstaller is available and up-to-date…")
-        os.system(f"{sys.executable} -m pip install --user --upgrade pyinstaller")
         print_bold("Packing with PyInstaller…")
         sep = ";" if cfg.windows else ":"
         try:
