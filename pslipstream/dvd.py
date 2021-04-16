@@ -215,11 +215,11 @@ class Dvd:
         Raises SlipstreamReadError on unexpected read errors.
         """
         # Print primary volume descriptor information
-        self.log.info(f"Starting DVD backup for {self.device}")
+        self.log.info("Starting DVD backup for %s" % self.device)
         pvd = self.cdlib.pvds[0]
         pvd.volume_identifier = pvd.volume_identifier.strip(b"\x00").decode()
-        fn = f"{pvd.volume_identifier}.ISO"
-        fn_tmp = f"{pvd.volume_identifier}.ISO.tmp"
+        fn = "%s.ISO" % pvd.volume_identifier
+        fn_tmp = "%s.ISO.tmp" % pvd.volume_identifier
         first_lba = 0
         last_lba = pvd.space_size - 1
         disc_size = pvd.space_size * self.dvdcss.SECTOR_SIZE
@@ -242,7 +242,7 @@ class Dvd:
         t = tqdm(total=last_lba + 1, unit="sectors")
         # Read through all the sectors in a memory efficient manner
         current_lba = first_lba
-        self.log.debug(f"Reading sectors {current_lba}->{last_lba}...")
+        self.log.debug("Reading sectors %d->%d..." % (current_lba, last_lba))
         while current_lba <= last_lba:
             # get the maximum sectors to read at once
             sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
