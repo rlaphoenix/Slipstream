@@ -190,6 +190,10 @@ class UI(QMainWindow):
         self.thread.start()
 
     def load_device(self, device: dict):
+        """
+        Load device, get disc object, get disc information.
+        Currently only supports DVD discs.
+        """
         self.thread = QtCore.QThread()
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
