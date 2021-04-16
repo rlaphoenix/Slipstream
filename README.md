@@ -2,8 +2,12 @@
 
 ---
 
-Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable package. It's trying to be different from the other solutions out there by providing as much information about the home-media as one could need while being stupid simple to use.
+Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a
+wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable
+package.
 
+It's trying to be different from the other solutions out there by providing as much information about the home-media
+as one could need while being stupid simple to use.
 
 [![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE)
