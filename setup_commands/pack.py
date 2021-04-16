@@ -1,4 +1,3 @@
-import os
 import subprocess
 import sys
 
@@ -29,9 +28,9 @@ class PackCommand(Command):
             subprocess.run([
                 "pyinstaller",
                 "--clean",
-                "-F", f"{cfg.title_pkg}/__main__.py",
+                "-F", "%s/__main__.py" % cfg.title_pkg,
                 "--add-data", sep.join([
-                    f"{cfg.title_pkg}/static",
+                    "%s/static" % cfg.title_pkg,
                     "static"
                 ]),
                 "--hidden-import", "pkg_resources.py2_warn",  # TODO: Still needed?
