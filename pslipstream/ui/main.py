@@ -177,7 +177,7 @@ class UI(QMainWindow):
             device_list.insertWidget(-1 if not device["volid"] else 0, button)
 
         self.worker.scanned_devices.connect(add_device_button)
-        self.worker.finished.connect(lambda n: self.widget.statusbar.showMessage(f"Found {n} devices"))
+        self.worker.finished.connect(lambda n: self.widget.statusbar.showMessage("Found %d devices" % n))
 
         self.thread.start()
 
