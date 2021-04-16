@@ -1,6 +1,30 @@
 # Release History
 
-## master
+## 0.4.0
+
+**Improvements**
+
+- Add support for listing devices on Windows.
+
+## 0.3.4
+
+**Improvements**
+
+- Move entry code out of __init__.py to slipstream.py so it doesn't get run on installation.
+
+## 0.3.3
+
+**Bug fixes**
+
+- Update pydvdcss usage in dvd.py to v1.1.0's changes.
+
+## 0.3.2
+
+**Improvements**
+
+- Use pydvdcss >= 1.1.0 to properly support CI without needing to forcefully install libdvdcss.so on the CI agent.
+
+## 0.3.1
 
 **Improvements**
 
@@ -8,7 +32,11 @@
 
 **Bug fixes**
 
-- Reset the progress bar on Dvd dispose.
+- Add requirements.txt to allow clients and CI to install requirements prior to usage.
+- Move temporary public UI host from Netlify to Vercel.
+- Remove the hacky cefpython3 py3.8 support warning and steps. These were very unofficial and didn't work unless you
+  had Python3.7 binaries available on your system anyway, so what's the point.
+- Correctly state which python versions are supported.
 
 ## 0.1.6
 
