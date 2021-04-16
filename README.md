@@ -1,18 +1,9 @@
-<p>&nbsp;</p><p>&nbsp;</p>
-
-<p align="center"><strong>Slipstream</strong> is the most informative Home-media backup solution.</p>
-
-<p>&nbsp;</p><p>&nbsp;</p>
+**Slipstream** is the most informative Home-media backup solution.
 
 ---
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
 Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable package. It's trying to be different from the other solutions out there by providing as much information about the home-media as one could need while being stupid simple to use.
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
-<span align="center">
 
 [![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE)
@@ -24,25 +15,17 @@ Slipstream's goal is to provide the user's a dead-simple process for backing up 
 ![Build](https://github.com/rlaPHOENiX/Slipstream/workflows/Build/badge.svg?branch=master)
 
 [![Support me on ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01KX2G)
-
-</span>
-
-<p>&nbsp;</p><p>&nbsp;</p>
-
 # Call for designers
 
 This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute one (or all :O) to this project, please do!  
 Not begging for a billion-dollar design, just something unique that shows off the project well.
 
-<p>&nbsp;</p><p>&nbsp;</p>
 
 # Quick Installation
 
     python -m pip install --user pslipstream
 
 If you wish to manually install from the source, take a look at [Building](#building) below.
-
-<p>&nbsp;</p><p>&nbsp;</p>
 
 # To-do
 
@@ -60,13 +43,9 @@ If you wish to manually install from the source, take a look at [Building](#buil
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 - [ ] Add Blu-ray backup support, using libaacs.
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
 # Usage
 
 To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu.
-
-<p>&nbsp;</p><p>&nbsp;</p>
 
 ## Working with the Source Code
 
