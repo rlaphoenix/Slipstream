@@ -245,11 +245,12 @@ class Dvd:
             # get the maximum sectors to read at once
             sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
             # read sectors
-            read_sectors = self.read(current_lba, sectors)
+            data = self.read(current_lba, sectors)
+            read_sectors = len(data * self.dvdcss.SECTOR_SIZE)
             if read_sectors < 0:
                 raise SlipstreamReadError(f"An unexpected read error occurred reading {current_lba}->{sectors}")
             # write the buffer to output file
-            f.write(self.dvdcss.buffer)
+            f.write(data)
             # increment the current sector and update the tqdm progress bar
             current_lba += read_sectors
             # write progress to GUI log
@@ -267,7 +268,7 @@ class Dvd:
             f"Read a total of {current_lba:,} sectors ({os.path.getsize(fn):,}) bytes.\n"
         )
 
-    def read(self, first_lba, sectors):
+    def read(self, first_lba, sectors) -> bytes:
         """
         Efficiently read an amount of sectors from the disc while supporting decryption
         with libdvdcss (pydvdcss).
@@ -325,7 +326,7 @@ class Dvd:
             flags = self.dvdcss.READ_DECRYPT
 
         ret = self.dvdcss.read(sectors, flags)
-        if ret != sectors:
+        if len(ret) * self.dvdcss.SECTOR_SIZE != sectors:
             raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         self.reader_position += ret
 
