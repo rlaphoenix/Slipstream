@@ -23,7 +23,7 @@ class Worker(QtCore.QObject):
     error = QtCore.Signal(Exception)
     finished = QtCore.Signal(int)
     progress = QtCore.Signal(float)
-    scanned_devices = QtCore.Signal(list)
+    scanned_devices = QtCore.Signal(dict)
     dvd = QtCore.Signal(Dvd)
 
     def __init__(self, *args, **kwargs):
