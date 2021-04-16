@@ -29,10 +29,7 @@ class PackCommand(Command):
                 "pyinstaller",
                 "--clean",
                 "-F", "%s/__main__.py" % cfg.title_pkg,
-                "--add-data", os.pathsep.join([
-                    "%s/static" % cfg.title_pkg,
-                    "static"
-                ]),
+                "--add-data", os.pathsep.join([str(cfg.static_dir), "%s/static" % cfg.title_pkg]),
                 "--hidden-import", "PySide2.QtXml",
                 "-n", "Slipstream"
             ], check=True)
