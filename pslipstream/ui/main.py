@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import sys
 
 import pythoncom
 import wmi
@@ -34,14 +35,15 @@ class Worker(QtCore.QObject):
             pythoncom.CoInitialize()  # important!
             c = wmi.WMI()
             drives = c.Win32_CDROMDrive()
-            self.scanned_devices.emit([{
-                # "type": ?
-                "make": x.name.split(" ")[0],
-                "model": x.name.split(" ")[1],
-                "fwver": x.mfrAssignedRevisionLevel,
-                "loc": x.drive,  # e.g. "D:"
-                "volid": x.volumeName
-            } for x in drives])
+            for drive in drives:
+                self.scanned_devices.emit({
+                    # "type": ?
+                    "make": drive.name.split(" ")[0],
+                    "model": drive.name.split(" ")[1],
+                    "fwver": drive.mfrAssignedRevisionLevel,
+                    "loc": drive.drive,  # e.g. "D:"
+                    "volid": drive.volumeName
+                })
             self.finished.emit(len(drives))
             return
         if cfg.linux:
@@ -49,14 +51,15 @@ class Worker(QtCore.QObject):
             lsscsi = [x[9:].strip() for x in lsscsi]
             lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
             lsscsi = [x for x in lsscsi if x[0] not in ["disk"]]
-            self.scanned_devices.emit([{
-                "type": scsi[0],
-                "make": scsi[1],
-                "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
-                "fwver": scsi[-2],
-                "loc": scsi[-1],
-                "volid": self.get_volume_id(scsi[-1])
-            } for scsi in lsscsi])
+            for scsi in lsscsi:
+                self.scanned_devices.emit({
+                    "type": scsi[0],
+                    "make": scsi[1],
+                    "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
+                    "fwver": scsi[-2],
+                    "loc": scsi[-1],
+                    "volid": self.get_volume_id(scsi[-1])
+                })
             self.finished.emit(len(lsscsi))
             return
         self.error.emit(NotImplementedError("Device Scanning has not been implemented for %s." % sys.platform))
@@ -160,21 +163,20 @@ class UI(QMainWindow):
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
 
-        def add_device_buttons(devices):
+        def add_device_button(device: dict):
             device_list = self.widget.deviceListDevices_2.layout()
-            for device in devices:
-                button = QPushButton("{volume}\n{make} - {model}".format(
-                    volume=device["volid"] or "No disc inserted...",
-                    make=device["make"],
-                    model=device["model"]
-                ))
-                button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-                button.clicked.connect(lambda: self.load_device(device))
-                if not device["volid"]:
-                    button.setEnabled(False)
-                device_list.insertWidget(0, button)
+            button = QPushButton("{volume}\n{make} - {model}".format(
+                volume=device["volid"] or "No disc inserted...",
+                make=device["make"],
+                model=device["model"]
+            ))
+            button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            button.clicked.connect(lambda: self.load_device(device))
+            if not device["volid"]:
+                button.setEnabled(False)
+            device_list.insertWidget(0, button)
 
-        self.worker.scanned_devices.connect(add_device_buttons)
+        self.worker.scanned_devices.connect(add_device_button)
         self.worker.finished.connect(lambda n: self.widget.statusbar.showMessage(f"Found {n} devices"))
 
         self.thread.start()
