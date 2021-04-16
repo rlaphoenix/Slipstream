@@ -1,13 +1,4 @@
-**Slipstream** is the most informative Home-media backup solution.
-
----
-
-Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a
-wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable
-package.
-
-It's trying to be different from the other solutions out there by providing as much information about the home-media
-as one could need while being stupid simple to use.
+# Slipstream
 
 [![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE)
@@ -17,6 +8,13 @@ as one could need while being stupid simple to use.
 [![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/issues)
 ![Build](https://github.com/rlaPHOENiX/Slipstream/workflows/Build/badge.svg?branch=master)
+
+Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a
+wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable
+package.
+
+It's trying to be different from the other solutions out there by providing as much information about the home-media
+as one could need while being stupid simple to use.
 
 ## Call for designers
 
