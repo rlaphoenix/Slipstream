@@ -236,13 +236,12 @@ class Dvd:
                 raise SlipstreamNoKeysObtained("No CSS title keys were returned, unable to decrypt.")
         else:
             self.log.debug("DVD isn't scrambled. CSS title key cracking skipped.")
-        # Create a file write handle to temp file
+
         f = open(fn_tmp, "wb")
-        # Create a TQDM progress bar
         t = tqdm(total=last_lba + 1, unit="sectors")
-        # Read through all the sectors in a memory efficient manner
         current_lba = first_lba
         self.log.debug("Reading sectors %d->%d..." % (current_lba, last_lba))
+
         while current_lba <= last_lba:
             # get the maximum sectors to read at once
             sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
