@@ -148,6 +148,7 @@ class UI(QMainWindow):
                 device.setParent(None)
 
     def scan_devices(self):
+        """Gets list of disc readers and adds them to device list."""
         self.clear_device_list()
 
         self.thread = QtCore.QThread()
