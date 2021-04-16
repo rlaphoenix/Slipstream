@@ -29,6 +29,7 @@ from datetime import datetime
 
 import pycdlib
 import rlapydvdid
+from PySide6.QtCore import Signal
 from dateutil.tz import tzoffset
 from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm
@@ -204,7 +205,7 @@ class Dvd:
         # Return lba data
         return lba_data
 
-    def create_backup(self):
+    def create_backup(self, signal: Signal = None):
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
@@ -253,9 +254,10 @@ class Dvd:
             f.write(data)
             # increment the current sector and update the tqdm progress bar
             current_lba += read_sectors
-            # write progress to GUI log
-            # progress = (current_lba / last_lba) * 100
-            # write progress to CLI log
+            # write progress to GUI
+            if signal:
+                signal.emit((current_lba / last_lba) * 100)
+            # write progress to CLI
             t.update(read_sectors)
         # Close file and tqdm progress bar
         f.close()
