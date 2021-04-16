@@ -309,7 +309,7 @@ class Dvd:
                 inTitle = True
 
         if needToSeek:
-            flags = self.dvdcss.NOFLAGS
+            flags = self.dvdcss.NO_FLAGS
             if enteredTitle:
                 flags = self.dvdcss.SEEK_KEY
             elif inTitle:
@@ -320,7 +320,7 @@ class Dvd:
             if self.reader_position != first_lba:
                 raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
 
-        flags = self.dvdcss.NOFLAGS
+        flags = self.dvdcss.NO_FLAGS
         if inTitle:
             flags = self.dvdcss.READ_DECRYPT
 
