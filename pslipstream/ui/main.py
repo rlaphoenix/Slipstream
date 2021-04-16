@@ -169,6 +169,9 @@ class UI(QMainWindow):
         def on_finish(n: int):
             self.widget.statusbar.showMessage("Found %d devices" % n)
 
+        def on_error(e: Exception):
+            print(e)
+
         def add_device_button(device: dict):
             device_list = self.widget.deviceListDevices_2.layout()
             button = QPushButton("{volume}\n{make} - {model}".format(
@@ -184,6 +187,7 @@ class UI(QMainWindow):
 
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
+        self.worker.error.connect(on_error)
         self.worker.scanned_devices.connect(add_device_button)
 
         self.thread.started.connect(self.worker.scan_devices)
@@ -214,6 +218,9 @@ class UI(QMainWindow):
             self.widget.discInfoFrame.show()
             self.widget.statusbar.showMessage("Loaded device %s - %s..." % (device["make"], device["model"]))
 
+        def on_error(e: Exception):
+            print(e)
+
         def get_dvd(dvd: Dvd):
             self.widget.discInfoList.clear()
             disc_id = dvd.compute_crc_id()
@@ -230,6 +237,7 @@ class UI(QMainWindow):
 
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
+        self.worker.error.connect(on_error)
         self.worker.dvd.connect(get_dvd)
 
         self.worker.device.connect(self.worker.load_device)
