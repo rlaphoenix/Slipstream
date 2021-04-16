@@ -19,7 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import argparse
-import builtins as g
 import os
 import sys
 
@@ -35,10 +34,9 @@ def main():
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
 
-    # Initialize custom global variables
     arguments = get_arguments()
-    g.CFG = Config(cfg.config_file)
-    g.CFG.load()
+    user_config = Config(cfg.config_file)
+    user_config.load()
 
     if arguments.license:
         if not os.path.exists("LICENSE"):
