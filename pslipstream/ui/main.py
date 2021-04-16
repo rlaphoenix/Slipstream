@@ -59,6 +59,7 @@ class Worker(QtCore.QObject):
             } for scsi in lsscsi])
             self.finished.emit(len(lsscsi))
             return
+        self.error.emit(NotImplementedError("Device Scanning has not been implemented for %s." % sys.platform))
 
     @staticmethod
     def get_volume_id(device: str):
