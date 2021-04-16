@@ -37,6 +37,11 @@ def main():
 
     log = logger.setup(level=logging.DEBUG if arguments.dbg else logging.INFO, stream_handler=True)
 
+    for line in get_runtime_details().splitlines(keepends=False):
+        if not line:
+            continue
+        log.info(line)
+
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
     log.debug("Project Config: %s" % cfg)
