@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 
@@ -23,13 +24,12 @@ class PackCommand(Command):
     def run():
         clean()
         print_bold("Packing with PyInstaller…")
-        sep = ";" if cfg.windows else ":"
         try:
             subprocess.run([
                 "pyinstaller",
                 "--clean",
                 "-F", "%s/__main__.py" % cfg.title_pkg,
-                "--add-data", sep.join([
+                "--add-data", os.pathsep.join([
                     "%s/static" % cfg.title_pkg,
                     "static"
                 ]),
