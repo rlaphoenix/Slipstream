@@ -96,7 +96,7 @@ class Worker(QtCore.QObject):
 
     def backup_disc(self, disc: Dvd):
         try:
-            disc.create_backup()
+            disc.create_backup(self.progress)
         except Exception as e:
             self.error.emit(e)
 
