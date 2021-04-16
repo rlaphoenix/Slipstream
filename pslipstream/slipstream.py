@@ -60,7 +60,7 @@ def main():
 def gui():
     app = QApplication(sys.argv)
     app.setStyle("fusion")
-    with open(cfg.root_dir / "ui" / "style.qss", "rt", encoding="utf8") as f:
+    with open(cfg.static_dir / "style.qss", "rt", encoding="utf8") as f:
         app.setStyleSheet(f.read())
 
     ui = UI()
