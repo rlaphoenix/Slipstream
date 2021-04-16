@@ -94,9 +94,11 @@ class Worker(QtCore.QObject):
         except Exception as e:
             self.error.emit(e)
 
-    @staticmethod
-    def backup_disc(disc: Dvd):
-        disc.create_backup()
+    def backup_disc(self, disc: Dvd):
+        try:
+            disc.create_backup()
+        except Exception as e:
+            self.error.emit(e)
 
 
 class UI(QMainWindow):
