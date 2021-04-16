@@ -19,6 +19,7 @@ class Worker(QtCore.QObject):
     device = QtCore.Signal(dict)
     disc = QtCore.Signal(Dvd)
     # output signals
+    error = QtCore.Signal(Exception)
     finished = QtCore.Signal(int)
     progress = QtCore.Signal(float)
     scanned_devices = QtCore.Signal(list)
