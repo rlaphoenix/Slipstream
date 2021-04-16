@@ -64,7 +64,7 @@ class Worker(QtCore.QObject):
     def get_volume_id(device: str):
         """Get the Volume Identifier for a device."""
         log = logging.getLogger("cdlib")
-        log.info("Getting Volume ID for {device}")
+        log.info("Getting Volume ID for %s" % device)
         cdlib = PyCdlib()
         try:
             cdlib.open(device, "rb")
@@ -72,16 +72,16 @@ class Worker(QtCore.QObject):
             # noinspection SpellCheckingInspection
             if "[Errno 123]" in str(e):
                 # no disc inserted
-                log.info(f"Device {device} has no disc inserted.")
+                log.info("Device %s has no disc inserted." % device)
                 return None
             # noinspection SpellCheckingInspection
             if "[Errno 5]" in str(e):
                 # Input/output error
-                log.error(f"Device {device} had an I/O error.")
+                log.error("Device %s had an I/O error." % device)
                 return "! Error occurred reading disc..."
             raise
         volume_id = cdlib.pvds[0].volume_identifier.decode().strip()
-        log.info(f"Device {device} has disc labeled \"{volume_id}\".")
+        log.info('Device %s has disc labeled "%s".' % (device, volume_id))
         return volume_id
 
     def load_device(self, device: dict):
