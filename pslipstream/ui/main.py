@@ -230,6 +230,8 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
+        self.worker.error.connect(lambda e: print(e))
+
         self.worker.disc.connect(self.worker.backup_disc)
 
         self.thread.started.connect(self.widget.progressBar.show)
@@ -244,10 +246,10 @@ class UI(QMainWindow):
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
 
-        self.worker.finished.connect(lambda: self.widget.backupButton.setEnabled(True))
         self.worker.finished.connect(lambda: self.widget.backupButton.setText("Backup"))
         self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
             "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
         ))
+        self.worker.finished.connect(lambda: self.widget.backupButton.setEnabled(True))
 
         self.thread.start()
