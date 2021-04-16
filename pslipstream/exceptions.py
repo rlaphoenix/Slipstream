@@ -27,10 +27,6 @@ class TkinterVersionError(Exception):
     """Tkinter version is too outdated, update tkinter to continue."""
 
 
-class CefInitializationError(Exception):
-    """CEF Failed to initialize."""
-
-
 class WindowHandleError(Exception):
     """Couldn't obtain the GUI's window handle."""
 

@@ -28,6 +28,7 @@ throughout the code by importing only what we want.
 import datetime
 import os
 import platform
+from pathlib import Path
 
 import pkg_resources
 
@@ -53,11 +54,6 @@ req_packages = [
     # general
     "appdirs>=1.4.4",
     "tqdm>=4.46.1",
-    # cef
-    "cefpython3==66.1; os_name == 'nt'",
-    "cefpython3==66.0; os_name != 'nt'",
-    "pyobjc; sys_platform == 'darwin'",
-    "AppKit; sys_platform == 'darwin'",
     # windows api
     "pywin32>=228; os_name == 'nt'",
     # parsing, syntax, and validators
@@ -76,7 +72,6 @@ opt_packages = {
 }
 
 # environment
-cef_version = None  # gotten on main()
 py_version = platform.python_version()
 architecture = platform.architecture()[0]
 platform = platform.system()
@@ -95,9 +90,9 @@ copyright_paragraph = "\n".join([
 ])
 
 # directories
-root_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+root_dir = Path(os.path.abspath(os.path.dirname(__file__))).parent
 user_dir = None  # gotten on main()
-static_dir = os.path.join(root_dir, "static")
+static_dir = root_dir / "static"
 if package_obj:
     try:
         static_dir = pkg_resources.resource_filename(package_obj, f"{title_pkg}/static")

@@ -46,19 +46,22 @@ If you wish to manually install from the source, take a look at [Building](#buil
 
 # To-do
 
-- [x] Craft GUI with Chromium Embedded Framework (CEF).
+- [X] Craft GUI with Qt.
 - [x] Create a file based settings system.
 - [x] Implement a quick and simple way to build, pack with PyInstaller, upload, and install.
-- [x] Add DVD backup support, using libdvdcss.
-- [x] Implement the UI and bridge the Javascript and Python together.
-- [x] Add drive selection option with information about the drive including disc label.
-- [x] Add information window with details about the DVD ISO.
 - [ ] Add information window with details about the DVD-Video data, like Layer count, titles, languages, subtitles, codecs, e.t.c.
-- [ ] Add support for remuxing to Matroka Video (MKV) with MkvToolnix.
+- [ ] Add support for remuxing to Matroska Video (MKV) with MKVToolnix.
 - [ ] Add the ability to choose to remux by Title ID's.
 - [ ] Add the ability to choose to remux by VOB ID, and VOB CELL's.
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 - [ ] Add Blu-ray backup support, using libaacs.
+
+## Qt rewrite
+
+- [x] Add back drive selection option.
+- [ ] Add back Linux support to the drive selection option.
+- [ ] Add back DVD backup support, using libdvdcss.
+- [ ] Add back information window with details about the DVD ISO.
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
