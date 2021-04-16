@@ -33,7 +33,6 @@ class PackCommand(Command):
                     "%s/static" % cfg.title_pkg,
                     "static"
                 ]),
-                "--hidden-import", "pkg_resources.py2_warn",  # TODO: Still needed?
                 "-n", "Slipstream"
             ], check=True)
         except subprocess.CalledProcessError as e:
