@@ -8,7 +8,6 @@
 from setuptools import find_packages, setup
 
 import pslipstream.cfg as cfg
-from setup_commands.dist import DistCommand
 from setup_commands.pack import PackCommand
 
 try:
@@ -61,5 +60,5 @@ setup(
         "Topic :: Multimedia :: Video :: Conversion",
     ],
     # $ setup.py publish support.
-    cmdclass={"dist": DistCommand, "pack": PackCommand},
+    cmdclass={"pack": PackCommand},
 )
