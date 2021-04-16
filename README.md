@@ -48,7 +48,7 @@ If you wish to manually install from the source, take a look at [Building](#buil
 
 - [X] Craft GUI with Qt.
 - [x] Create a file based settings system.
-- [x] Implement a quick and simple way to build, pack with PyInstaller, upload, and install.
+- [x] Write PyInstaller spec file.
 - [ ] Add information window with details about the DVD-Video data, like Layer count, titles, languages, subtitles, codecs, e.t.c.
 - [ ] Add support for remuxing to Matroska Video (MKV) with MKVToolnix.
 - [ ] Add the ability to choose to remux by Title ID's.
