@@ -31,10 +31,10 @@ from pslipstream.ui.main import UI
 
 
 def main():
+    arguments = get_arguments()
     cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
 
-    arguments = get_arguments()
     user_config = Config(cfg.config_file)
     user_config.load()
 
