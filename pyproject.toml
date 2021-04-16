@@ -25,7 +25,7 @@ include = ["LICENSE", "README.md", "HISTORY.md", "static/*"]
 [tool.poetry.dependencies]
 python = ">=3.6,<3.10"
 pycdlib = { git = "https://github.com/rlaphoenix/pycdlib.git", branch = "win32-test" }
-pydvdcss = "^1.3.0"
+pydvdcss = "^1.3.1"
 rlapydvdid = "^1.2"
 appdirs = "^1.4.4"
 tqdm = "^4.46.1"
