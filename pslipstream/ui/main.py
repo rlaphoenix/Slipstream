@@ -242,26 +242,36 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
-        self.worker.error.connect(lambda e: print(e))
-
-        self.worker.disc.connect(self.worker.backup_disc)
-
-        self.thread.started.connect(self.widget.progressBar.show)
-        self.thread.started.connect(lambda: self.widget.backupButton.setEnabled(False))
-        self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
-            "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
-        ))
-        self.thread.started.connect(lambda: self.worker.disc.emit(disc))
-        self.worker.progress.connect(lambda n: self.widget.progressBar.setValue(n))
-        self.worker.progress.connect(lambda n: self.widget.backupButton.setText("Backing up... %d%%" % math.floor(n)))
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
 
-        self.worker.finished.connect(lambda: self.widget.backupButton.setText("Backup"))
-        self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
-            "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
-        ))
-        self.worker.finished.connect(lambda: self.widget.backupButton.setEnabled(True))
+        def manage_state():
+            self.widget.progressBar.show()
+            self.widget.backupButton.setEnabled(False)
+            self.widget.statusbar.showMessage(
+                "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
+            )
 
+        def on_progress(n: float):
+            self.widget.progressBar.setValue(n)
+            self.widget.backupButton.setText("Backing up... %d%%" % math.floor(n))
+
+        def on_finish():
+            self.widget.backupButton.setText("Backup")
+            self.widget.statusbar.showMessage(
+                "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
+            )
+            self.widget.backupButton.setEnabled(True)
+
+        def on_error(e: Exception):
+            print(e)
+
+        self.thread.started.connect(manage_state)
+        self.worker.progress.connect(on_progress)
+        self.worker.finished.connect(on_finish)
+        self.worker.error.connect(on_error)
+
+        self.worker.disc.connect(self.worker.backup_disc)
+        self.thread.started.connect(lambda: self.worker.disc.emit(disc))
         self.thread.start()
