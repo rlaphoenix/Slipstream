@@ -227,6 +227,7 @@ class UI(QMainWindow):
             "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
         ))
         self.thread.started.connect(lambda: self.worker.disc.emit(disc))
+        self.worker.progress.connect(lambda n: self.widget.progressBar.setValue(n))
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
