@@ -29,7 +29,7 @@ from datetime import datetime
 
 import pycdlib
 import rlapydvdid
-from PySide6.QtCore import Signal
+from PySide2.QtCore import Signal
 from dateutil.tz import tzoffset
 from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm

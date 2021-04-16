@@ -23,7 +23,7 @@ import builtins as g
 import os
 import sys
 
-from PySide6.QtWidgets import QApplication
+from PySide2.QtWidgets import QApplication
 from appdirs import user_data_dir
 
 import pslipstream.cfg as cfg

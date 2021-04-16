@@ -6,10 +6,10 @@ import sys
 
 import pythoncom
 import wmi
-from PySide6 import QtCore, QtGui
-from PySide6.QtGui import QPixmap
-from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem
+from PySide2 import QtCore, QtGui
+from PySide2.QtGui import QPixmap
+from PySide2.QtUiTools import QUiLoader
+from PySide2.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem
 from pycdlib import PyCdlib
 
 from pslipstream import cfg
