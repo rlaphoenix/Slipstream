@@ -330,7 +330,11 @@ class Dvd:
         ret = self.dvdcss.read(sectors, flags)
         read_sectors = len(ret) // self.dvdcss.SECTOR_SIZE
         if read_sectors != sectors:
-            raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
+            raise SlipstreamReadError(
+                "Read %d bytes, expected %d, while reading %d->%d" % (
+                    read_sectors, sectors, first_lba, first_lba + sectors
+                )
+            )
         self.reader_position += read_sectors
 
         return ret
