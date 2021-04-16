@@ -29,7 +29,7 @@ class PackCommand(Command):
             subprocess.run([
                 "pyinstaller",
                 "--clean",
-                "-F", f"{cfg.title_pkg}/__init__.py",
+                "-F", f"{cfg.title_pkg}/__main__.py",
                 "--add-data", sep.join([
                     f"{cfg.title_pkg}/static",
                     "static"
