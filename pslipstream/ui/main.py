@@ -198,19 +198,21 @@ class UI(QMainWindow):
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
 
-        self.worker.device.connect(self.worker.load_device)
-
-        self.thread.started.connect(self.widget.progressBar.hide)
-        self.thread.started.connect(self.widget.backupButton.hide)
-        self.thread.started.connect(self.widget.discInfoFrame.hide)
-        self.thread.started.connect(self.widget.discInfoList.clear)
-        self.thread.started.connect(lambda: self.widget.statusbar.showMessage(
-            "Loading device %s - %s..." % (device["make"], device["model"])
-        ))
-        self.thread.started.connect(lambda: self.worker.device.emit(device))
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
+
+        def manage_state():
+            self.widget.progressBar.hide()
+            self.widget.backupButton.hide()
+            self.widget.discInfoFrame.hide()
+            self.widget.discInfoList.clear()
+            self.widget.statusbar.showMessage("Loading device %s - %s..." % (device["make"], device["model"]))
+
+        def on_finish(_: int):
+            self.widget.backupButton.show()
+            self.widget.discInfoFrame.show()
+            self.widget.statusbar.showMessage("Loaded device %s - %s..." % (device["make"], device["model"]))
 
         def get_dvd(dvd: Dvd):
             self.widget.discInfoList.clear()
@@ -226,14 +228,12 @@ class UI(QMainWindow):
 
             self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
 
+        self.thread.started.connect(manage_state)
+        self.worker.finished.connect(on_finish)
         self.worker.dvd.connect(get_dvd)
 
-        self.worker.finished.connect(self.widget.backupButton.show)
-        self.worker.finished.connect(self.widget.discInfoFrame.show)
-        self.worker.finished.connect(lambda: self.widget.statusbar.showMessage(
-            "Loaded device %s - %s..." % (device["make"], device["model"])
-        ))
-
+        self.worker.device.connect(self.worker.load_device)
+        self.thread.started.connect(lambda: self.worker.device.emit(device))
         self.thread.start()
 
     def backup_disc(self, device: dict, disc: Dvd):
