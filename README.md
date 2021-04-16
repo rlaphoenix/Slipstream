@@ -51,28 +51,31 @@ To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu
 
 ## Working with the Source Code
 
+This project requires [Poetry], so feel free to take advantage and use it for its various conveniences like
+building sdist/wheel packages, creating and managing dependencies, virtual environments, and more.
+
+Note:
+
+- Source Code may have changes that may be old, not yet tested or stable, or may have regressions.
+- Only run or install from Source Code if you have a good reason. Examples would be to test for regressions, test
+  changes (either your own or other contributors), or to research the code (agreeing to the [LICENSE](LICENSE)).
+- [Poetry] is required as it's used as the [PEP 517] build system, virtual environment manager, dependency manager,
+  and more.
+
+  [Poetry]: <https://python-poetry.org/docs/#installation>
+  [PEP 517]: <https://www.python.org/dev/peps/pep-0517>
+
 ### Install from Source Code
 
     git clone https://github.com/rlaPHOENiX/Slipstream.git
     cd Slipstream
     python -m pip install --user .
 
-Note however that there are some caveats when installing from Source Code:
-
-- Source Code may have changes that are not yet tested or stable, and may have regressions.
-- Only install from Source-code if you have a reason, e.g. to test changes.
-- Requires [Poetry] as it’s used as the build system backend.
-
-This project uses [Poetry] so feel free to use it for its various conveniences like building
-sdist/wheel packages, creating and managing dependencies, virtual environments, and more.
-
-  [Poetry]: <https://python-poetry.org/docs/#installation>
-
 ### Building source and wheel distributions
 
     poetry build
 
-You can specify `-f` to build `sdist` or `wheel` only.
+You can specify `-f` to build `sdist` or `wheel` only. Built files can be found in the `/dist` directory.
 
 ### Packing with PyInstaller
 
