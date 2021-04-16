@@ -263,6 +263,8 @@ class Dvd:
         f.close()
         t.close()
         # Rename temp file to final filename
+        if os.path.exists(fn):
+            os.unlink(fn)
         os.rename(fn_tmp, fn)
         # Tell the user some output information
         self.log.info(
