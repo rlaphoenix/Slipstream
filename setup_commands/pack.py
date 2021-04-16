@@ -27,7 +27,7 @@ class PackCommand(Command):
         try:
             subprocess.run([
                 "pyinstaller",
-                "--clean",
+                "--clean", "--windowed",
                 "-F", "%s/__main__.py" % cfg.title_pkg,
                 "--add-data", os.pathsep.join([str(cfg.static_dir), "%s/static" % cfg.title_pkg]),
                 "--hidden-import", "PySide2.QtXml",
