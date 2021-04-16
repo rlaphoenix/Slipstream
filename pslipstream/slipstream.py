@@ -83,12 +83,6 @@ def gui():
 def get_arguments():
     ap = argparse.ArgumentParser()
     ap.add_argument(
-        "--dev",
-        nargs="*",
-        required=False,
-        help="This is only to be used by dev's that know what it does!!",
-    )
-    ap.add_argument(
         "--dbg",
         action="store_true",
         default=False,
@@ -101,14 +95,6 @@ def get_arguments():
         default=False,
         required=False,
         help="View license details",
-    )
-    ap.add_argument(
-        "-d",
-        "--device",
-        type=str,
-        default="",
-        required=False,
-        help="Choose device for backup (e.g. '/dev/sr0', '/mnt/dvd-rw', 'E:')",
     )
     return ap.parse_args()
 
