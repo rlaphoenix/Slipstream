@@ -37,7 +37,6 @@ def main():
 
     # Initialize custom global variables
     arguments = get_arguments()
-    g.DBG = arguments.dbg  # Debug switch, enables debugging specific code and logging
     g.CFG = Config(cfg.config_file)
     g.CFG.load()
 
