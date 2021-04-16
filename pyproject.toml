@@ -2,8 +2,25 @@
 name = "pslipstream"
 version = "0.1.0"
 description = "The most informative Home-media backup solution."
-authors = ["PHOENiX <rlaphoenix@pm.me>"]
 license = "GPLv3"
+authors = ["PHOENiX <rlaphoenix@pm.me>"]
+maintainers = ["PHOENiX <rlaphoenix@pm.me>"]
+readme = "README.md"
+homepage = "https://github.com/rlaphoenix/pydvdcss"
+repository = "https://github.com/rlaphoenix/pydvdcss"
+documentation = "https://github.com/rlaphoenix/pydvdcss"
+keywords = ["dvd", "wrapper", "library", "videolan", "libdvdcss"]
+classifiers = [
+    # python ver and license set by poetry automatically
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Video :: Conversion"
+]
+include = ["LICENSE", "README.md", "HISTORY.md", "static/*"]
 
 [tool.poetry.dependencies]
 python = ">=3.6,<3.10"
