@@ -4,10 +4,14 @@ import shutil
 from pathlib import Path
 
 from PyInstaller.__main__ import run
+from PyInstaller.utils.win32.versioninfo import VSVersionInfo, FixedFileInfo, StringFileInfo, StringTable, StringStruct, \
+    VarFileInfo, VarStruct, SetVersion
 
 """Configuration options that may be changed or referenced often."""
 DEBUG = False  # When False, removes un-needed data after build has finished
 NAME = "Slipstream"
+AUTHOR = "PHOENiX"
+VERSION = "0.4.0"
 ICON_FILE = "pslipstream/static/img/icon.ico"  # pass None to use default icon
 ONE_FILE = False  # Must be False if using setup.iss
 CONSOLE = False  # Recommended if using GUI
@@ -38,6 +42,36 @@ run([
     *itertools.chain(*[["--hidden-import", x] for x in HIDDEN_IMPORTS]),
     *EXTRA_ARGS
 ])
+
+"""Set Version Info Structure."""
+VERSION_4_TUP = tuple(map(int, ("%s.0" % VERSION).split(".")))
+VERSION_4_STR = ".".join(map(str, VERSION_4_TUP))
+SetVersion(
+    "dist/{0}/{0}.exe".format(NAME),
+    VSVersionInfo(
+        ffi=FixedFileInfo(
+            filevers=VERSION_4_TUP,
+            prodvers=VERSION_4_TUP
+        ),
+        kids=[
+            StringFileInfo([StringTable(
+                "040904B0",  # ?
+                [
+                    StringStruct("Comments", NAME),
+                    StringStruct("CompanyName", AUTHOR),
+                    StringStruct("FileDescription", "The most informative Home-media backup solution"),
+                    StringStruct("FileVersion", VERSION_4_STR),
+                    StringStruct("InternalName", NAME),
+                    StringStruct("LegalCopyright", "Copyright (C) 2021 %s" % AUTHOR),
+                    StringStruct("OriginalFilename", ""),
+                    StringStruct("ProductName", NAME),
+                    StringStruct("ProductVersion", VERSION_4_STR)
+                ]
+            )]),
+            VarFileInfo([VarStruct("Translation", [0, 1200])])  # ?
+        ]
+    )
+)
 
 if not DEBUG:
     shutil.rmtree("build", ignore_errors=True)
