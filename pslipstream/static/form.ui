@@ -329,10 +329,7 @@
             <bool>true</bool>
            </attribute>
            <attribute name="headerMinimumSectionSize">
-            <number>88</number>
-           </attribute>
-           <attribute name="headerDefaultSectionSize">
-            <number>196</number>
+            <number>175</number>
            </attribute>
            <column>
             <property name="text">
