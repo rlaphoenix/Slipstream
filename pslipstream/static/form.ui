@@ -322,6 +322,9 @@
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
+           </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectItems</enum>
            </property>
