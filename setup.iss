@@ -9,6 +9,7 @@ AppId={{88EAF5E9-A032-4322-95C9-89FB13E38278}
 AppName={#AppName}
 AppPublisher=PHOENiX
 AppPublisherURL=https://github.com/rlaphoenix/slipstream
+AppReadmeFile=https://github.com/rlaPHOENiX/Slipstream/blob/master/README.md
 AppSupportURL=https://github.com/rlaPHOENiX/Slipstream/discussions
 AppUpdatesURL=https://github.com/rlaphoenix/slipstream/releases
 AppVerName={#AppName} {#Version}
