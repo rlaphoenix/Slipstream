@@ -15,49 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../static/img/music-disc-with-luster.svg</normaloff>../static/img/music-disc-with-luster.svg</iconset>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">* {
-	color: rgb(210, 211, 211);
-	background-color: rgb(32, 34, 37);
-}
-
-QPushButton {
-	border: none;
-	background-color: rgb(109, 109, 109);
-	border-radius: 2px;
-	padding: 4px 8px;
-	text-align: left;
-}
-QPushButton:hover:!pressed {
-  background-color: rgb(139, 139, 139);
-}
-QPushButton:disabled {
-  background-color: rgb(39, 39, 39);
-}
-
-QTextEdit {
-	background-color: rgb(24, 24, 24);
-	border-radius: 4px;
-}
-
-QScrollBar:vertical {
-	border: none;
-	width:  8px;
-	margin-left: 4px;
-	border-radius: 1px;
-}
-
-QScrollBar:add-line:vertical,
-QScrollBar:sub-line:vertica {
-	width: 0px;
-}
-
-QScrollBar:handle:vertical {
-	background: white;
-	border-radius: 2px;
-}</string>
+    <normaloff>img/music-disc-with-luster.svg</normaloff>img/music-disc-with-luster.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -128,7 +86,7 @@ QScrollBar:handle:vertical {
               </size>
              </property>
              <property name="pixmap">
-              <pixmap>../static/img/music-disc-with-luster.svg</pixmap>
+              <pixmap>img/music-disc-with-luster.svg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -166,7 +124,7 @@ QScrollBar:handle:vertical {
              </property>
              <property name="icon">
               <iconset>
-               <normaloff>../static/img/refresh.svg</normaloff>../static/img/refresh.svg</iconset>
+               <normaloff>img/refresh.svg</normaloff>img/refresh.svg</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -332,7 +290,7 @@ QPushButton:hover:pressed {
               </size>
              </property>
              <property name="pixmap">
-              <pixmap>../static/img/info-circle.svg</pixmap>
+              <pixmap>img/info-circle.svg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -459,7 +417,7 @@ QPushButton:hover:pressed {
               </size>
              </property>
              <property name="pixmap">
-              <pixmap>../static/img/align.svg</pixmap>
+              <pixmap>img/align.svg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
