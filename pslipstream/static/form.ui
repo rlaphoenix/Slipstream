@@ -340,6 +340,9 @@
            <attribute name="headerMinimumSectionSize">
             <number>175</number>
            </attribute>
+           <attribute name="headerStretchLastSection">
+            <bool>false</bool>
+           </attribute>
            <column>
             <property name="text">
              <string>Name</string>
