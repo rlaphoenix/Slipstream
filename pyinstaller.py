@@ -19,7 +19,7 @@ CONSOLE = False  # Recommended if using GUI
 ADDITIONAL_DATA = [
     # local file path, destination in build output
     ["pslipstream/static", "static"],
-    ["submodules/libdvdcss/1.4.2/%d-bit/libdvdcss-2.dll" % (8 * struct.calcsize("P")), ""]
+    ["submodules/libdvdcss/1.4.2/%d-bit/libdvdcss-2.dll" % (8 * struct.calcsize("P")), "."]
 ]
 HIDDEN_IMPORTS = ["PySide2.QtXml"]
 EXTRA_ARGS = [
