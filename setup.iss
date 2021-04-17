@@ -16,15 +16,15 @@ AppVerName={#AppName} {#Version}
 AppVersion={#Version}
 ArchitecturesAllowed=x64
 Compression=lzma2/max
+DefaultDirName={autopf}\{#AppName}
 LicenseFile=LICENSE
 ; Python 3.9 has dropped support for <= Windows 7/Server 2008 R2 SP1. https://jrsoftware.org/ishelp/index.php?topic=winvernotes
 MinVersion=6.2
-DefaultDirName={autopf}\{#AppName}
+OutputBaseFilename=Slipstream-Setup
+OutputDir=dist
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=dist
-OutputBaseFilename=Slipstream-Setup
 SolidCompression=yes
 WizardStyle=modern
 
