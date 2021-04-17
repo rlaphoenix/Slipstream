@@ -24,8 +24,6 @@ OutputBaseFilename=Slipstream-Setup
 OutputDir=dist
 OutputManifestFile=Slipstream-Setup-Manifest.txt
 PrivilegesRequiredOverridesAllowed=dialog commandline
-; Uncomment the following line to run in non administrative install mode (install for current user only.)
-;PrivilegesRequired=lowest
 SolidCompression=yes
 WizardStyle=modern
 
