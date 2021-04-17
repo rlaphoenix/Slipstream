@@ -108,7 +108,7 @@ def get_runtime_details():
             cfg.description,
             cfg.url,
             "",
-            f":: {cfg.platform} {cfg.architecture} (Python v{cfg.py_version})",
+            f":: {cfg.platform} {cfg.architecture} (Python v{cfg.py_version}{['', ' +Frozen'][cfg.frozen]})",
             f":: User Directory: {cfg.user_dir}",
             f":: Static Directory: {cfg.static_dir}",
         ]
