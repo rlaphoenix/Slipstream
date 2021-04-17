@@ -7,12 +7,12 @@
 [Setup]
 AppId={{88EAF5E9-A032-4322-95C9-89FB13E38278}
 AppName={#AppName}
-AppVersion={#Version}
-;AppVerName={#AppName} {#Version}
 AppPublisher=PHOENiX
 AppPublisherURL=https://github.com/rlaphoenix/slipstream
 AppSupportURL=https://github.com/rlaphoenix/slipstream/issues
 AppUpdatesURL=https://github.com/rlaphoenix/slipstream/releases/latest
+AppVerName={#AppName} {#Version}
+AppVersion={#Version}
 ArchitecturesAllowed=x64
 Compression=lzma2/max
 LicenseFile=LICENSE
