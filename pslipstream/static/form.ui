@@ -221,7 +221,7 @@
             </font>
            </property>
            <property name="text">
-            <string>BACKUP</string>
+            <string>Backup</string>
            </property>
           </widget>
          </item>
