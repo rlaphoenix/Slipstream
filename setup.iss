@@ -14,6 +14,7 @@ AppPublisherURL=https://github.com/rlaphoenix/slipstream
 AppSupportURL=https://github.com/rlaphoenix/slipstream/issues
 AppUpdatesURL=https://github.com/rlaphoenix/slipstream/releases/latest
 ArchitecturesAllowed=x64
+Compression=lzma2/max
 LicenseFile=LICENSE
 ; Python 3.9 has dropped support for <= Windows 7/Server 2008 R2 SP1. https://jrsoftware.org/ishelp/index.php?topic=winvernotes
 MinVersion=6.2
@@ -24,7 +25,6 @@ DisableProgramGroupPage=yes
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=dist
 OutputBaseFilename=Slipstream-Setup
-Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 
