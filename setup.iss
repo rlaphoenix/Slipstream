@@ -22,6 +22,7 @@ LicenseFile=LICENSE
 MinVersion=6.2
 OutputBaseFilename=Slipstream-Setup
 OutputDir=dist
+OutputManifestFile=Slipstream-Setup-Manifest.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
