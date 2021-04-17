@@ -19,7 +19,7 @@ from pslipstream.dvd import Dvd
 class Worker(QtCore.QObject):
     # input signals
     device = QtCore.Signal(dict)
-    disc = QtCore.Signal(Dvd)
+    disc = QtCore.Signal(Dvd, str)
     # output signals
     error = QtCore.Signal(Exception)
     finished = QtCore.Signal(int)
@@ -99,11 +99,8 @@ class Worker(QtCore.QObject):
         except Exception as e:
             self.error.emit(e)
 
-    def backup_disc(self, disc: Dvd):
+    def backup_disc(self, disc: Dvd, out_dir: str):
         try:
-            out_dir = QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
-            if out_dir:
-                out_dir = out_dir[0]
             disc.create_backup(out_dir, self.progress)
             self.finished.emit(0)
         except Exception as e:
@@ -254,6 +251,12 @@ class UI(QMainWindow):
 
     def backup_disc(self, device: dict, disc: Dvd):
         """Backup loaded disc to an ISO file."""
+        out_dir = QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
+        print(out_dir)
+        if not out_dir:
+            self.log.debug("Cancelled Backup as no file was provided.")
+            return
+
         self.thread = QtCore.QThread()
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
@@ -289,5 +292,5 @@ class UI(QMainWindow):
         self.worker.error.connect(on_error)
 
         self.worker.disc.connect(self.worker.backup_disc)
-        self.thread.started.connect(lambda: self.worker.disc.emit(disc))
+        self.thread.started.connect(lambda: self.worker.disc.emit(disc, out_dir))
         self.thread.start()
