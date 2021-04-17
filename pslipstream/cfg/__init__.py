@@ -28,6 +28,7 @@ throughout the code by importing only what we want.
 import datetime
 import os
 import platform
+import sys
 from pathlib import Path
 
 # general
@@ -68,6 +69,7 @@ opt_packages = {
 py_version = platform.python_version()
 architecture = platform.architecture()[0]
 platform = platform.system()
+frozen = getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")
 windows = platform == "Windows"
 linux = platform == "Linux"
 darwin = platform == "Darwin"
