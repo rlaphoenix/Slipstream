@@ -13,6 +13,8 @@ AppPublisher=PHOENiX
 AppPublisherURL=https://github.com/rlaphoenix/slipstream
 AppSupportURL=https://github.com/rlaphoenix/slipstream/issues
 AppUpdatesURL=https://github.com/rlaphoenix/slipstream/releases/latest
+; Python 3.9 has dropped support for <= Windows 7/Server 2008 R2 SP1. https://jrsoftware.org/ishelp/index.php?topic=winvernotes
+MinVersion=6.2
 DefaultDirName={autopf}\{#AppName}
 DisableProgramGroupPage=yes
 LicenseFile=C:\Users\phoenix\Git\Slipstream\LICENSE
