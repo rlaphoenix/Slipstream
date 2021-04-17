@@ -95,7 +95,7 @@ user_dir = None  # gotten on main()
 static_dir = root_dir / "static"
 if package_obj:
     try:
-        static_dir = pkg_resources.resource_filename(package_obj, f"{title_pkg}/static")
+        static_dir = Path(pkg_resources.resource_filename(package_obj, "%s/static" % title_pkg))
     except pkg_resources.DistributionNotFound:
         pass
     except pkg_resources.VersionConflict:
