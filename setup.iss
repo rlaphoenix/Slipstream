@@ -5,7 +5,7 @@
 #define AppExeName "Slipstream.exe"
 
 [Setup]
-AppId={{88EAF5E9-A032-4322-95C9-89FB13E38278}
+AppId={#AppName}
 AppName={#AppName}
 AppPublisher=PHOENiX
 AppPublisherURL=https://github.com/rlaphoenix/slipstream
