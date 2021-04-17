@@ -316,9 +316,6 @@
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
-           <property name="alternatingRowColors">
-            <bool>false</bool>
-           </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectItems</enum>
            </property>
