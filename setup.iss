@@ -25,6 +25,7 @@ OutputDir=dist
 OutputManifestFile=Slipstream-Setup-Manifest.txt
 PrivilegesRequiredOverridesAllowed=dialog commandline
 SolidCompression=yes
+SetupIconFile=pslipstream/static/img/icon.ico
 WizardStyle=modern
 
 [Languages]
