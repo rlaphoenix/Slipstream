@@ -30,8 +30,6 @@ import os
 import platform
 from pathlib import Path
 
-import pkg_resources
-
 # general
 title = "Slipstream"
 title_pkg = "pslipstream"
@@ -41,11 +39,6 @@ version = "0.4.0"
 author = "PHOENiX"
 author_email = "rlaphoenix@pm.me"
 min_size = "1200x440"
-package_obj = None
-try:
-    package_obj = pkg_resources.Requirement.parse(f"{title_pkg}=={version}")
-except pkg_resources.DistributionNotFound:
-    pass
 
 # build configuration
 py_ver_support = ">=3.6, <3.10"
@@ -93,13 +86,6 @@ copyright_paragraph = "\n".join([
 root_dir = Path(os.path.abspath(os.path.dirname(__file__))).parent
 user_dir = None  # gotten on main()
 static_dir = root_dir / "static"
-if package_obj:
-    try:
-        static_dir = Path(pkg_resources.resource_filename(package_obj, "%s/static" % title_pkg))
-    except pkg_resources.DistributionNotFound:
-        pass
-    except pkg_resources.VersionConflict:
-        pass
 
 # file paths
 config_file = None  # gotten on main()
