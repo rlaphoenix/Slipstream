@@ -15,7 +15,7 @@ AUTHOR = "PHOENiX"
 VERSION = "0.4.0"
 ICON_FILE = "pslipstream/static/img/icon.ico"  # pass None to use default icon
 ONE_FILE = False  # Must be False if using setup.iss
-CONSOLE = False  # Recommended if using GUI
+CONSOLE = False  # If build is intended for GUI, set to False
 ADDITIONAL_DATA = [
     # local file path, destination in build output
     ["pslipstream/static", "pslipstream/static"],
