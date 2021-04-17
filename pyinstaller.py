@@ -21,6 +21,11 @@ EXTRA_ARGS = [
     "-y", "--win-private-assemblies", "--win-no-prefer-redirects"
 ]
 
+"""Prepare environment to ensure output data is fresh."""
+shutil.rmtree("build")
+shutil.rmtree("dist")
+os.unlink("Slipstream.spec")
+
 """Run PyInstaller with the provided configuration."""
 run([
     "pslipstream/__main__.py",
