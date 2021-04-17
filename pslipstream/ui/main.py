@@ -210,6 +210,7 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def manage_state():
+            self.widget.deviceListDevices_2.setEnabled(False)
             self.widget.progressBar.hide()
             self.widget.backupButton.hide()
             self.widget.discInfoFrame.hide()
@@ -220,6 +221,7 @@ class UI(QMainWindow):
                 self.widget.backupButton.clicked.disconnect()
 
         def on_finish(_: int):
+            self.widget.deviceListDevices_2.setEnabled(True)
             self.widget.backupButton.setEnabled(True)
             self.widget.backupButton.show()
             self.widget.discInfoFrame.show()
