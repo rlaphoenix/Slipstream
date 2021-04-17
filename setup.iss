@@ -25,7 +25,7 @@ LicenseFile=C:\Users\phoenix\Git\Slipstream\LICENSE
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=dist
-OutputBaseFilename=mysetup
+OutputBaseFilename=Slipstream-Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -38,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Users\phoenix\Git\Slipstream\dist\Slipstream\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\phoenix\Git\Slipstream\build\Slipstream\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\phoenix\Git\Slipstream\dist\Slipstream\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
