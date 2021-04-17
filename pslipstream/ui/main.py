@@ -9,7 +9,7 @@ import wmi
 from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QPixmap
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem, QFileDialog
+from PySide2.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem, QFileDialog, QHeaderView
 from pycdlib import PyCdlib
 
 from pslipstream import cfg
@@ -245,6 +245,7 @@ class UI(QMainWindow):
             self.widget.discInfoList.addTopLevelItem(pvd_tree)
 
             self.widget.discInfoList.expandToDepth(0)
+            self.widget.discInfoList.header().setSectionResizeMode(QHeaderView.ResizeToContents)
 
             self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
 
