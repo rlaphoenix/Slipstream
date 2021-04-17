@@ -1,6 +1,7 @@
 import itertools
 import os
 import shutil
+from pathlib import Path
 
 from PyInstaller.__main__ import run
 
@@ -22,9 +23,9 @@ EXTRA_ARGS = [
 ]
 
 """Prepare environment to ensure output data is fresh."""
-shutil.rmtree("build")
-shutil.rmtree("dist")
-os.unlink("Slipstream.spec")
+shutil.rmtree("build", ignore_errors=True)
+shutil.rmtree("dist", ignore_errors=True)
+Path("Slipstream.spec").unlink(missing_ok=True)
 
 """Run PyInstaller with the provided configuration."""
 run([
@@ -39,5 +40,5 @@ run([
 ])
 
 if not DEBUG:
-    shutil.rmtree("build")
-    os.unlink("Slipstream.spec")
+    shutil.rmtree("build", ignore_errors=True)
+    Path("Slipstream.spec").unlink(missing_ok=True)
