@@ -165,7 +165,7 @@
               <x>0</x>
               <y>0</y>
               <width>200</width>
-              <height>223</height>
+              <height>205</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -219,21 +219,6 @@
              <bold>false</bold>
              <stylestrategy>PreferDefault</stylestrategy>
             </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-	text-align: center;
-}
-QPushButton:!hover {
-	background-color: transparent;
-}
-QPushButton:hover:!pressed {
-	background-color: rgb(0, 105, 192);
-}
-QPushButton:hover:pressed {
-	background-color: rgb(30, 135, 222);
-}
-</string>
            </property>
            <property name="text">
             <string>BACKUP</string>
@@ -333,9 +318,6 @@ QPushButton:hover:pressed {
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
            </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
@@ -451,9 +433,6 @@ QPushButton:hover:pressed {
              <bold>true</bold>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">padding: 10px;</string>
-           </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
@@ -476,12 +455,6 @@ p, li { white-space: pre-wrap; }
     </item>
     <item>
      <widget class="QProgressBar" name="progressBar">
-      <property name="styleSheet">
-       <string notr="true">margin: -1px -1px -1px -1px;
-border: none;
-background-color: rgb(24, 24, 24);
-max-height: 5px;</string>
-      </property>
       <property name="value">
        <number>20</number>
       </property>
@@ -501,9 +474,6 @@ max-height: 5px;</string>
      <width>1000</width>
      <height>21</height>
     </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border-bottom: 1px solid rgb(24, 24, 24);</string>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">

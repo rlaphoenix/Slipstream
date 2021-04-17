@@ -17,9 +17,25 @@ QPushButton:disabled {
   background-color: rgb(39, 39, 39);
 }
 
+QPushButton#backupButton {
+	text-align: center;
+}
+QPushButton#backupButton:!hover {
+	background-color: transparent;
+}
+QPushButton#backupButton:hover:!pressed {
+	background-color: rgb(0, 105, 192);
+}
+QPushButton#backupButton:hover:pressed {
+	background-color: rgb(30, 135, 222);
+}
+
 QTextEdit {
 	background-color: rgb(24, 24, 24);
 	border-radius: 4px;
+}
+QTextEdit#log {
+    padding: 10px;
 }
 
 QScrollBar:vertical {
@@ -37,4 +53,15 @@ QScrollBar:sub-line:vertica {
 QScrollBar:handle:vertical {
 	background: white;
 	border-radius: 2px;
+}
+
+QProgressBar {
+    margin: -1px -1px -1px -1px;
+    border: none;
+    background-color: rgb(24, 24, 24);
+    max-height: 5px;
+}
+
+QMenuBar {
+	border-bottom: 1px solid rgb(24, 24, 24);
 }
