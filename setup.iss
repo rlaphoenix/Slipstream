@@ -35,8 +35,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\phoenix\Git\Slipstream\dist\Slipstream\{#AppName}.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\phoenix\Git\Slipstream\dist\Slipstream\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: dist\Slipstream\{#AppName}.exe; DestDir: {app}; Flags: ignoreversion
+Source: dist\Slipstream\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
