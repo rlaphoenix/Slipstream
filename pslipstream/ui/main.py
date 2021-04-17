@@ -9,7 +9,7 @@ import wmi
 from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QPixmap
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem
+from PySide2.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem, QFileDialog
 from pycdlib import PyCdlib
 
 from pslipstream import cfg
@@ -101,7 +101,10 @@ class Worker(QtCore.QObject):
 
     def backup_disc(self, disc: Dvd):
         try:
-            disc.create_backup(self.progress)
+            out_dir = QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
+            if out_dir:
+                out_dir = out_dir[0]
+            disc.create_backup(out_dir, self.progress)
             self.finished.emit(0)
         except Exception as e:
             self.error.emit(e)
