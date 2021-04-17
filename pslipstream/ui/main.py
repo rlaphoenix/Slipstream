@@ -161,6 +161,7 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def manage_state():
+            self.widget.refreshIcon.setEnabled(False)
             self.widget.progressBar.hide()
             self.widget.backupButton.hide()
             self.widget.discInfoFrame.hide()
@@ -168,6 +169,7 @@ class UI(QMainWindow):
             self.widget.statusbar.showMessage("Scanning devices...")
 
         def on_finish(n: int):
+            self.widget.refreshIcon.setEnabled(True)
             self.widget.statusbar.showMessage("Found %d devices" % n)
 
         def on_error(e: Exception):
