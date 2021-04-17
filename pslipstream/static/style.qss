@@ -36,19 +36,23 @@ QTextEdit#log {
     padding: 10px;
 }
 
-QScrollBar:vertical {
+QScrollBar {
 	border: none;
-	width: 8px;
-	margin-left: 4px;
 	border-radius: 1px;
 }
-
-QScrollBar:add-line:vertical,
-QScrollBar:sub-line:vertical {
+QScrollBar:vertical {
+	width: 8px;
+	margin-left: 4px;
+}
+QScrollBar:horizontal {
+	height: 8px;
+	margin-top: 4px;
+}
+QScrollBar:add-line,
+QScrollBar:sub-line {
 	width: 0px;
 }
-
-QScrollBar:handle:vertical {
+QScrollBar:handle {
 	background: white;
 	border-radius: 2px;
 }
