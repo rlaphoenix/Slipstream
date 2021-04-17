@@ -211,6 +211,7 @@ class UI(QMainWindow):
 
         def manage_state():
             self.widget.deviceListDevices_2.setEnabled(False)
+            self.widget.refreshIcon.setEnabled(False)
             self.widget.progressBar.hide()
             self.widget.backupButton.hide()
             self.widget.discInfoFrame.hide()
@@ -222,6 +223,7 @@ class UI(QMainWindow):
 
         def on_finish(_: int):
             self.widget.deviceListDevices_2.setEnabled(True)
+            self.widget.refreshIcon.setEnabled(True)
             self.widget.backupButton.setEnabled(True)
             self.widget.backupButton.show()
             self.widget.discInfoFrame.show()
