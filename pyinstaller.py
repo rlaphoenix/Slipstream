@@ -16,7 +16,7 @@ ADDITIONAL_DATA = [
 ]
 HIDDEN_IMPORTS = ["PySide2.QtXml"]
 EXTRA_ARGS = [
-    "--win-private-assemblies", "--win-no-prefer-redirects"
+    "-y", "--win-private-assemblies", "--win-no-prefer-redirects"
 ]
 
 """Run PyInstaller with the provided configuration."""
