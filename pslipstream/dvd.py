@@ -206,7 +206,7 @@ class Dvd:
         # Return lba data
         return lba_data
 
-    def create_backup(self, signal: Signal = None):
+    def create_backup(self, out_dir: str, signal: Signal = None):
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
@@ -218,8 +218,8 @@ class Dvd:
         self.log.info("Starting DVD backup for %s" % self.device)
         pvd = self.cdlib.pvds[0]
         pvd.volume_identifier = pvd.volume_identifier.strip(b"\x00").decode()
-        fn = "%s.ISO" % pvd.volume_identifier
-        fn_tmp = "%s.ISO.tmp" % pvd.volume_identifier
+        fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
+        fn_tmp = fn + ".tmp"
         first_lba = 0
         last_lba = pvd.space_size - 1
         disc_size = pvd.space_size * self.dvdcss.SECTOR_SIZE
