@@ -244,6 +244,8 @@ class UI(QMainWindow):
                 pvd_tree.addChild(QTreeWidgetItem([k, repr(v or "NULL")]))
             self.widget.discInfoList.addTopLevelItem(pvd_tree)
 
+            self.widget.discInfoList.expandToDepth(0)
+
             self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
 
         self.thread.started.connect(manage_state)
