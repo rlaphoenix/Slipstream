@@ -1,6 +1,7 @@
 import itertools
 import os
 import shutil
+import struct
 from pathlib import Path
 
 from PyInstaller.__main__ import run
@@ -18,8 +19,7 @@ CONSOLE = False  # Recommended if using GUI
 ADDITIONAL_DATA = [
     # local file path, destination in build output
     ["pslipstream/static", "static"],
-    ["submodules/libdvdcss/1.4.2/64-bit/libdvdcss-2.dll", "libdvdcss-x64.dll"],
-    ["submodules/libdvdcss/1.4.2/32-bit/libdvdcss-2.dll", "libdvdcss-x86.dll"]
+    ["submodules/libdvdcss/1.4.2/%d-bit/libdvdcss-2.dll" % (8 * struct.calcsize("P")), ""]
 ]
 HIDDEN_IMPORTS = ["PySide2.QtXml"]
 EXTRA_ARGS = [
