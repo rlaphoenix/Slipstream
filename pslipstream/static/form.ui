@@ -492,11 +492,7 @@ max-height: 5px;</string>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar">
-   <property name="styleSheet">
-    <string notr="true">border-top: 1px solid rgb(24, 24, 24);</string>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
