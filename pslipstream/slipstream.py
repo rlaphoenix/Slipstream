@@ -75,8 +75,6 @@ def gui():
 
     ui.scan_devices()
 
-    ui.widget.log.append(get_runtime_details())
-
     sys.exit(app.exec_())
 
 
