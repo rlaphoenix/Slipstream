@@ -9,6 +9,7 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QMessageBox
 
 from pslipstream import cfg
+from pslipstream.device import Device
 from pslipstream.dvd import Dvd
 from pslipstream.ui.DeviceWorker import DeviceWorker
 
