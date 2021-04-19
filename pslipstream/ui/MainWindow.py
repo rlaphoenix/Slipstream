@@ -125,7 +125,7 @@ class MainWindow:
         self.thread.started.connect(self.worker.scan_devices)
         self.thread.start()
 
-    def load_device(self, device: dict):
+    def load_device(self, device: Device):
         """
         Load device, get disc object, get disc information.
         Currently only supports DVD discs.
@@ -145,7 +145,7 @@ class MainWindow:
             self.ui.backupButton.hide()
             self.ui.discInfoFrame.hide()
             self.ui.discInfoList.clear()
-            self.ui.statusbar.showMessage("Loading device %s - %s..." % (device["make"], device["model"]))
+            self.ui.statusbar.showMessage("Loading device %s - %s..." % (device.make, device.model))
 
             if self.ui.backupButton.isEnabled():
                 self.ui.backupButton.clicked.disconnect()
@@ -156,7 +156,7 @@ class MainWindow:
             self.ui.backupButton.setEnabled(True)
             self.ui.backupButton.show()
             self.ui.discInfoFrame.show()
-            self.ui.statusbar.showMessage("Loaded device %s - %s..." % (device["make"], device["model"]))
+            self.ui.statusbar.showMessage("Loaded device %s - %s..." % (device.make, device.model))
 
         def on_error(e: Exception):
             print(e)
