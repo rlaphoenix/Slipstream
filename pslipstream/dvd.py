@@ -216,14 +216,14 @@ class Dvd:
         """
         # Print primary volume descriptor information
         self.log.info("Starting DVD backup for %s" % self.device)
-        pvd = self.cdlib.pvds[0]
-        fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
+        pvd = self.get_primary_descriptor()
+        fn = os.path.join(out_dir, "%s.ISO" % pvd["volume_id"])
         fn_tmp = fn + ".tmp"
         first_lba = 0
-        last_lba = pvd.space_size - 1
-        disc_size = pvd.space_size * self.dvdcss.SECTOR_SIZE
+        last_lba = pvd["total_sectors"] - 1
+        disc_size = pvd["size"]
         self.log.debug(
-            f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {self.dvdcss.SECTOR_SIZE:,} B.\n"
+            f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {pvd['sector_size']:,} B.\n"
             f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes.\n"
             f'Saving to "{fn}"...'
         )
