@@ -1,5 +1,6 @@
 import logging
 import subprocess
+import sys
 
 import pythoncom
 import wmi
