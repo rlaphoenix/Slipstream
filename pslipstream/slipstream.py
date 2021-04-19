@@ -72,6 +72,8 @@ def gui():
         app.setStyleSheet(f.read())
     app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
+    app.aboutToQuit.connect(lambda: cfg.user_cfg.save())
+
     window = MainWindow()
     window.show()
 
