@@ -45,7 +45,12 @@ class MainWindow:
 
     def open_file(self, device: Device = None):
         if not device:
-            loc = QtWidgets.QFileDialog.getOpenFileName(self.ui, "Backup Disc Image", "", "ISO files (*.iso)")
+            loc = QtWidgets.QFileDialog.getOpenFileName(
+                self.ui,
+                "Backup Disc Image",
+                "",
+                "ISO files (*.iso);;DVD IFO files (*.ifo)"
+            )
             if not loc[0]:
                 self.log.debug("Cancelled Open File as no save path was provided.")
                 return
