@@ -185,14 +185,6 @@ class MainWindow:
             if not device.volume_id:
                 device.volume_id = pvd["volume_id"]
 
-            if device["loc"].lower().endswith(".iso"):
-                button = QtWidgets.QPushButton("{volid}\n{file_name}".format(
-                    volid=pvd["volume_id"],
-                    file_name=Path(device["loc"]).name
-                ))
-                button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-                button.clicked.connect(lambda: self.load_device(device))
-                self.ui.deviceListDevices_2.layout().insertWidget(0, button)
 
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
