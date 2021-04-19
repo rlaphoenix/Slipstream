@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Class file that handles all DVD operations including loading,
 reading, seeking, backing up, and more.
 """
-
 import logging
 import os
 from datetime import datetime
@@ -127,7 +126,7 @@ class Dvd:
             "total_sectors": pvd.space_size,
             "size": pvd.log_block_size * pvd.space_size,
             "system_id": pvd.system_identifier.decode().strip() or None,
-            "volume_id": pvd.volume_identifier.decode().strip() or None,
+            "volume_id": pvd.volume_identifier.replace(b"\x00", b"").strip().decode() or None,
             "volume_set_id": pvd.volume_set_identifier.decode().strip() or None,
             "publisher_id": pvd.publisher_identifier.record().decode().strip() or None,
             "preparer_id": pvd.preparer_identifier.record().decode().strip() or None,
@@ -218,7 +217,6 @@ class Dvd:
         # Print primary volume descriptor information
         self.log.info("Starting DVD backup for %s" % self.device)
         pvd = self.cdlib.pvds[0]
-        pvd.volume_identifier = pvd.volume_identifier.strip(b"\x00").decode()
         fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
         fn_tmp = fn + ".tmp"
         first_lba = 0
