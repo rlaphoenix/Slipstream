@@ -89,7 +89,6 @@ class MainWindow:
         recent_entry.triggered.connect(lambda: self.open_file(device))
         self.ui.menuOpen_Recent.addAction(recent_entry)
         self.ui.menuOpen_Recent.setEnabled(True)
-        cfg.user_cfg.recently_opened.append(device)
 
     def open_file(self, device: Device = None):
         if not device:
@@ -113,6 +112,7 @@ class MainWindow:
 
         if not any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions()):
             self.add_recent_entry(device)
+            cfg.user_cfg.recently_opened.append(device)
 
         cfg.user_cfg.last_opened_directory = Path(device.target).parent
 
