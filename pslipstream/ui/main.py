@@ -112,6 +112,7 @@ class UI(QMainWindow):
     def __init__(self, parent=None):
         super(UI, self).__init__(parent)
         ui_loader = QUiLoader()
+        ui_loader.setWorkingDirectory(QtCore.QDir(str(cfg.root_dir / "ui")))
         ui_file = QtCore.QFile(str(cfg.root_dir / "ui" / "MainWindow.ui"))
         ui_file.open(QtCore.QFile.ReadOnly)
         self.widget = ui_loader.load(ui_file, parent)
