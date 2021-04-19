@@ -50,7 +50,7 @@ class Config(object):
         with open(config_path, "rt") as f:
             stored_settings = yaml.load(f, Loader=yaml.Loader)
             if not stored_settings:
-                return
+                return cls(config_path)
             return cls(config_path, stored_settings)
 
     def save(self):
