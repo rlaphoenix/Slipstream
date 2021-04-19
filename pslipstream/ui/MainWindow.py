@@ -88,6 +88,7 @@ class MainWindow:
         recent_entry.setText(device.target)
         recent_entry.triggered.connect(lambda: self.open_file(device))
         self.ui.menuOpen_Recent.addAction(recent_entry)
+        self.ui.menuOpen_Recent.setEnabled(True)
         cfg.user_cfg.recently_opened.append(device)
 
     def open_file(self, device: Device = None):
