@@ -182,7 +182,8 @@ class MainWindow:
             self.ui.discInfoList.expandToDepth(0)
             self.ui.discInfoList.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
-            self.ui.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
+            if not device.volume_id:
+                device.volume_id = pvd["volume_id"]
 
             if device["loc"].lower().endswith(".iso"):
                 button = QtWidgets.QPushButton("{volid}\n{file_name}".format(
