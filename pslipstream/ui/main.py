@@ -121,6 +121,8 @@ class UI(QMainWindow):
         self.thread = None
         self.worker = None
 
+        self.log = logging.getLogger("GUI")
+
         self.configure()
 
     def configure(self):
