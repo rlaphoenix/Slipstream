@@ -3,7 +3,6 @@ import math
 import struct
 import sys
 from pathlib import Path
-from typing import Union
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtUiTools import QUiLoader
