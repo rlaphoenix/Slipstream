@@ -36,6 +36,7 @@ class MainWindow:
         self.ui.progressBar.hide()
 
     def connect_io(self):
+        self.ui.actionExit.triggered.connect(self.ui.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.refreshIcon.clicked.connect(self.scan_devices)
 
