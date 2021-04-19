@@ -57,4 +57,4 @@ class Config(object):
         """Save yaml config to file from dictionary"""
         self.config_path.parent.mkdir(exist_ok=True)
         with open(self.config_path, "wt") as f:
-            yaml.dump(self.__dict__ or {}, f)
+            yaml.dump({k: v for k, v in (self.__dict__ or {}).items() if k != "config_path"}, f)
