@@ -386,8 +386,6 @@
      </property>
      <addaction name="actionUntitled_txt"/>
     </widget>
-    <addaction name="actionNew"/>
-    <addaction name="separator"/>
     <addaction name="actionOpen"/>
     <addaction name="menuOpen_Recent"/>
     <addaction name="separator"/>
