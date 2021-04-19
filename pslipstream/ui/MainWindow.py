@@ -54,7 +54,7 @@ class MainWindow:
                 ])))
             )) +
             ("<p>%s</p>" % cfg.copyright_line) +
-            ("<p>{0}<br/><a href='{1}'>{1}</a></p>".format(cfg.description, cfg.url))
+            ("<p>{0}<br/><a href='{1}' style='color:white'>{1}</a></p>".format(cfg.description, cfg.url))
         )
 
     def clear_device_list(self):
