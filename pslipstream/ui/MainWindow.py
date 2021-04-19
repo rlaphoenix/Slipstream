@@ -19,6 +19,7 @@ class MainWindow:
         self.worker = None
 
         self.setup_ui()
+        self.connect_io()
 
     def show(self):
         self.ui.show()
