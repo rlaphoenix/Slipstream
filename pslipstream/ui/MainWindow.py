@@ -72,16 +72,23 @@ class MainWindow:
                 device.setParent(None)
 
     def add_device_button(self, device: Device):
+        for d in self.ui.deviceListDevices_2.children():
+            if isinstance(d, QtWidgets.QPushButton):
+                if d.objectName() == device.target:
+                    return
+
         no_disc = not bool(device.volume_id)
         button = QtWidgets.QPushButton("{volume}\n{make} - {model}".format(
             volume=device.volume_id or "No disc inserted...",
             make=device.make,
             model=device.model
         ))
+        button.setObjectName(device.target)
         button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         button.clicked.connect(lambda: self.load_device(device))
         if no_disc:
             button.setEnabled(False)
+
         device_list = self.ui.deviceListDevices_2.layout()
         device_list.insertWidget(device_list.count() - 1 if no_disc else 0, button)
 
