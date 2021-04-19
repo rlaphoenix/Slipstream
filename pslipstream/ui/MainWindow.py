@@ -98,7 +98,7 @@ class MainWindow:
             loc = QtWidgets.QFileDialog.getOpenFileName(
                 self.ui,
                 "Backup Disc Image",
-                "",
+                str(cfg.user_cfg.last_opened_directory or ""),
                 "ISO files (*.iso);;DVD IFO files (*.ifo)"
             )
             if not loc[0]:
