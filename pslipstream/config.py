@@ -48,7 +48,7 @@ class Config(object):
         if not config_path.is_file():
             return cls(config_path)
         with open(config_path, "rt") as f:
-            stored_settings = yaml.safe_load(f)
+            stored_settings = yaml.load(f, Loader=yaml.Loader)
             if not stored_settings:
                 return
             return cls(config_path, stored_settings)
