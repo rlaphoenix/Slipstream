@@ -8,6 +8,7 @@ from PySide2 import QtCore
 from pycdlib import PyCdlib
 
 from pslipstream import cfg
+from pslipstream.device import Device
 from pslipstream.dvd import Dvd
 
 
@@ -32,14 +33,13 @@ class DeviceWorker(QtCore.QObject):
             c = wmi.WMI()
             drives = c.Win32_CDROMDrive()
             for drive in drives:
-                self.scanned_devices.emit({
-                    # "type": ?
-                    "make": drive.name.split(" ")[0],
-                    "model": drive.name.split(" ")[1],
-                    "fwver": drive.mfrAssignedRevisionLevel,
-                    "loc": drive.drive,  # e.g. "D:"
-                    "volid": drive.volumeName
-                })
+                self.scanned_devices.emit(Device(
+                    target=drive.drive,  # e.g. "D:"
+                    make=drive.name.split(" ")[0],
+                    model=drive.name.split(" ")[1],
+                    revision=drive.mfrAssignedRevisionLevel,
+                    volume_id=drive.volumeName
+                ))
             self.finished.emit(len(drives))
             return
         if cfg.linux:
@@ -48,14 +48,14 @@ class DeviceWorker(QtCore.QObject):
             lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]
             lsscsi = [x for x in lsscsi if x[0] not in ["disk"]]
             for scsi in lsscsi:
-                self.scanned_devices.emit({
-                    "type": scsi[0],
-                    "make": scsi[1],
-                    "model": " ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
-                    "fwver": scsi[-2],
-                    "loc": scsi[-1],
-                    "volid": self.get_volume_id(scsi[-1])
-                })
+                self.scanned_devices.emit(Device(
+                    target=scsi[-1],
+                    medium=scsi[0],
+                    make=scsi[1],
+                    model=" ".join([scsi[2]] if len(scsi) == 5 else scsi[2:(len(scsi) - 2)]),
+                    revision=scsi[-2],
+                    volume_id=self.get_volume_id(scsi[-1])
+                ))
             self.finished.emit(len(lsscsi))
             return
         self.error.emit(NotImplementedError("Device Scanning has not been implemented for %s." % sys.platform))
@@ -84,11 +84,11 @@ class DeviceWorker(QtCore.QObject):
         log.info('Device %s has disc labeled "%s".' % (device, volume_id))
         return volume_id
 
-    def load_device(self, device: dict):
+    def load_device(self, device: Device):
         try:
             pythoncom.CoInitialize()
             dvd = Dvd()  # TODO: assumes disc is a DVD
-            dvd.open(device["loc"])
+            dvd.open(device.target)
             self.dvd.emit(dvd)
             self.finished.emit(0)
         except Exception as e:
