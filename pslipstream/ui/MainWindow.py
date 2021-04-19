@@ -82,6 +82,20 @@ class MainWindow:
                 # noinspection PyTypeChecker
                 device.setParent(None)
 
+    def add_device_button(self, device: Device):
+        no_disc = not bool(device.volume_id)
+        button = QtWidgets.QPushButton("{volume}\n{make} - {model}".format(
+            volume=device.volume_id or "No disc inserted...",
+            make=device.make,
+            model=device.model
+        ))
+        button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        button.clicked.connect(lambda: self.load_device(device))
+        if no_disc:
+            button.setEnabled(False)
+        device_list = self.ui.deviceListDevices_2.layout()
+        device_list.insertWidget(device_list.count() - 1 if no_disc else 0, button)
+
     def scan_devices(self):
         """Gets list of disc readers and adds them to device list."""
         self.clear_device_list()
@@ -109,23 +123,10 @@ class MainWindow:
         def on_error(e: Exception):
             print(e)
 
-        def add_device_button(device: dict):
-            button = QtWidgets.QPushButton("{volume}\n{make} - {model}".format(
-                volume=device["volid"] or "No disc inserted...",
-                make=device["make"],
-                model=device["model"]
-            ))
-            button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-            button.clicked.connect(lambda: self.load_device(device))
-            if not device["volid"]:
-                button.setEnabled(False)
-            device_list = self.ui.deviceListDevices_2.layout()
-            device_list.insertWidget(device_list.count() - 1 if not device["volid"] else 0, button)
-
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
         self.worker.error.connect(on_error)
-        self.worker.scanned_devices.connect(add_device_button)
+        self.worker.scanned_devices.connect(self.add_device_button)
 
         self.thread.started.connect(self.worker.scan_devices)
         self.thread.start()
