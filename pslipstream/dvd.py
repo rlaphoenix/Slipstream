@@ -147,7 +147,8 @@ class Dvd:
             "path_table_location_be": pvd.path_table_location_be,
             "optional_path_table_location_le": pvd.optional_path_table_location_le,
             "optional_path_table_location_be": pvd.optional_path_table_location_be,
-            "application_reserve": None if pvd.application_use == bytearray(512) else pvd.application_use
+            "application_reserve": f"00 * {len(pvd.application_use)}" if pvd.application_use == bytearray(
+                len(pvd.application_use)) else pvd.application_use
         }
         self.log.info(f"Got Primary Volume Descriptor: {pvd}\n")
         return pvd
