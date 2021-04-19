@@ -48,7 +48,6 @@ class MainWindow:
         if not loc[0]:
             self.log.debug("Cancelled Open File as no save path was provided.")
             return
-
         device = Device(
             target=loc[0],
             medium="DVD",  # TODO: Don't presume DVD
@@ -57,6 +56,14 @@ class MainWindow:
 
         self.add_device_button(device)
         self.load_device(device)
+
+        has_entry = any(x.text() == device.volume_id for x in self.ui.menuOpen_Recent.actions())
+        if not has_entry:
+            recent_entry = QtWidgets.QAction(self.ui)
+            recent_entry.text()
+            recent_entry.setText(device.volume_id)
+            recent_entry.triggered.connect(lambda: self.open_file(device))
+            self.ui.menuOpen_Recent.addAction(recent_entry)
 
     def about(self):
         QMessageBox.about(
