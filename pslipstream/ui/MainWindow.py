@@ -196,7 +196,7 @@ class MainWindow:
         self.thread.started.connect(lambda: self.worker.device.emit(device))
         self.thread.start()
 
-    def backup_disc(self, device: dict, disc: Dvd):
+    def backup_disc(self, device: Device, disc: Dvd):
         """Backup loaded disc to an ISO file."""
         out_dir = QtWidgets.QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
         if not out_dir:
@@ -215,7 +215,7 @@ class MainWindow:
             self.ui.progressBar.show()
             self.ui.backupButton.setEnabled(False)
             self.ui.statusbar.showMessage(
-                "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
+                "Backing up %s (%s - %s)..." % (device.volume_id, device.make, device.model)
             )
 
         def on_progress(n: float):
@@ -225,7 +225,7 @@ class MainWindow:
         def on_finish():
             self.ui.backupButton.setText("Backup")
             self.ui.statusbar.showMessage(
-                "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
+                "Backed up %s (%s - %s)..." % (device.volume_id, device.make, device.model)
             )
             self.ui.backupButton.setEnabled(True)
 
