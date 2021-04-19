@@ -35,11 +35,11 @@ class Config(object):
     def __init__(self, config_path: Union[Path, str], settings: dict = None):
         self.config_path = Path(config_path)
         self.last_opened_directory = None
-        self.recently_opened = None
+        self.recently_opened = []
 
         if settings:
             self.last_opened_directory = settings.get("last_opened_directory")
-            self.recently_opened = settings.get("recently_opened")
+            self.recently_opened = settings.get("recently_opened", [])
 
     @classmethod
     def load(cls, config_path: Union[Path, str]):
