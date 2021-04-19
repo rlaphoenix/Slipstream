@@ -32,9 +32,14 @@ import yaml
 
 
 class Config(object):
-    def __init__(self, config_path: Union[Path, str], settings: Union[dict, list] = None):
-        self.settings = settings
+    def __init__(self, config_path: Union[Path, str], settings: dict = None):
         self.config_path = Path(config_path)
+        self.last_opened_directory = None
+        self.recently_opened = None
+
+        if settings:
+            self.last_opened_directory = settings.get("last_opened_directory")
+            self.recently_opened = settings.get("recently_opened")
 
     @classmethod
     def load(cls, config_path: Union[Path, str]):
@@ -52,4 +57,4 @@ class Config(object):
         """Save yaml config to file from dictionary"""
         self.config_path.parent.mkdir(exist_ok=True)
         with open(self.config_path, "wt") as f:
-            yaml.dump(self.settings or {}, f)
+            yaml.dump(self.__dict__ or {}, f)
