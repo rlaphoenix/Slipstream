@@ -23,6 +23,7 @@ import logging
 import os
 import sys
 
+from PySide2 import QtCore
 from PySide2.QtWidgets import QApplication
 from appdirs import user_data_dir
 
@@ -65,10 +66,12 @@ def main():
 
 
 def gui():
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     app = QApplication(sys.argv)
     app.setStyle("fusion")
     with open(cfg.static_dir / "style.qss", "rt", encoding="utf8") as f:
         app.setStyleSheet(f.read())
+    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
     window = MainWindow()
     window.show()
