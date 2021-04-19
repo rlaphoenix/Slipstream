@@ -48,11 +48,15 @@ class MainWindow:
         if not loc[0]:
             self.log.debug("Cancelled Open File as no save path was provided.")
             return
-        self.load_device({
-            "make": "File",
-            "model": "File",
-            "loc": loc[0]
-        })
+
+        device = Device(
+            target=loc[0],
+            medium="DVD",  # TODO: Don't presume DVD
+            volume_id=Path(loc[0]).name
+        )
+
+        self.add_device_button(device)
+        self.load_device(device)
 
     def about(self):
         QMessageBox.about(
