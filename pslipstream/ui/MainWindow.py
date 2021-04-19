@@ -3,6 +3,7 @@ import math
 import struct
 import sys
 from pathlib import Path
+from typing import Union
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtUiTools import QUiLoader
@@ -81,6 +82,14 @@ class MainWindow:
         device_list = self.ui.deviceListDevices_2.layout()
         device_list.insertWidget(device_list.count() - 1 if no_disc else 0, button)
 
+    def add_recent_entry(self, device: Device):
+        recent_entry = QtWidgets.QAction(self.ui)
+        recent_entry.text()
+        recent_entry.setText(device.target)
+        recent_entry.triggered.connect(lambda: self.open_file(device))
+        self.ui.menuOpen_Recent.addAction(recent_entry)
+        cfg.user_cfg.recently_opened.append(device)
+
     def open_file(self, device: Device = None):
         if not device:
             loc = QtWidgets.QFileDialog.getOpenFileName(
@@ -101,14 +110,8 @@ class MainWindow:
         self.add_device_button(device)
         self.load_device(device)
 
-        has_entry = any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions())
-        if not has_entry:
-            recent_entry = QtWidgets.QAction(self.ui)
-            recent_entry.text()
-            recent_entry.setText(device.target)
-            recent_entry.triggered.connect(lambda: self.open_file(device))
-            self.ui.menuOpen_Recent.addAction(recent_entry)
-            cfg.user_cfg.recently_opened.append(device.target)
+        if not any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions()):
+            self.add_recent_entry(device)
 
         cfg.user_cfg.last_opened_directory = Path(device.target).parent
 
