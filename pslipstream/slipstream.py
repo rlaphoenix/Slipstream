@@ -42,8 +42,7 @@ def main():
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
     log.debug("Project Config: %s" % cfg)
 
-    cfg.user_cfg = Config(cfg.config_file)
-    cfg.user_cfg.load()
+    cfg.user_cfg = Config.load(cfg.config_file)
     log.debug("User Config: %s" % cfg.user_cfg.settings)
 
     for line in get_runtime_details().splitlines(keepends=False):

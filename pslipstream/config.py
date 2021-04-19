@@ -25,7 +25,6 @@ writing of yaml files, ensuring paths exist, ensuring it has read and write
 permissions and such.
 """
 
-import os.path
 from pathlib import Path
 from typing import Union
 
@@ -33,36 +32,24 @@ import yaml
 
 
 class Config(object):
-    def __init__(self, config_path: Union[Path, str]):
-        self.settings = {
-            "-": "-"  # need at least one config entry, otherwise it infinite loops
-            # todo ; implement stuff that needs configuration
-        }
+    def __init__(self, config_path: Union[Path, str], settings: Union[dict, list] = None):
+        self.settings = settings
         self.config_path = Path(config_path)
 
-    def get_handle(self, mode="r"):
-        """Open a file handle with the specified mode"""
-        self.config_path.parent.mkdir(exist_ok=True)
-        return open(self.config_path, mode)
-
-    def load(self):
+    @classmethod
+    def load(cls, config_path: Union[Path, str]):
         """Load yaml config file as a dictionary"""
-        if not self.config_path.is_file():
-            # no config file exists yet, let's create base one
-            self.save()
-        with self.get_handle() as f:
+        config_path = Path(config_path)
+        if not config_path.is_file():
+            return cls(config_path)
+        with open(config_path, "rt") as f:
             stored_settings = yaml.safe_load(f)
             if not stored_settings:
-                # invalid yaml or empty file, reset the config file and reload
-                self.save()
-                self.load()
                 return
-            self.settings = stored_settings
+            return cls(config_path, stored_settings)
 
-    def save(self, settings=None):
+    def save(self):
         """Save yaml config to file from dictionary"""
-        if settings:
-            self.settings = settings
-        if self.settings:
-            with self.get_handle("w") as f:
-                yaml.dump(self.settings, f)
+        self.config_path.parent.mkdir(exist_ok=True)
+        with open(self.config_path, "wt") as f:
+            yaml.dump(self.settings or {}, f)
