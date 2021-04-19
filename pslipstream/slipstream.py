@@ -29,7 +29,7 @@ from appdirs import user_data_dir
 import pslipstream.cfg as cfg
 from pslipstream import logger
 from pslipstream.config import Config
-from pslipstream.ui.main import UI
+from pslipstream.ui.MainWindow import MainWindow
 
 
 def main():
@@ -70,10 +70,10 @@ def gui():
     with open(cfg.static_dir / "style.qss", "rt", encoding="utf8") as f:
         app.setStyleSheet(f.read())
 
-    ui = UI()
-    ui.show()
+    window = MainWindow()
+    window.show()
 
-    ui.scan_devices()
+    window.scan_devices()
 
     sys.exit(app.exec_())
 

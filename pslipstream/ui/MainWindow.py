@@ -1,57 +1,42 @@
 import logging
 import math
-import os
-import subprocess
-import sys
 
-import pythoncom
-import wmi
-from PySide2 import QtCore, QtGui
-from PySide2.QtGui import QPixmap
+from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QMainWindow, QPushButton, QTreeWidgetItem, QFileDialog, QHeaderView
-from pycdlib import PyCdlib
 
 from pslipstream import cfg
 from pslipstream.dvd import Dvd
+from pslipstream.ui.DeviceWorker import DeviceWorker
 
 
-class UI(QMainWindow):
+class MainWindow:
 
-    def __init__(self, parent=None):
-        super(UI, self).__init__(parent)
-        ui_loader = QUiLoader()
-        ui_loader.setWorkingDirectory(QtCore.QDir(str(cfg.root_dir)))
-        ui_file = QtCore.QFile(str(cfg.root_dir / "ui" / "MainWindow.ui"))
-        ui_file.open(QtCore.QFile.ReadOnly)
-        self.widget = ui_loader.load(ui_file, parent)
-        self.widget.setWindowFlags(QtCore.Qt.Window)
-        ui_file.close()
+    def __init__(self):
+        self.ui = self.open()
+        self.log = logging.getLogger("GUI")
 
         self.thread = None
         self.worker = None
 
-        self.log = logging.getLogger("GUI")
-
-        self.configure()
-
-    def configure(self):
-        self.widget.setWindowTitle("Slipstream")
-
-        self.widget.backupButton.setEnabled(False)
-        self.widget.backupButton.hide()
-        self.widget.discInfoFrame.hide()
-        self.widget.progressBar.hide()
-        self.clear_device_list()  # clear example buttons
-
-        self.widget.refreshIcon.clicked.connect(self.scan_devices)
+        self.setup_ui()
 
     def show(self):
-        self.widget.show()
+        self.ui.show()
+
+    def setup_ui(self):
+        self.clear_device_list()  # clear example buttons
+
+        self.ui.backupButton.setEnabled(False)
+        self.ui.backupButton.hide()
+        self.ui.discInfoFrame.hide()
+        self.ui.progressBar.hide()
+
+    def connect_io(self):
+        self.ui.refreshIcon.clicked.connect(self.scan_devices)
 
     def clear_device_list(self):
-        for device in self.widget.deviceListDevices_2.children():
-            if isinstance(device, QPushButton):
+        for device in self.ui.deviceListDevices_2.children():
+            if isinstance(device, QtWidgets.QPushButton):
                 # noinspection PyTypeChecker
                 device.setParent(None)
 
@@ -60,7 +45,7 @@ class UI(QMainWindow):
         self.clear_device_list()
 
         self.thread = QtCore.QThread()
-        self.worker = Worker()
+        self.worker = DeviceWorker()
         self.worker.moveToThread(self.thread)
 
         self.worker.finished.connect(self.thread.quit)
@@ -68,23 +53,22 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def manage_state():
-            self.widget.refreshIcon.setEnabled(False)
-            self.widget.progressBar.hide()
-            self.widget.backupButton.hide()
-            self.widget.discInfoFrame.hide()
-            self.widget.discInfoList.clear()
-            self.widget.statusbar.showMessage("Scanning devices...")
+            self.ui.refreshIcon.setEnabled(False)
+            self.ui.progressBar.hide()
+            self.ui.backupButton.hide()
+            self.ui.discInfoFrame.hide()
+            self.ui.discInfoList.clear()
+            self.ui.statusbar.showMessage("Scanning devices...")
 
         def on_finish(n: int):
-            self.widget.refreshIcon.setEnabled(True)
-            self.widget.statusbar.showMessage("Found %d devices" % n)
+            self.ui.refreshIcon.setEnabled(True)
+            self.ui.statusbar.showMessage("Found %d devices" % n)
 
         def on_error(e: Exception):
             print(e)
 
         def add_device_button(device: dict):
-            device_list = self.widget.deviceListDevices_2.layout()
-            button = QPushButton("{volume}\n{make} - {model}".format(
+            button = QtWidgets.QPushButton("{volume}\n{make} - {model}".format(
                 volume=device["volid"] or "No disc inserted...",
                 make=device["make"],
                 model=device["model"]
@@ -93,6 +77,7 @@ class UI(QMainWindow):
             button.clicked.connect(lambda: self.load_device(device))
             if not device["volid"]:
                 button.setEnabled(False)
+            device_list = self.ui.deviceListDevices_2.layout()
             device_list.insertWidget(device_list.count() - 1 if not device["volid"] else 0, button)
 
         self.thread.started.connect(manage_state)
@@ -109,7 +94,7 @@ class UI(QMainWindow):
         Currently only supports DVD discs.
         """
         self.thread = QtCore.QThread()
-        self.worker = Worker()
+        self.worker = DeviceWorker()
         self.worker.moveToThread(self.thread)
 
         self.worker.finished.connect(self.thread.quit)
@@ -117,44 +102,44 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def manage_state():
-            self.widget.deviceListDevices_2.setEnabled(False)
-            self.widget.refreshIcon.setEnabled(False)
-            self.widget.progressBar.hide()
-            self.widget.backupButton.hide()
-            self.widget.discInfoFrame.hide()
-            self.widget.discInfoList.clear()
-            self.widget.statusbar.showMessage("Loading device %s - %s..." % (device["make"], device["model"]))
+            self.ui.deviceListDevices_2.setEnabled(False)
+            self.ui.refreshIcon.setEnabled(False)
+            self.ui.progressBar.hide()
+            self.ui.backupButton.hide()
+            self.ui.discInfoFrame.hide()
+            self.ui.discInfoList.clear()
+            self.ui.statusbar.showMessage("Loading device %s - %s..." % (device["make"], device["model"]))
 
-            if self.widget.backupButton.isEnabled():
-                self.widget.backupButton.clicked.disconnect()
+            if self.ui.backupButton.isEnabled():
+                self.ui.backupButton.clicked.disconnect()
 
         def on_finish(_: int):
-            self.widget.deviceListDevices_2.setEnabled(True)
-            self.widget.refreshIcon.setEnabled(True)
-            self.widget.backupButton.setEnabled(True)
-            self.widget.backupButton.show()
-            self.widget.discInfoFrame.show()
-            self.widget.statusbar.showMessage("Loaded device %s - %s..." % (device["make"], device["model"]))
+            self.ui.deviceListDevices_2.setEnabled(True)
+            self.ui.refreshIcon.setEnabled(True)
+            self.ui.backupButton.setEnabled(True)
+            self.ui.backupButton.show()
+            self.ui.discInfoFrame.show()
+            self.ui.statusbar.showMessage("Loaded device %s - %s..." % (device["make"], device["model"]))
 
         def on_error(e: Exception):
             print(e)
 
         def get_dvd(dvd: Dvd):
-            self.widget.discInfoList.clear()
+            self.ui.discInfoList.clear()
             disc_id = dvd.compute_crc_id()
-            disc_id_tree = QTreeWidgetItem(["Disc ID", disc_id])
-            self.widget.discInfoList.addTopLevelItem(disc_id_tree)
+            disc_id_tree = QtWidgets.QTreeWidgetItem(["Disc ID", disc_id])
+            self.ui.discInfoList.addTopLevelItem(disc_id_tree)
 
             pvd = dvd.get_primary_descriptor()
-            pvd_tree = QTreeWidgetItem(["Primary Volume Descriptor"])
+            pvd_tree = QtWidgets.QTreeWidgetItem(["Primary Volume Descriptor"])
             for k, v in pvd.items():
-                pvd_tree.addChild(QTreeWidgetItem([k, repr(v)]))
-            self.widget.discInfoList.addTopLevelItem(pvd_tree)
+                pvd_tree.addChild(QtWidgets.QTreeWidgetItem([k, repr(v)]))
+            self.ui.discInfoList.addTopLevelItem(pvd_tree)
 
-            self.widget.discInfoList.expandToDepth(0)
-            self.widget.discInfoList.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+            self.ui.discInfoList.expandToDepth(0)
+            self.ui.discInfoList.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
-            self.widget.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
+            self.ui.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
 
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
@@ -167,13 +152,13 @@ class UI(QMainWindow):
 
     def backup_disc(self, device: dict, disc: Dvd):
         """Backup loaded disc to an ISO file."""
-        out_dir = QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
+        out_dir = QtWidgets.QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
         if not out_dir:
             self.log.debug("Cancelled Backup as no file was provided.")
             return
 
         self.thread = QtCore.QThread()
-        self.worker = Worker()
+        self.worker = DeviceWorker()
         self.worker.moveToThread(self.thread)
 
         self.worker.finished.connect(self.thread.quit)
@@ -181,22 +166,22 @@ class UI(QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
 
         def manage_state():
-            self.widget.progressBar.show()
-            self.widget.backupButton.setEnabled(False)
-            self.widget.statusbar.showMessage(
+            self.ui.progressBar.show()
+            self.ui.backupButton.setEnabled(False)
+            self.ui.statusbar.showMessage(
                 "Backing up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
             )
 
         def on_progress(n: float):
-            self.widget.progressBar.setValue(n)
-            self.widget.backupButton.setText("Backing up... %d%%" % math.floor(n))
+            self.ui.progressBar.setValue(n)
+            self.ui.backupButton.setText("Backing up... %d%%" % math.floor(n))
 
         def on_finish():
-            self.widget.backupButton.setText("Backup")
-            self.widget.statusbar.showMessage(
+            self.ui.backupButton.setText("Backup")
+            self.ui.statusbar.showMessage(
                 "Backed up %s (%s - %s)..." % (device["volid"], device["make"], device["model"])
             )
-            self.widget.backupButton.setEnabled(True)
+            self.ui.backupButton.setEnabled(True)
 
         def on_error(e: Exception):
             print(e)
@@ -209,3 +194,14 @@ class UI(QMainWindow):
         self.worker.disc.connect(self.worker.backup_disc)
         self.thread.started.connect(lambda: self.worker.disc.emit(disc, out_dir))
         self.thread.start()
+
+    @staticmethod
+    def open() -> QtWidgets.QMainWindow:
+        loader = QUiLoader()
+        loader.setWorkingDirectory(QtCore.QDir(str(cfg.root_dir)))
+        ui_file = QtCore.QFile(str(cfg.root_dir / "ui" / "MainWindow.ui"))
+        ui_file.open(QtCore.QFile.ReadOnly)
+        widget = loader.load(ui_file)
+        widget.setWindowFlags(QtCore.Qt.Window)
+        ui_file.close()
+        return widget
