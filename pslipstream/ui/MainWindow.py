@@ -221,7 +221,11 @@ class MainWindow:
 
     def backup_disc(self, device: Device, disc: Dvd):
         """Backup loaded disc to an ISO file."""
-        out_dir = QtWidgets.QFileDialog.getExistingDirectory(None, "Backup Disc Image", "")
+        out_dir = QtWidgets.QFileDialog.getExistingDirectory(
+            self.ui,
+            "Backup Disc Image",
+            str(cfg.user_cfg.last_opened_directory or "")
+        )
         if not out_dir:
             self.log.debug("Cancelled Backup as no file was provided.")
             return
