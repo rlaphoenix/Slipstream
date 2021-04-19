@@ -185,6 +185,7 @@ class MainWindow:
             if not device.volume_id:
                 device.volume_id = pvd["volume_id"]
 
+            self.ui.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
 
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
