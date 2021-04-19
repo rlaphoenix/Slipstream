@@ -43,37 +43,6 @@ class MainWindow:
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.refreshIcon.clicked.connect(self.scan_devices)
 
-    def open_file(self, device: Device = None):
-        if not device:
-            loc = QtWidgets.QFileDialog.getOpenFileName(
-                self.ui,
-                "Backup Disc Image",
-                "",
-                "ISO files (*.iso);;DVD IFO files (*.ifo)"
-            )
-            if not loc[0]:
-                self.log.debug("Cancelled Open File as no save path was provided.")
-                return
-            device = Device(
-                target=loc[0],
-                medium="DVD",  # TODO: Don't presume DVD
-                volume_id=Path(loc[0]).name
-            )
-
-        self.add_device_button(device)
-        self.load_device(device)
-
-        has_entry = any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions())
-        if not has_entry:
-            recent_entry = QtWidgets.QAction(self.ui)
-            recent_entry.text()
-            recent_entry.setText(device.target)
-            recent_entry.triggered.connect(lambda: self.open_file(device))
-            self.ui.menuOpen_Recent.addAction(recent_entry)
-            cfg.user_cfg.recently_opened.append(device.target)
-
-        cfg.user_cfg.last_opened_directory = Path(device.target).parent
-
     def about(self):
         QMessageBox.about(
             self.ui,
@@ -111,6 +80,37 @@ class MainWindow:
             button.setEnabled(False)
         device_list = self.ui.deviceListDevices_2.layout()
         device_list.insertWidget(device_list.count() - 1 if no_disc else 0, button)
+
+    def open_file(self, device: Device = None):
+        if not device:
+            loc = QtWidgets.QFileDialog.getOpenFileName(
+                self.ui,
+                "Backup Disc Image",
+                "",
+                "ISO files (*.iso);;DVD IFO files (*.ifo)"
+            )
+            if not loc[0]:
+                self.log.debug("Cancelled Open File as no save path was provided.")
+                return
+            device = Device(
+                target=loc[0],
+                medium="DVD",  # TODO: Don't presume DVD
+                volume_id=Path(loc[0]).name
+            )
+
+        self.add_device_button(device)
+        self.load_device(device)
+
+        has_entry = any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions())
+        if not has_entry:
+            recent_entry = QtWidgets.QAction(self.ui)
+            recent_entry.text()
+            recent_entry.setText(device.target)
+            recent_entry.triggered.connect(lambda: self.open_file(device))
+            self.ui.menuOpen_Recent.addAction(recent_entry)
+            cfg.user_cfg.recently_opened.append(device.target)
+
+        cfg.user_cfg.last_opened_directory = Path(device.target).parent
 
     def scan_devices(self):
         """Gets list of disc readers and adds them to device list."""
