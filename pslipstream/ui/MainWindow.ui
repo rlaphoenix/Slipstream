@@ -165,7 +165,7 @@
               <x>0</x>
               <y>0</y>
               <width>200</width>
-              <height>205</height>
+              <height>204</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -373,7 +373,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -381,10 +381,12 @@
      <string>File</string>
     </property>
     <widget class="QMenu" name="menuOpen_Recent">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Open Recent</string>
      </property>
-     <addaction name="actionUntitled_txt"/>
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="menuOpen_Recent"/>
@@ -408,11 +410,6 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionUntitled_txt">
-   <property name="text">
-    <string>Untitled.txt</string>
    </property>
   </action>
   <action name="actionAbout">
