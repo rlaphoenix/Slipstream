@@ -43,7 +43,7 @@ def main():
     log.debug("Project Config: %s" % cfg)
 
     cfg.user_cfg = Config.load(cfg.config_file)
-    log.debug("User Config: %s" % cfg.user_cfg.settings)
+    log.debug("User Config: %s" % cfg.user_cfg)
 
     for line in get_runtime_details().splitlines(keepends=False):
         if not line:
