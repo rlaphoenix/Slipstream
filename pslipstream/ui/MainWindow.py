@@ -2,6 +2,7 @@ import logging
 import math
 import struct
 import sys
+from pathlib import Path
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtUiTools import QUiLoader
@@ -36,9 +37,21 @@ class MainWindow:
         self.ui.progressBar.hide()
 
     def connect_io(self):
+        self.ui.actionOpen.triggered.connect(self.open_file)
         self.ui.actionExit.triggered.connect(self.ui.close)
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.refreshIcon.clicked.connect(self.scan_devices)
+
+    def open_file(self):
+        loc = QtWidgets.QFileDialog.getOpenFileName(self.ui, "Backup Disc Image", "", "ISO files (*.iso)")
+        if not loc[0]:
+            self.log.debug("Cancelled Open File as no save path was provided.")
+            return
+        self.load_device({
+            "make": "File",
+            "model": "File",
+            "loc": loc[0]
+        })
 
     def about(self):
         QMessageBox.about(
@@ -164,6 +177,15 @@ class MainWindow:
             self.ui.discInfoList.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
             self.ui.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
+
+            if device["loc"].lower().endswith(".iso"):
+                button = QtWidgets.QPushButton("{volid}\n{file_name}".format(
+                    volid=pvd["volume_id"],
+                    file_name=Path(device["loc"]).name
+                ))
+                button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                button.clicked.connect(lambda: self.load_device(device))
+                self.ui.deviceListDevices_2.layout().insertWidget(0, button)
 
         self.thread.started.connect(manage_state)
         self.worker.finished.connect(on_finish)
