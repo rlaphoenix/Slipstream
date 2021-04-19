@@ -1,5 +1,5 @@
 Write-Output 'Building to self-contained folder via PyInstaller'
-& 'poetry' run python pyinstaller.py
+& 'poetry' run python -OO pyinstaller.py
 
 if ($args[0] -eq 'run') {
     & 'dist/Slipstream/Slipstream.exe' ($args | Select-Object -Skip 1)
