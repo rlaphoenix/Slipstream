@@ -70,6 +70,9 @@ class MainWindow:
             recent_entry.setText(device.target)
             recent_entry.triggered.connect(lambda: self.open_file(device))
             self.ui.menuOpen_Recent.addAction(recent_entry)
+            cfg.user_cfg.recently_opened.append(device.target)
+
+        cfg.user_cfg.last_opened_directory = Path(device.target).parent
 
     def about(self):
         QMessageBox.about(
