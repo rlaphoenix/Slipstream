@@ -26,30 +26,28 @@ permissions and such.
 """
 
 import os.path
+from pathlib import Path
+from typing import Union
 
 import yaml
 
 
 class Config(object):
-    def __init__(self, config_path):
+    def __init__(self, config_path: Union[Path, str]):
         self.settings = {
             "-": "-"  # need at least one config entry, otherwise it infinite loops
             # todo ; implement stuff that needs configuration
         }
-        self.config_path = config_path
+        self.config_path = Path(config_path)
 
     def get_handle(self, mode="r"):
         """Open a file handle with the specified mode"""
-        os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
+        self.config_path.parent.mkdir(exist_ok=True)
         return open(self.config_path, mode)
 
     def load(self):
         """Load yaml config file as a dictionary"""
-        if (
-            not os.path.exists(self.config_path) or
-            not os.path.isfile(self.config_path) or
-            not os.path.exists(self.config_path)
-        ):
+        if not self.config_path.is_file():
             # no config file exists yet, let's create base one
             self.save()
         with self.get_handle() as f:
