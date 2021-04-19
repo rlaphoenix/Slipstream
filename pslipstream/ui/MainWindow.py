@@ -33,6 +33,9 @@ class MainWindow:
     def setup_ui(self):
         self.clear_device_list()  # clear example buttons
 
+        for entry in cfg.user_cfg.recently_opened:
+            self.add_recent_entry(entry)
+
         self.ui.backupButton.setEnabled(False)
         self.ui.backupButton.hide()
         self.ui.discInfoFrame.hide()
