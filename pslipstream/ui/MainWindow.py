@@ -43,16 +43,17 @@ class MainWindow:
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.refreshIcon.clicked.connect(self.scan_devices)
 
-    def open_file(self):
-        loc = QtWidgets.QFileDialog.getOpenFileName(self.ui, "Backup Disc Image", "", "ISO files (*.iso)")
-        if not loc[0]:
-            self.log.debug("Cancelled Open File as no save path was provided.")
-            return
-        device = Device(
-            target=loc[0],
-            medium="DVD",  # TODO: Don't presume DVD
-            volume_id=Path(loc[0]).name
-        )
+    def open_file(self, device: Device = None):
+        if not device:
+            loc = QtWidgets.QFileDialog.getOpenFileName(self.ui, "Backup Disc Image", "", "ISO files (*.iso)")
+            if not loc[0]:
+                self.log.debug("Cancelled Open File as no save path was provided.")
+                return
+            device = Device(
+                target=loc[0],
+                medium="DVD",  # TODO: Don't presume DVD
+                volume_id=Path(loc[0]).name
+            )
 
         self.add_device_button(device)
         self.load_device(device)
