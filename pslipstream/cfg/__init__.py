@@ -93,3 +93,6 @@ static_dir = root_dir / "static"
 config_file = None  # gotten on main()
 icon_file = os.path.join(static_dir, "icon.png")
 ui_index = None  # prefix with `file://` for local file
+
+# objects
+user_cfg = None  # gotten on main()

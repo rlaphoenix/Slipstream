@@ -47,9 +47,9 @@ def main():
     cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
     log.debug("Project Config: %s" % cfg)
 
-    user_config = Config(cfg.config_file)
-    user_config.load()
-    log.debug("User Config: %s" % user_config.settings)
+    cfg.user_cfg = Config(cfg.config_file)
+    cfg.user_cfg.load()
+    log.debug("User Config: %s" % cfg.user_cfg.settings)
 
     if arguments.license:
         if not os.path.exists("LICENSE"):
