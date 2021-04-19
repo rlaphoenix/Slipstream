@@ -1,8 +1,11 @@
 import logging
 import math
+import struct
+import sys
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtUiTools import QUiLoader
+from PySide2.QtWidgets import QMessageBox
 
 from pslipstream import cfg
 from pslipstream.dvd import Dvd
@@ -33,7 +36,26 @@ class MainWindow:
         self.ui.progressBar.hide()
 
     def connect_io(self):
+        self.ui.actionAbout.triggered.connect(self.about)
         self.ui.refreshIcon.clicked.connect(self.scan_devices)
+
+    def about(self):
+        QMessageBox.about(
+            self.ui,
+            "About %s" % cfg.title,
+            ("%s v%s [%s]" % (
+                cfg.title,
+                cfg.version,
+                ",".join(map(str, filter(None, [
+                    sys.platform,
+                    "%dbit" % (8 * struct.calcsize("P")),
+                    cfg.py_version,
+                    [None, "frozen"][cfg.frozen]
+                ])))
+            )) +
+            ("<p>%s</p>" % cfg.copyright_line) +
+            ("<p>{0}<br/><a href='{1}'>{1}</a></p>".format(cfg.description, cfg.url))
+        )
 
     def clear_device_list(self):
         for device in self.ui.deviceListDevices_2.children():
