@@ -58,11 +58,11 @@ class MainWindow:
         self.add_device_button(device)
         self.load_device(device)
 
-        has_entry = any(x.text() == device.volume_id for x in self.ui.menuOpen_Recent.actions())
+        has_entry = any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions())
         if not has_entry:
             recent_entry = QtWidgets.QAction(self.ui)
             recent_entry.text()
-            recent_entry.setText(device.volume_id)
+            recent_entry.setText(device.target)
             recent_entry.triggered.connect(lambda: self.open_file(device))
             self.ui.menuOpen_Recent.addAction(recent_entry)
 
