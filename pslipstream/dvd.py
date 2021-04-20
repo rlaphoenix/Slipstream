@@ -99,7 +99,7 @@ class Dvd:
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
-    def get_primary_descriptor(self) -> pycdlib.PrimaryOrSupplementaryVD:
+    def get_pvd(self) -> pycdlib.PrimaryOrSupplementaryVD:
         """
         Get's and returns the Primary Volume Descriptor of the
         disc in a more accessible and parsed format.
@@ -189,7 +189,7 @@ class Dvd:
         """
         # Print primary volume descriptor information
         self.log.info("Starting DVD backup for %s" % self.device)
-        pvd = self.get_primary_descriptor()
+        pvd = self.get_pvd()
         fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
         fn_tmp = fn + ".tmp"
         first_lba = 0
