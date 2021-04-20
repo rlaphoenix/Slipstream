@@ -24,15 +24,12 @@ reading, seeking, backing up, and more.
 """
 import logging
 import os
-from datetime import datetime
 from pathlib import Path
 from typing import Union
 
 import pycdlib
 import rlapydvdid
 from PySide2.QtCore import Signal
-from dateutil.tz import tzoffset
-from pycdlib.headervd import PrimaryOrSupplementaryVD
 from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm
 
