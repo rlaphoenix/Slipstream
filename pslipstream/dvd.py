@@ -238,8 +238,8 @@ class Dvd:
         f.close()
         t.close()
 
-        fn.replace(fn.with_suffix(""))
         # Tell the user some output information
+        fn = fn.replace(fn.with_suffix(""))
         self.log.info(
             "Finished DVD Backup!\n"
             f"Read a total of {current_lba:,} sectors ({os.path.getsize(fn):,}) bytes.\n"
