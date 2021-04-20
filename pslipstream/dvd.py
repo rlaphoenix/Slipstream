@@ -102,32 +102,6 @@ class Dvd:
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
-    def get_pvd(self) -> PrimaryOrSupplementaryVD:
-        """
-        Get's and returns the Primary Volume Descriptor of the
-        disc in a more accessible and parsed format.
-        """
-
-        def date_convert(d):
-            if not d.year:
-                return None
-            return datetime(
-                year=d.year, month=d.month, day=d.dayofmonth,
-                hour=d.hour, minute=d.minute, second=d.second, microsecond=d.hundredthsofsecond,
-                # offset the timezone, since ISO's dates are offsets of GMT in 15 minute intervals, we
-                # need to calculate that but in seconds to pass to `tzoffset`.
-                tzinfo=tzoffset("GMT", (15 * d.gmtoffset) * 60)
-            )
-
-        pvd = self.cdlib.pvd
-        pvd.system_identifier = pvd.system_identifier.replace(b"\x00", b"").strip().decode() or None
-        pvd.volume_identifier = pvd.volume_identifier.replace(b"\x00", b"").strip().decode() or None
-        pvd.volume_creation_date = date_convert(pvd.volume_creation_date)
-        pvd.volume_expiration_date = date_convert(pvd.volume_expiration_date)
-        pvd.volume_effective_date = date_convert(pvd.volume_effective_date)
-        self.log.info(f"Got Primary Volume Descriptor: {pvd}\n")
-        return pvd
-
     def get_files(self, path="/", no_versions=True):
         """
         Read and list file paths directly from the disc device file system
@@ -197,15 +171,14 @@ class Dvd:
         """
         self.log.info("Starting DVD backup for %s" % self.device)
 
-        pvd = self.get_pvd()
-        fn = Path(out_dir) / ("%s.ISO.!ss" % pvd.volume_identifier)
+        fn = Path(out_dir) / ("%s.ISO.!ss" % self.cdlib.pvd.volume_identifier.replace(b"\x00", b"").strip().decode())
         first_lba = 0  # lba values are 0-indexed
         current_lba = first_lba
-        last_lba = pvd.space_size - 1
-        disc_size = pvd.log_block_size * pvd.space_size
+        last_lba = self.cdlib.pvd.space_size - 1
+        disc_size = self.cdlib.pvd.log_block_size * self.cdlib.pvd.space_size
 
         self.log.debug(
-            f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {pvd.log_block_size:,} B.\n"
+            f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {self.cdlib.pvd.log_block_size:,} B.\n"
             f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes.\n"
             f'Saving to "{fn.with_suffix("")}"...'
         )
@@ -224,7 +197,7 @@ class Dvd:
         while current_lba <= last_lba:
             data = self.read(current_lba, min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1))
             f.write(data)
-            read_sectors = len(data) // pvd.log_block_size
+            read_sectors = len(data) // self.cdlib.pvd.log_block_size
             current_lba += read_sectors
             if progress:
                 progress.emit((current_lba / last_lba) * 100)

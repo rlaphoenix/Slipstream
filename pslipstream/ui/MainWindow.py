@@ -202,9 +202,8 @@ class MainWindow:
             disc_id_tree = QtWidgets.QTreeWidgetItem(["Disc ID", disc_id])
             self.ui.discInfoList.addTopLevelItem(disc_id_tree)
 
-            pvd = dvd.get_pvd()
             pvd_tree = QtWidgets.QTreeWidgetItem(["Primary Volume Descriptor"])
-            for k, v in {k: pvd.__getattribute__(k) for k in pvd.__slots__}.items():
+            for k, v in {k: dvd.cdlib.pvd.__getattribute__(k) for k in dvd.cdlib.pvd.__slots__}.items():
                 pvd_tree.addChild(QtWidgets.QTreeWidgetItem([k, repr(v)]))
             self.ui.discInfoList.addTopLevelItem(pvd_tree)
 
@@ -212,7 +211,7 @@ class MainWindow:
             self.ui.discInfoList.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
             if not device.volume_id:
-                device.volume_id = pvd.volume_identifier
+                device.volume_id = dvd.cdlib.pvd.volume_identifier
 
             self.ui.backupButton.clicked.connect(lambda: self.backup_disc(device, dvd))
 
