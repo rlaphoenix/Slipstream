@@ -267,11 +267,15 @@ class Dvd:
         if read_sectors < 0:
             raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         if read_sectors != sectors:
-            raise SlipstreamReadError(
-                "Read %d bytes, expected %d, while reading %d->%d" % (
-                    read_sectors, sectors, first_lba, first_lba + sectors
+            # we do not want to just reduce the requested sector count as there's
+            # a chance that the pvd space size is just wrong/badly mastered
+            request_too_large = first_lba + sectors > self.cdlib.pvd.space_size
+            if not request_too_large or (first_lba + sectors) - self.cdlib.pvd.space_size != read_sectors:
+                raise SlipstreamReadError(
+                    "Read %d bytes, expected %d, while reading %d->%d" % (
+                        read_sectors, sectors, first_lba, first_lba + sectors
+                    )
                 )
-            )
         self.reader_position += read_sectors
 
         return ret
