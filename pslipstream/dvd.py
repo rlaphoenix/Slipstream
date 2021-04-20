@@ -99,7 +99,7 @@ class Dvd:
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
-    def get_primary_descriptor(self):
+    def get_primary_descriptor(self) -> pycdlib.PrimaryOrSupplementaryVD:
         """
         Get's and returns the Primary Volume Descriptor of the
         disc in a more accessible and parsed format.
@@ -117,37 +117,11 @@ class Dvd:
             )
 
         pvd = self.cdlib.pvd
-        pvd = {
-            "version": pvd.version,
-            "version_fs": pvd.file_structure_version,
-            "flags": pvd.flags,
-            "sector_size": pvd.log_block_size,
-            "total_sectors": pvd.space_size,
-            "size": pvd.log_block_size * pvd.space_size,
-            "system_id": pvd.system_identifier.decode().strip() or None,
-            "volume_id": pvd.volume_identifier.replace(b"\x00", b"").strip().decode() or None,
-            "volume_set_id": pvd.volume_set_identifier.decode().strip() or None,
-            "publisher_id": pvd.publisher_identifier.record().decode().strip() or None,
-            "preparer_id": pvd.preparer_identifier.record().decode().strip() or None,
-            "application_id": pvd.application_identifier.record().decode().strip() or None,
-            "copyright_file_id": pvd.copyright_file_identifier.decode().strip() or None,
-            "abstract_file_id": pvd.abstract_file_identifier.decode().strip() or None,
-            "bibliographic_file_id": pvd.bibliographic_file_identifier.decode().strip() or None,
-            "creation_date": date_convert(pvd.volume_creation_date),
-            "expiration_date": date_convert(pvd.volume_expiration_date),
-            "effective_date": date_convert(pvd.volume_effective_date),
-            "escape_seq": f"00 * {len(pvd.escape_sequences)}" if pvd.escape_sequences == bytearray(
-                len(pvd.escape_sequences)) else pvd.escape_sequences,
-            "set_size": pvd.set_size,
-            "seq_num": pvd.seqnum,
-            "path_tbl_size": pvd.path_tbl_size,
-            "path_table_location_le": pvd.path_table_location_le,
-            "path_table_location_be": pvd.path_table_location_be,
-            "optional_path_table_location_le": pvd.optional_path_table_location_le,
-            "optional_path_table_location_be": pvd.optional_path_table_location_be,
-            "application_reserve": f"00 * {len(pvd.application_use)}" if pvd.application_use == bytearray(
-                len(pvd.application_use)) else pvd.application_use
-        }
+        pvd.system_identifier = pvd.system_identifier.replace(b"\x00", b"").strip().decode() or None
+        pvd.volume_identifier = pvd.volume_identifier.replace(b"\x00", b"").strip().decode() or None
+        pvd.volume_creation_date = date_convert(pvd.volume_creation_date)
+        pvd.volume_expiration_date = date_convert(pvd.volume_expiration_date)
+        pvd.volume_effective_date = date_convert(pvd.volume_effective_date)
         self.log.info(f"Got Primary Volume Descriptor: {pvd}\n")
         return pvd
 
@@ -216,13 +190,13 @@ class Dvd:
         # Print primary volume descriptor information
         self.log.info("Starting DVD backup for %s" % self.device)
         pvd = self.get_primary_descriptor()
-        fn = os.path.join(out_dir, "%s.ISO" % pvd["volume_id"])
+        fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
         fn_tmp = fn + ".tmp"
         first_lba = 0
-        last_lba = pvd["total_sectors"] - 1
-        disc_size = pvd["size"]
+        last_lba = pvd.space_size - 1  # 0-index
+        disc_size = pvd.log_block_size * pvd.space_size
         self.log.debug(
-            f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {pvd['sector_size']:,} B.\n"
+            f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {pvd.log_block_size:,} B.\n"
             f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes.\n"
             f'Saving to "{fn}"...'
         )

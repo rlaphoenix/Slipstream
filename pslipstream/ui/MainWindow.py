@@ -204,7 +204,7 @@ class MainWindow:
 
             pvd = dvd.get_primary_descriptor()
             pvd_tree = QtWidgets.QTreeWidgetItem(["Primary Volume Descriptor"])
-            for k, v in pvd.items():
+            for k, v in pvd.__dict__.items():
                 pvd_tree.addChild(QtWidgets.QTreeWidgetItem([k, repr(v)]))
             self.ui.discInfoList.addTopLevelItem(pvd_tree)
 
