@@ -185,8 +185,13 @@ class Dvd:
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
 
-        Raises SlipstreamNoKeysObtained if no CSS keys were obtained when needed.
-        Raises SlipstreamReadError on unexpected read errors.
+        Parameters:
+            out_dir: Directory to store the backup.
+            progress: Signal to emit progress updates to.
+
+        Raises:
+            SlipstreamNoKeysObtained if no CSS keys were obtained when needed.
+            SlipstreamReadError on unexpected read errors.
         """
         # Print primary volume descriptor information
         self.log.info("Starting DVD backup for %s" % self.device)
