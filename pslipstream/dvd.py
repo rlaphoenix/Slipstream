@@ -117,7 +117,6 @@ class Dvd:
             )
 
         pvd = self.cdlib.pvd
-        pvd.space_size -= 1  # for some reason it's +1 more than it should be
         pvd = {
             "version": pvd.version,
             "version_fs": pvd.file_structure_version,
