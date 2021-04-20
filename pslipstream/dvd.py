@@ -30,6 +30,7 @@ import pycdlib
 import rlapydvdid
 from PySide2.QtCore import Signal
 from dateutil.tz import tzoffset
+from pycdlib.headervd import PrimaryOrSupplementaryVD
 from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm
 
@@ -99,7 +100,7 @@ class Dvd:
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
-    def get_pvd(self) -> pycdlib.PrimaryOrSupplementaryVD:
+    def get_pvd(self) -> PrimaryOrSupplementaryVD:
         """
         Get's and returns the Primary Volume Descriptor of the
         disc in a more accessible and parsed format.
