@@ -220,7 +220,6 @@ class Dvd:
         f = open(fn_tmp, "wb")
         t = tqdm(total=last_lba + 1, unit="sectors")
         current_lba = first_lba
-        self.log.debug("Reading sectors %d->%d..." % (current_lba, last_lba))
 
         while current_lba <= last_lba:
             # get the maximum sectors to read at once
