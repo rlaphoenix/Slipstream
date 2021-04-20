@@ -200,15 +200,17 @@ class Dvd:
         pvd = self.get_pvd()
         fn = Path(out_dir) / ("%s.ISO" % pvd.volume_identifier)
         fn_tmp = fn + ".tmp"
-        first_lba = 0
-        last_lba = pvd.space_size - 1  # 0-index
+        first_lba = 0  # lba values are 0-indexed
+        current_lba = first_lba
+        last_lba = pvd.space_size - 1
         disc_size = pvd.log_block_size * pvd.space_size
+
         self.log.debug(
             f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {pvd.log_block_size:,} B.\n"
             f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes.\n"
             f'Saving to "{fn}"...'
         )
-        # Retrieve CSS keys if disc is scrambled
+
         if self.dvdcss.is_scrambled():
             self.log.debug("DVD is scrambled. Checking if all CSS keys can be cracked. This might take a while.")
             self.vob_lba_offsets = self.get_vob_lbas(crack_keys=True)
@@ -219,7 +221,6 @@ class Dvd:
 
         f = open(fn_tmp, "wb")
         t = tqdm(total=last_lba + 1, unit="sectors")
-        current_lba = first_lba
 
         while current_lba <= last_lba:
             # get the maximum sectors to read at once
