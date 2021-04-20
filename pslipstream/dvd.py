@@ -226,8 +226,6 @@ class Dvd:
             sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
             data = self.read(current_lba, sectors)
             read_sectors = len(data) // pvd.log_block_size
-            if read_sectors < 0:
-                raise SlipstreamReadError(f"An unexpected read error occurred reading {current_lba}->{sectors}")
             # write the buffer to output file
             f.write(data)
             # increment the current sector and update the tqdm progress bar
@@ -311,6 +309,8 @@ class Dvd:
                     read_sectors, sectors, first_lba, first_lba + sectors
                 )
             )
+        if read_sectors < 0:
+            raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         self.reader_position += read_sectors
 
         return ret
