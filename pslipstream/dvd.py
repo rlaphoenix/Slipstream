@@ -180,7 +180,7 @@ class Dvd:
         # Return lba data
         return lba_data
 
-    def backup(self, out_dir: str, signal: Signal = None):
+    def backup(self, out_dir: str, progress: Signal = None):
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
@@ -193,8 +193,8 @@ class Dvd:
             SlipstreamNoKeysObtained if no CSS keys were obtained when needed.
             SlipstreamReadError on unexpected read errors.
         """
-        # Print primary volume descriptor information
         self.log.info("Starting DVD backup for %s" % self.device)
+
         pvd = self.get_pvd()
         fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
         fn_tmp = fn + ".tmp"
@@ -233,8 +233,8 @@ class Dvd:
             # increment the current sector and update the tqdm progress bar
             current_lba += read_sectors
             # write progress to GUI
-            if signal:
-                signal.emit((current_lba / last_lba) * 100)
+            if progress:
+                progress.emit((current_lba / last_lba) * 100)
             # write progress to CLI
             t.update(read_sectors)
         # Close file and tqdm progress bar
