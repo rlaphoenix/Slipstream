@@ -264,14 +264,14 @@ class Dvd:
 
         ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
         read_sectors = len(ret) // self.cdlib.pvd.log_block_size
+        if read_sectors < 0:
+            raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         if read_sectors != sectors:
             raise SlipstreamReadError(
                 "Read %d bytes, expected %d, while reading %d->%d" % (
                     read_sectors, sectors, first_lba, first_lba + sectors
                 )
             )
-        if read_sectors < 0:
-            raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         self.reader_position += read_sectors
 
         return ret
