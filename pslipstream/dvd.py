@@ -198,8 +198,7 @@ class Dvd:
         self.log.info("Starting DVD backup for %s" % self.device)
 
         pvd = self.get_pvd()
-        fn = Path(out_dir) / ("%s.ISO" % pvd.volume_identifier)
-        fn_tmp = fn + ".tmp"
+        fn = Path(out_dir) / ("%s.ISO.!ss" % pvd.volume_identifier)
         first_lba = 0  # lba values are 0-indexed
         current_lba = first_lba
         last_lba = pvd.space_size - 1
@@ -208,7 +207,7 @@ class Dvd:
         self.log.debug(
             f"Reading sectors {first_lba:,} to {last_lba:,} with sector size {pvd.log_block_size:,} B.\n"
             f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes.\n"
-            f'Saving to "{fn}"...'
+            f'Saving to "{fn.with_suffix("")}"...'
         )
 
         if self.dvdcss.is_scrambled():
@@ -219,7 +218,7 @@ class Dvd:
         else:
             self.log.debug("DVD isn't scrambled. CSS title key cracking skipped.")
 
-        f = open(fn_tmp, "wb")
+        f = fn.open("wb")
         t = tqdm(total=last_lba + 1, unit="sectors")
 
         while current_lba <= last_lba:
@@ -238,10 +237,8 @@ class Dvd:
         # Close file and tqdm progress bar
         f.close()
         t.close()
-        # Rename temp file to final filename
-        if os.path.exists(fn):
-            os.unlink(fn)
-        os.rename(fn_tmp, fn)
+
+        fn.replace(fn.with_suffix(""))
         # Tell the user some output information
         self.log.info(
             "Finished DVD Backup!\n"
