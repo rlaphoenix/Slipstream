@@ -225,20 +225,15 @@ class Dvd:
             sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
             data = self.read(current_lba, sectors)
             read_sectors = len(data) // pvd.log_block_size
-            # write the buffer to output file
             f.write(data)
-            # increment the current sector and update the tqdm progress bar
             current_lba += read_sectors
-            # write progress to GUI
             if progress:
                 progress.emit((current_lba / last_lba) * 100)
-            # write progress to CLI
             t.update(read_sectors)
-        # Close file and tqdm progress bar
+
         f.close()
         t.close()
 
-        # Tell the user some output information
         fn = fn.replace(fn.with_suffix(""))
         self.log.info(
             "Finished DVD Backup!\n"
