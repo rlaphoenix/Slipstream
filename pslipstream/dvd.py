@@ -25,6 +25,8 @@ reading, seeking, backing up, and more.
 import logging
 import os
 from datetime import datetime
+from pathlib import Path
+from typing import Union
 
 import pycdlib
 import rlapydvdid
@@ -180,7 +182,7 @@ class Dvd:
         # Return lba data
         return lba_data
 
-    def backup(self, out_dir: str, progress: Signal = None):
+    def backup(self, out_dir: Union[Path, str], progress: Signal = None):
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
@@ -196,7 +198,7 @@ class Dvd:
         self.log.info("Starting DVD backup for %s" % self.device)
 
         pvd = self.get_pvd()
-        fn = os.path.join(out_dir, "%s.ISO" % pvd.volume_identifier)
+        fn = Path(out_dir) / ("%s.ISO" % pvd.volume_identifier)
         fn_tmp = fn + ".tmp"
         first_lba = 0
         last_lba = pvd.space_size - 1  # 0-index
