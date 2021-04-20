@@ -266,9 +266,8 @@ class Dvd:
 
         # Make sure we never read encrypted and unencrypted data at once since libdvdcss
         # only decrypts the whole area of read sectors or nothing at all.
-        for vob_lba_offset in self.vob_lba_offsets:
-            title_start = vob_lba_offset[0]
-            title_end = title_start + vob_lba_offset[1] - 1
+        for title_start, title_end in self.vob_lba_offsets:
+            title_end += title_start - 1
 
             # update key when entering a new title
             # FIXME: we also need this if we seek into a new title (not only the start of the title)
