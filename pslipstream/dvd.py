@@ -222,10 +222,9 @@ class Dvd:
         t = tqdm(total=last_lba + 1, unit="sectors")
 
         while current_lba <= last_lba:
-            sectors = min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1)
-            data = self.read(current_lba, sectors)
-            read_sectors = len(data) // pvd.log_block_size
+            data = self.read(current_lba, min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1))
             f.write(data)
+            read_sectors = len(data) // pvd.log_block_size
             current_lba += read_sectors
             if progress:
                 progress.emit((current_lba / last_lba) * 100)
