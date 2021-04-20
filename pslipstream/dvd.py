@@ -260,42 +260,42 @@ class Dvd:
         """
 
         # we need to seek to the first sector. Otherwise we get faulty data.
-        needToSeek = first_lba != self.reader_position or first_lba == 0
-        inTitle = False
-        enteredTitle = False
+        need_to_seek = first_lba != self.reader_position or first_lba == 0
+        in_title = False
+        entered_title = False
 
         # Make sure we never read encrypted and unencrypted data at once since libdvdcss
         # only decrypts the whole area of read sectors or nothing at all.
         for vob_lba_offset in self.vob_lba_offsets:
-            titleStart = vob_lba_offset[0]
-            titleEnd = titleStart + vob_lba_offset[1] - 1
+            title_start = vob_lba_offset[0]
+            title_end = title_start + vob_lba_offset[1] - 1
 
             # update key when entering a new title
             # FIXME: we also need this if we seek into a new title (not only the start of the title)
-            if titleStart == first_lba:
-                enteredTitle = needToSeek = inTitle = True
+            if title_start == first_lba:
+                entered_title = need_to_seek = in_title = True
 
-            # if first_lba < titleStart and first_lba + sectors > titleStart:
-            if first_lba < titleStart < first_lba + sectors:
+            # if first_lba < title_start and first_lba + sectors > title_start:
+            if first_lba < title_start < first_lba + sectors:
                 # read range will read beyond or on a title,
                 # let's read up to right before the next title start
-                sectors = titleStart - first_lba
+                sectors = title_start - first_lba
 
-            # if first_lba < titleEnd and first_lba + sectors > titleEnd:
-            if first_lba < titleEnd < first_lba + sectors:
+            # if first_lba < title_end and first_lba + sectors > title_end:
+            if first_lba < title_end < first_lba + sectors:
                 # read range will read beyond or on a title,
                 # let's read up to right before the next title start
-                sectors = titleEnd - first_lba + 1
+                sectors = title_end - first_lba + 1
 
             # is our read range part of one title
-            if first_lba >= titleStart and first_lba + (sectors - 1) <= titleEnd:
-                inTitle = True
+            if first_lba >= title_start and first_lba + (sectors - 1) <= title_end:
+                in_title = True
 
-        if needToSeek:
+        if need_to_seek:
             flags = self.dvdcss.NO_FLAGS
-            if enteredTitle:
+            if entered_title:
                 flags = self.dvdcss.SEEK_KEY
-            elif inTitle:
+            elif in_title:
                 flags = self.dvdcss.SEEK_MPEG
 
             # refresh the key status for this sector's data
@@ -304,7 +304,7 @@ class Dvd:
                 raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
 
         flags = self.dvdcss.NO_FLAGS
-        if inTitle:
+        if in_title:
             flags = self.dvdcss.READ_DECRYPT
 
         ret = self.dvdcss.read(sectors, flags)
