@@ -121,7 +121,7 @@ class Dvd:
             # get lba
             lba = child.extent_location()
             # get size in sectors
-            size = int(child.get_data_length() / self.dvdcss.SECTOR_SIZE)
+            size = child.get_data_length() // self.cdlib.pvd.log_block_size
             self.log.debug(f"Found title file: {file_path}, lba: {lba}, size: {size}")
             yield file_path, lba, size
 
@@ -263,7 +263,7 @@ class Dvd:
                 raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
 
         ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
-        read_sectors = len(ret) // self.dvdcss.SECTOR_SIZE
+        read_sectors = len(ret) // self.cdlib.pvd.log_block_size
         if read_sectors != sectors:
             raise SlipstreamReadError(
                 "Read %d bytes, expected %d, while reading %d->%d" % (
