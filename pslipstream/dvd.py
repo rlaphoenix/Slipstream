@@ -291,22 +291,19 @@ class Dvd:
                 in_title = True
 
         if need_to_seek:
-            flags = self.dvdcss.NO_FLAGS
             if entered_title:
                 flags = self.dvdcss.SEEK_KEY
             elif in_title:
                 flags = self.dvdcss.SEEK_MPEG
+            else:
+                flags = self.dvdcss.NO_FLAGS
 
             # refresh the key status for this sector's data
             self.reader_position = self.dvdcss.seek(first_lba, flags)
             if self.reader_position != first_lba:
                 raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
 
-        flags = self.dvdcss.NO_FLAGS
-        if in_title:
-            flags = self.dvdcss.READ_DECRYPT
-
-        ret = self.dvdcss.read(sectors, flags)
+        ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
         read_sectors = len(ret) // self.dvdcss.SECTOR_SIZE
         if read_sectors != sectors:
             raise SlipstreamReadError(
