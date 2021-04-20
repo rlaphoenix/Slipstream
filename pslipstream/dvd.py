@@ -180,7 +180,7 @@ class Dvd:
         # Return lba data
         return lba_data
 
-    def create_backup(self, out_dir: str, signal: Signal = None):
+    def backup(self, out_dir: str, signal: Signal = None):
         """
         Create a full untouched (but decrypted) ISO backup of a DVD with all
         metadata intact.
