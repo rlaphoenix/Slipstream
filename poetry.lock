@@ -140,8 +140,8 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/rlaphoenix/pycdlib.git"
-reference = "win32-test"
-resolved_reference = "37124f207ea45c1c092f1037f07d611e986645a2"
+reference = "new-win"
+resolved_reference = "dda446ea753099c5cb601ed76bb2421f6fcd8f07"
 
 [[package]]
 name = "pydvdcss"
