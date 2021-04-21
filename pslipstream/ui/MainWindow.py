@@ -245,6 +245,7 @@ class MainWindow:
 
         def manage_state():
             self.ui.progressBar.show()
+            self.ui.progressBar.setValue(0)
             self.ui.backupButton.setEnabled(False)
             self.ui.statusbar.showMessage(
                 "Backing up %s (%s - %s)..." % (device.volume_id, device.make, device.model)
