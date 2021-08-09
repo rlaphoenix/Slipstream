@@ -30,7 +30,7 @@ rlapydvdid = "^1.2"
 appdirs = "^1.4.4"
 tqdm = "^4.46.1"
 PyYAML = "^5.4.1"
-pywin32 = {version = "228", platform = "win32"}
+pywin32 = {version = "301", platform = "win32"}
 WMI = {version = "^1.5.1", platform = "win32"}
 PySide2 = "^5.15.2"
 coloredlogs = {version = "^15.0", optional = true}
