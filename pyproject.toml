@@ -38,6 +38,9 @@ coloredlogs = {version = "^15.0", optional = true}
 [tool.poetry.dev-dependencies]
 pyinstaller = "^4.2"
 
+[tool.poetry.scripts]
+slipstream = 'pslipstream.slipstream:main'
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
