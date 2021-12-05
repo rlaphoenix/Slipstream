@@ -1,6 +1,7 @@
 import logging
 import subprocess
 import sys
+import traceback
 
 import pythoncom
 import wmi
@@ -91,12 +92,12 @@ class DeviceWorker(QtCore.QObject):
             dvd.open(device.target)
             self.dvd.emit(dvd)
             self.finished.emit(0)
-        except Exception as e:
-            self.error.emit(e)
+        except Exception:
+            self.error.emit(traceback.format_exc())
 
     def backup_disc(self, disc: Dvd, out_dir: str):
         try:
             disc.backup(out_dir, self.progress)
             self.finished.emit(0)
-        except Exception as e:
-            self.error.emit(e)
+        except Exception:
+            self.error.emit(traceback.format_exc())
