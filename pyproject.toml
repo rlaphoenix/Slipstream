@@ -18,13 +18,13 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Multimedia",
     "Topic :: Multimedia :: Video",
-    "Topic :: Multimedia :: Video :: Conversion"
+    "Topic :: Multimedia :: Video :: Conversion",
 ]
 include = ["LICENSE", "README.md", "HISTORY.md", "static/*"]
 
 [tool.poetry.dependencies]
 python = ">=3.6,<3.10"
-pycdlib = { git = "https://github.com/rlaphoenix/pycdlib.git", branch = "new-win" }
+pycdlib = { git = "https://github.com/rlaphoenix/pycdlib.git", branch = "big-win32-device-fix" }
 pydvdcss = "^1.3.2"
 rlapydvdid = "^1.2"
 appdirs = "^1.4.4"
