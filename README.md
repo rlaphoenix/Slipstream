@@ -1,5 +1,11 @@
 # Slipstream
 
+![Preview](docs/images/preview.png)
+
+*<small>Preview as of December 2021</small>*
+
+* * *
+
 [![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/pslipstream)](https://pypi.python.org/pypi/pslipstream)
