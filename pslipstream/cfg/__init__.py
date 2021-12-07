@@ -38,32 +38,6 @@ description = "The most informative Home-media backup solution."
 url = "https://github.com/rlaPHOENiX/Slipstream"
 version = "0.4.0"
 author = "PHOENiX"
-author_email = "rlaphoenix@pm.me"
-min_size = "1200x440"
-
-# build configuration
-py_ver_support = ">=3.6, <3.10"
-# noinspection SpellCheckingInspection
-req_packages = [
-    # general
-    "appdirs>=1.4.4",
-    "tqdm>=4.46.1",
-    # windows api
-    "pywin32>=228; os_name == 'nt'",
-    # parsing, syntax, and validators
-    "PyYAML>=5.3.1",
-    "python-dateutil>=2.8.1",
-    # general disc operations
-    "pycdlib>=1.10.0",
-    # dvd disc operations
-    "pydvdcss>=1.0.7.post0",
-    "rlapydvdid>=1.2"  # fork of pydvdid, faster and doesn't need mount permission
-]
-# noinspection SpellCheckingInspection
-opt_packages = {
-    # build related
-    "packing support": ["PyInstaller"]  # provide no version to let the user decide
-}
 
 # environment
 py_version = platform.python_version()
@@ -75,7 +49,6 @@ linux = platform == "Linux"
 darwin = platform == "Darwin"
 
 # licensing and copyright
-licence = "GPLv3"
 copyright_line = f"Copyright (C) 2020-{datetime.datetime.now().year} {author}"
 copyright_paragraph = "\n".join([
     f"{title}  {copyright_line}",
@@ -91,8 +64,6 @@ static_dir = root_dir / "static"
 
 # file paths
 config_file = None  # gotten on main()
-icon_file = os.path.join(static_dir, "icon.png")
-ui_index = None  # prefix with `file://` for local file
 
 # objects
 user_cfg = None  # gotten on main()
