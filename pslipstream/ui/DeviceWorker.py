@@ -9,7 +9,7 @@ import wmi
 from PySide2 import QtCore
 from pycdlib import PyCdlib
 
-from pslipstream import cfg
+from pslipstream.config import System
 from pslipstream.device import Device
 from pslipstream.dvd import Dvd
 
@@ -29,7 +29,7 @@ class DeviceWorker(QtCore.QObject):
         super().__init__(*args, **kwargs)
 
     def scan_devices(self):
-        if cfg.windows:
+        if System.Windows:
             # noinspection PyUnresolvedReferences
             pythoncom.CoInitialize()  # important!
             c = wmi.WMI()
@@ -44,7 +44,7 @@ class DeviceWorker(QtCore.QObject):
                 ))
             self.finished.emit(len(drives))
             return
-        if cfg.linux:
+        if System.Linux:
             lsscsi = subprocess.check_output(["lsscsi"]).decode().splitlines()
             lsscsi = [x[9:].strip() for x in lsscsi]
             lsscsi = [[x for x in scsi.split(" ") if x] for scsi in lsscsi]

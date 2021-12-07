@@ -25,11 +25,9 @@ import sys
 
 from PySide2 import QtCore
 from PySide2.QtWidgets import QApplication
-from appdirs import user_data_dir
 
-import pslipstream.cfg as cfg
 from pslipstream import logger
-from pslipstream.config import Config
+from pslipstream.config import config, Directories, System, Project
 from pslipstream.ui.MainWindow import MainWindow
 
 
@@ -37,13 +35,6 @@ def main():
     arguments = get_arguments()
 
     log = logger.setup(level=logging.DEBUG if arguments.dbg else logging.INFO, stream_handler=True)
-
-    cfg.user_dir = user_data_dir(cfg.title_pkg, cfg.author)
-    cfg.config_file = os.path.join(cfg.user_dir, "config.yml")
-    log.debug("Project Config: %s" % cfg)
-
-    cfg.user_cfg = Config.load(cfg.config_file)
-    log.debug("User Config: %s" % cfg.user_cfg)
 
     for line in get_runtime_details().splitlines(keepends=False):
         if not line:
@@ -68,11 +59,11 @@ def gui():
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     app = QApplication(sys.argv)
     app.setStyle("fusion")
-    with open(cfg.static_dir / "style.qss", "rt", encoding="utf8") as f:
+    with open(Directories.static / "style.qss", "rt", encoding="utf8") as f:
         app.setStyleSheet(f.read())
     app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-    app.aboutToQuit.connect(lambda: cfg.user_cfg.save())
+    app.aboutToQuit.connect(config.save)
 
     window = MainWindow()
     window.show()
@@ -101,20 +92,15 @@ def get_arguments():
     return ap.parse_args()
 
 
-def get_runtime_details():
-    return "\n".join(
-        [
-            cfg.copyright_paragraph,
-            "",
-            f"{cfg.title} v{cfg.version}",
-            cfg.description,
-            cfg.url,
-            "",
-            f":: {cfg.platform} {cfg.architecture} (Python v{cfg.py_version}{['', ' +Frozen'][cfg.frozen]})",
-            f":: User Directory: {cfg.user_dir}",
-            f":: Static Directory: {cfg.static_dir}",
-        ]
-    )
+def get_runtime_details() -> str:
+    return "\n".join([
+        Project.license,
+        f"{Project.name} v{Project.version} [{System.Info}]",
+        Project.description,
+        Project.url,
+        f"User-Data Directory: {Directories.user_data}",
+        f"Static Directory: {Directories.static}",
+    ])
 
 
 if __name__ == "__main__":

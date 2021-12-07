@@ -25,7 +25,6 @@ reading, seeking, backing up, and more.
 import logging
 import os
 from pathlib import Path
-from typing import Union
 
 import pycdlib
 import rlapydvdid
@@ -33,7 +32,7 @@ from PySide2.QtCore import Signal
 from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm
 
-import pslipstream.cfg as cfg
+from pslipstream.config import System
 from pslipstream.exceptions import SlipstreamSeekError, SlipstreamDiscInUse, SlipstreamNoKeysObtained, \
     SlipstreamReadError
 
@@ -82,7 +81,7 @@ class Dvd:
         self.device = dev
         self.log.info(f"Opening '{dev}'...")
         self.cdlib = pycdlib.PyCdlib()
-        self.cdlib.open(rf"\\.\{dev}" if cfg.windows else dev)
+        self.cdlib.open(rf"\\.\{dev}" if System.Windows else dev)
         self.log.info("Initialised pycdlib instance successfully...")
         self.dvdcss = DvdCss()
         self.dvdcss.open(dev)
@@ -95,7 +94,7 @@ class Dvd:
         Get the CRC64 checksum known as the Media Player DVD ID.
         The algorithm used is the exact same one used by Microsoft's old Windows Media Center.
         """
-        crc = str(rlapydvdid.compute(rf"\\.\{self.device}" if cfg.windows else self.device))
+        crc = str(rlapydvdid.compute(rf"\\.\{self.device}" if System.Windows else self.device))
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 

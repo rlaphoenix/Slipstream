@@ -1,14 +1,12 @@
 import logging
 import math
-import struct
-import sys
 from pathlib import Path
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QMessageBox
 
-from pslipstream import cfg
+from pslipstream.config import config, Directories, System, Project
 from pslipstream.device import Device
 from pslipstream.dvd import Dvd
 from pslipstream.ui.DeviceWorker import DeviceWorker
@@ -32,7 +30,7 @@ class MainWindow:
     def setup_ui(self):
         self.clear_device_list()  # clear example buttons
 
-        for entry in cfg.user_cfg.recently_opened:
+        for entry in config.recently_opened:
             self.add_recent_entry(entry)
 
         self.ui.backupButton.setEnabled(False)
@@ -49,19 +47,10 @@ class MainWindow:
     def about(self):
         QMessageBox.about(
             self.ui,
-            "About %s" % cfg.title,
-            ("%s v%s [%s]" % (
-                cfg.title,
-                cfg.version,
-                ",".join(map(str, filter(None, [
-                    sys.platform,
-                    "%dbit" % (8 * struct.calcsize("P")),
-                    cfg.py_version,
-                    [None, "frozen"][cfg.frozen]
-                ])))
-            )) +
-            ("<p>%s</p>" % cfg.copyright_line) +
-            ("<p>{0}<br/><a href='{1}' style='color:white'>{1}</a></p>".format(cfg.description, cfg.url))
+            "About %s" % Project.name,
+            ("%s v%s [%s]" % (Project.name, Project.version, System.Info)) +
+            ("<p>%s</p>" % Project.copyright) +
+            ("<p>{0}<br/><a href='{1}' style='color:white'>{1}</a></p>".format(Project.description, Project.url))
         )
 
     def clear_device_list(self):
@@ -104,7 +93,7 @@ class MainWindow:
             loc = QtWidgets.QFileDialog.getOpenFileName(
                 self.ui,
                 "Backup Disc Image",
-                str(cfg.user_cfg.last_opened_directory or ""),
+                str(config.last_opened_directory or ""),
                 "ISO files (*.iso);;DVD IFO files (*.ifo)"
             )
             if not loc[0]:
@@ -121,9 +110,9 @@ class MainWindow:
 
         if not any(x.text() == device.target for x in self.ui.menuOpen_Recent.actions()):
             self.add_recent_entry(device)
-            cfg.user_cfg.recently_opened.append(device)
+            config.recently_opened.append(device)
 
-        cfg.user_cfg.last_opened_directory = Path(device.target).parent
+        config.last_opened_directory = Path(device.target).parent
 
     def scan_devices(self):
         """Gets list of disc readers and adds them to device list."""
@@ -230,7 +219,7 @@ class MainWindow:
             self.ui,
             "Backup Disc Image",
             str(Path(
-                cfg.user_cfg.last_opened_directory or "",
+                config.last_opened_directory or "",
                 disc.cdlib.pvd.volume_identifier.replace(b"\x00", b"").strip().decode() + ".ISO"
             )),
             "Disc Images (*.ISO, *.BIN);;All Files (*)"
@@ -282,8 +271,8 @@ class MainWindow:
     @staticmethod
     def open() -> QtWidgets.QMainWindow:
         loader = QUiLoader()
-        loader.setWorkingDirectory(QtCore.QDir(str(cfg.root_dir)))
-        ui_file = QtCore.QFile(str(cfg.root_dir / "ui" / "MainWindow.ui"))
+        loader.setWorkingDirectory(QtCore.QDir(str(Directories.root)))
+        ui_file = QtCore.QFile(str(Directories.root / "ui" / "MainWindow.ui"))
         ui_file.open(QtCore.QFile.ReadOnly)
         widget = loader.load(ui_file)
         widget.setWindowFlags(QtCore.Qt.Window)
