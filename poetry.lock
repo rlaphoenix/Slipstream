@@ -139,9 +139,9 @@ develop = false
 
 [package.source]
 type = "git"
-url = "https://github.com/rlaphoenix/pycdlib.git"
-reference = "big-win32-device-fix"
-resolved_reference = "6f9597a82c6b44f43576b58ac17f76c9ba96d122"
+url = "https://github.com/clalancette/pycdlib.git"
+reference = "master"
+resolved_reference = "9a4f0b78bbe89a6b14ed1ac6fd154b04877e7a7a"
 
 [[package]]
 name = "pydvdcss"
@@ -326,7 +326,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<3.10"
-content-hash = "754c1f9e6e1aced6ffb323080ef1a5f39f72fc71897226fdbb242beb2ba2a5c4"
+content-hash = "a5c731f740a2019c563e85d42713b13e246a5e69c3aaa44a2fd564c8e359dc87"
 
 [metadata.files]
 altgraph = [
