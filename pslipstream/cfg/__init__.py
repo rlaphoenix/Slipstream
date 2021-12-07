@@ -76,7 +76,7 @@ darwin = platform == "Darwin"
 
 # licensing and copyright
 licence = "GPLv3"
-copyright_line = f"Copyright (C) {datetime.datetime.now().year} {author}"
+copyright_line = f"Copyright (C) 2020-{datetime.datetime.now().year} {author}"
 copyright_paragraph = "\n".join([
     f"{title}  {copyright_line}",
     "This program comes with ABSOLUTELY NO WARRANTY.",
