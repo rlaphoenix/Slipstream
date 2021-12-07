@@ -2,6 +2,7 @@ import logging
 import subprocess
 import sys
 import traceback
+from pathlib import Path
 
 import pythoncom
 import wmi
@@ -16,7 +17,7 @@ from pslipstream.dvd import Dvd
 class DeviceWorker(QtCore.QObject):
     # input signals
     device = QtCore.Signal(dict)
-    disc = QtCore.Signal(Dvd, str)
+    disc = QtCore.Signal(Dvd, Path)
     # output signals
     error = QtCore.Signal(Exception)
     finished = QtCore.Signal(int)
@@ -95,9 +96,9 @@ class DeviceWorker(QtCore.QObject):
         except Exception:
             self.error.emit(traceback.format_exc())
 
-    def backup_disc(self, disc: Dvd, out_dir: str):
+    def backup_disc(self, disc: Dvd, save_path: Path):
         try:
-            disc.backup(out_dir, self.progress)
+            disc.backup(save_path, self.progress)
             self.finished.emit(0)
         except Exception:
             self.error.emit(traceback.format_exc())

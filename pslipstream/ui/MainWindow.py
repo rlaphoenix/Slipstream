@@ -226,14 +226,19 @@ class MainWindow:
 
     def backup_disc(self, device: Device, disc: Dvd):
         """Backup loaded disc to an ISO file."""
-        out_dir = QtWidgets.QFileDialog.getExistingDirectory(
+        save_path = QtWidgets.QFileDialog.getSaveFileName(
             self.ui,
             "Backup Disc Image",
-            str(cfg.user_cfg.last_opened_directory or "")
-        )
-        if not out_dir:
+            str(Path(
+                cfg.user_cfg.last_opened_directory or "",
+                disc.cdlib.pvd.volume_identifier.replace(b"\x00", b"").strip().decode() + ".ISO"
+            )),
+            "Disc Images (*.ISO, *.BIN);;All Files (*)"
+        )[0]
+        if not save_path:
             self.log.debug("Cancelled Backup as no file was provided.")
             return
+        save_path = Path(save_path)
 
         self.thread = QtCore.QThread()
         self.worker = DeviceWorker()
@@ -271,7 +276,7 @@ class MainWindow:
         self.worker.error.connect(on_error)
 
         self.worker.disc.connect(self.worker.backup_disc)
-        self.thread.started.connect(lambda: self.worker.disc.emit(disc, out_dir))
+        self.thread.started.connect(lambda: self.worker.disc.emit(disc, save_path))
         self.thread.start()
 
     @staticmethod
