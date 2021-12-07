@@ -33,7 +33,7 @@ Not begging for a billion-dollar design, just something unique that shows off th
 
     python -m pip install --user pslipstream
 
-If you wish to manually install from the source, take a look at [Building](#building-source-and-wheel-distributions).
+You may also want to install from source, if so take a look at [Working with the Source Code](#working-with-the-source-code).
 
 ## To-do
 
@@ -53,7 +53,7 @@ If you wish to manually install from the source, take a look at [Building](#buil
 
 ## Usage
 
-To run Slipstream, type `pslipstream` into Terminal, App Launcher, or Start Menu.
+To run Slipstream, type `slipstream` into Terminal, App Launcher, or Start Menu.
 
 ## Working with the Source Code
 
@@ -86,7 +86,6 @@ You can specify `-f` to build `sdist` or `wheel` only. Built files can be found 
 ### Packing with PyInstaller
 
     python -m pip install --user pyinstaller
-    poetry run pyinstaller Slipstream.spec
-    .\dist\Slipstream.exe
+    poetry run python pyinstaller.py
 
-Feel free to apply any CLI options/switches you feel like, see `pyinstaller -h`.
+The frozen build will be available in `/dist`. You may do both `.exe` and `Folder` builds. See `ONE_FILE` bool in `pyinstaller.py`.
