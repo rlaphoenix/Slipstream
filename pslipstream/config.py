@@ -65,11 +65,11 @@ class Config:
         return self._data or {}
 
     @property
-    def last_opened_dir(self) -> Optional[str]:
+    def last_opened_directory(self) -> Optional[str]:
         return self.data.get("last_opened_directory")
 
-    @last_opened_dir.setter
-    def last_opened_dir(self, v: Union[Path, str]):
+    @last_opened_directory.setter
+    def last_opened_directory(self, v: Union[Path, str]):
         self.data["last_opened_directory"] = str(v)
         self.save()
 
