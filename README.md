@@ -1,8 +1,5 @@
 ![Banner](https://rawcdn.githack.com/rlaphoenix/Slipstream/e02cfd1174b209b76904130229eacc62ae7a6c5c/docs/images/banner.png)
 
-* * *
-
-[![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaphoenix/Slipstream/blob/master/LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/pslipstream)](https://pypi.python.org/pypi/pslipstream)
 [![Python versions](https://img.shields.io/pypi/pyversions/pslipstream)](https://pypi.python.org/pypi/pslipstream)
