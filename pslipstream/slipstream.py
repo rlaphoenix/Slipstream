@@ -55,14 +55,14 @@ def main():
     gui()
 
 
-def gui():
+def gui() -> None:
+    """Create, Configure, and Show the GUI window."""
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+
     app = QApplication(sys.argv)
     app.setStyle("fusion")
-    with open(Directories.static / "style.qss", "rt", encoding="utf8") as f:
-        app.setStyleSheet(f.read())
-    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-
+    app.setStyleSheet((Directories.static / "style.qss").read_text("utf8"))
     app.aboutToQuit.connect(config.save)
 
     window = MainWindow()
