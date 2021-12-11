@@ -1,8 +1,4 @@
-# Slipstream
-
-![Preview](docs/images/preview.png)
-
-*<small>Preview as of December 2021</small>*
+![Banner](https://rawcdn.githack.com/rlaphoenix/Slipstream/e02cfd1174b209b76904130229eacc62ae7a6c5c/docs/images/banner.png)
 
 * * *
 
@@ -21,6 +17,9 @@ package.
 
 It's trying to be different from the other solutions out there by providing as much information about the home-media
 as one could need while being stupid simple to use.
+
+![Preview](docs/images/preview.png)  
+*Preview as of December 2021.*
 
 ## Quick Installation
 
