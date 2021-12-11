@@ -22,13 +22,6 @@ package.
 It's trying to be different from the other solutions out there by providing as much information about the home-media
 as one could need while being stupid simple to use.
 
-## Call for designers
-
-This project is looking for a Logo, Icon, and Banner artwork. If you have some free time and would like to contribute
-one (or all :O) to this project, please do!
-
-Not begging for a billion-dollar design, just something unique that shows off the project well.
-
 ## Quick Installation
 
     python -m pip install --user pslipstream
