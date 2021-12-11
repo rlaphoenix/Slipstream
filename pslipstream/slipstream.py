@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import argparse
+import ctypes
 import logging
 import os
 import sys
@@ -57,6 +58,11 @@ def main():
 
 def gui() -> None:
     """Create, Configure, and Show the GUI window."""
+    # https://stackoverflow.com/a/1552105/13183782
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+        f"{Project.author}.{Project.name}.GUI.{Project.version}".lower()
+    )
+
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
