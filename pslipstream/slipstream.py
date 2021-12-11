@@ -28,7 +28,7 @@ from PySide2.QtWidgets import QApplication
 
 from pslipstream import logger
 from pslipstream.config import config, Directories, System, Project
-from pslipstream.ui.MainWindow import MainWindow
+from pslipstream.ui.main import Main
 
 
 def main():
@@ -65,10 +65,8 @@ def gui() -> None:
     app.setStyleSheet((Directories.static / "style.qss").read_text("utf8"))
     app.aboutToQuit.connect(config.save)
 
-    window = MainWindow()
+    window = Main()
     window.show()
-
-    window.scan_devices()
 
     sys.exit(app.exec_())
 
