@@ -25,6 +25,7 @@ import os
 import sys
 
 from PySide2 import QtCore
+from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import QApplication
 
 from pslipstream import logger
@@ -69,6 +70,7 @@ def gui() -> None:
     app = QApplication(sys.argv)
     app.setStyle("fusion")
     app.setStyleSheet((Directories.static / "style.qss").read_text("utf8"))
+    app.setWindowIcon(QIcon("pslipstream/static/img/music-disc-with-luster.svg"))
     app.aboutToQuit.connect(config.save)
 
     window = Main()
