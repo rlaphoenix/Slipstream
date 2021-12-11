@@ -7,13 +7,13 @@
 * * *
 
 [![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
-[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/Slipstream/blob/master/LICENSE)
+[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaphoenix/Slipstream/blob/master/LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/pslipstream)](https://pypi.python.org/pypi/pslipstream)
 [![Python versions](https://img.shields.io/pypi/pyversions/pslipstream)](https://pypi.python.org/pypi/pslipstream)
 [![PyPI status](https://img.shields.io/pypi/status/pslipstream)](https://pypi.python.org/pypi/pslipstream)
-[![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/graphs/contributors)
-[![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/Slipstream)](https://github.com/rlaPHOENiX/Slipstream/issues)
-![Build](https://github.com/rlaPHOENiX/Slipstream/workflows/Build/badge.svg?branch=master)
+[![Contributors](https://img.shields.io/github/contributors/rlaphoenix/Slipstream)](https://github.com/rlaphoenix/Slipstream/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/rlaphoenix/Slipstream)](https://github.com/rlaphoenix/Slipstream/issues)
+![Build](https://github.com/rlaphoenix/Slipstream/workflows/Build/badge.svg?branch=master)
 
 Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a
 wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable
@@ -73,7 +73,7 @@ Note:
 
 ### Install from Source Code
 
-    git clone https://github.com/rlaPHOENiX/Slipstream.git
+    git clone https://github.com/rlaphoenix/Slipstream.git
     cd Slipstream
     python -m pip install --user .
 

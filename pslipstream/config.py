@@ -114,7 +114,7 @@ class Project:
     package = "pslipstream"
     author = "rlaphoenix"
     description = "The most informative Home-media backup solution."
-    url = "https://github.com/rlaPHOENiX/Slipstream"
+    url = "https://github.com/rlaphoenix/Slipstream"
     version = "0.4.0"
     copyright = f"Copyright (C) 2020-{datetime.now().year} {author}"
     license = "\n".join([
