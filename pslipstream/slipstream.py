@@ -70,7 +70,7 @@ def gui() -> None:
     app = QApplication(sys.argv)
     app.setStyle("fusion")
     app.setStyleSheet((Directories.static / "style.qss").read_text("utf8"))
-    app.setWindowIcon(QIcon("pslipstream/static/img/music-disc-with-luster.svg"))
+    app.setWindowIcon(QIcon("pslipstream/static/img/icon.ico"))
     app.aboutToQuit.connect(config.save)
 
     window = Main()
