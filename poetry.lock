@@ -155,6 +155,21 @@ python-versions = ">=3.5,<4.0"
 poetry-dynamic-versioning = ">=0.12.4,<0.13.0"
 
 [[package]]
+name = "pydvdid-m"
+version = "1.1.0"
+description = "Pure Python implementation of the Windows API method IDvdInfo2::GetDiscID."
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+pycdlib = ">=1.12.0,<2.0.0"
+python-dateutil = ">=2.8.2,<3.0.0"
+
+[package.extras]
+win_raw_dev = ["pywin32 (==301)"]
+
+[[package]]
 name = "pyinstaller"
 version = "4.3"
 description = "PyInstaller bundles a Python application and all its dependencies into a single package."
@@ -203,7 +218,7 @@ shiboken2 = "5.15.2"
 
 [[package]]
 name = "python-dateutil"
-version = "2.8.1"
+version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
 category = "main"
 optional = false
@@ -237,18 +252,6 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
 [[package]]
-name = "rlapydvdid"
-version = "1.2"
-description = "Fork by rlaPHOENiX of, A pure Python implementation of the Windows API IDvdInfo2::GetDiscID method, as used by Windows Media Center to compute a 'practically unique' 64-bit CRC for metadata retrieval."
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-pycdlib = ">=1.10.0"
-python-dateutil = ">=2.8.1"
-
-[[package]]
 name = "shiboken2"
 version = "5.15.2"
 description = "Python / C++ bindings helper module"
@@ -258,7 +261,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <3.10"
 
 [[package]]
 name = "six"
-version = "1.15.0"
+version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
 category = "main"
 optional = false
@@ -325,8 +328,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 
 [metadata]
 lock-version = "1.1"
-content-hash = "a5c731f740a2019c563e85d42713b13e246a5e69c3aaa44a2fd564c8e359dc87"
 python-versions = ">=3.7,<3.10"
+content-hash = "8a19eee22a6ff41693c66f96daaec653c26ea41bfe0b1d884f51c31b7f5a4ec9"
 
 [metadata.files]
 altgraph = [
@@ -430,6 +433,10 @@ pydvdcss = [
     {file = "pydvdcss-1.3.2-py3-none-any.whl", hash = "sha256:f172a5ec42d00d365545c4a30815975ee8aa364eaf3a2f1b59a517d8e770eac8"},
     {file = "pydvdcss-1.3.2.tar.gz", hash = "sha256:28bc2e159b19a323c28a2eb3cb6b44bc74d5ae0569c6b026f6f182297096a7cc"},
 ]
+pydvdid-m = [
+    {file = "pydvdid-m-1.1.0.tar.gz", hash = "sha256:2aed8d6fe7180c19ef63abcde1d19533f01085377b651249a1c04540945e9653"},
+    {file = "pydvdid_m-1.1.0-py3-none-any.whl", hash = "sha256:77237ae4404d6ef8d393501003c22da81cb67e794835f1d21a1c9eb5469cb0af"},
+]
 pyinstaller = [
     {file = "pyinstaller-4.3.tar.gz", hash = "sha256:5ecf8bbc230d7298a796e52bb745b95eee12878d141f1645612c99246ecd23f2"},
 ]
@@ -451,8 +458,8 @@ pyside2 = [
     {file = "PySide2-5.15.2-5.15.2-cp35.cp36.cp37.cp38.cp39-none-win_amd64.whl", hash = "sha256:1316aa22dd330df096daf7b0defe9c00297a66e0b4907f057aaa3e88c53d1aff"},
 ]
 python-dateutil = [
-    {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
-    {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
+    {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
+    {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
 pywin32 = [
     {file = "pywin32-301-cp35-cp35m-win32.whl", hash = "sha256:93367c96e3a76dfe5003d8291ae16454ca7d84bb24d721e0b74a07610b7be4a7"},
@@ -501,10 +508,6 @@ pyyaml = [
     {file = "PyYAML-5.4.1-cp39-cp39-win_amd64.whl", hash = "sha256:c20cfa2d49991c8b4147af39859b167664f2ad4561704ee74c1de03318e898db"},
     {file = "PyYAML-5.4.1.tar.gz", hash = "sha256:607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"},
 ]
-rlapydvdid = [
-    {file = "rlapydvdid-1.2-py2.py3-none-any.whl", hash = "sha256:bf7f985260173931958a5beec5780a90f00ebc9d8ef178d8c4d654ce267ff413"},
-    {file = "rlapydvdid-1.2.tar.gz", hash = "sha256:ae23ea1daf96c0f3473af52c40dbb73d82496b2151d99f563890bb300829be60"},
-]
 shiboken2 = [
     {file = "shiboken2-5.15.2-5.15.2-cp27-cp27m-macosx_10_13_intel.whl", hash = "sha256:03f41b0693b91c7f89627f1085a4ecbe8591c03f904118a034854d935e0e766c"},
     {file = "shiboken2-5.15.2-5.15.2-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:ae8ca41274cfa057106268b6249674ca669c5b21009ec49b16d77665ab9619ed"},
@@ -514,8 +517,8 @@ shiboken2 = [
     {file = "shiboken2-5.15.2-5.15.2-cp35.cp36.cp37.cp38.cp39-none-win_amd64.whl", hash = "sha256:14a33169cf1bd919e4c4c4408fffbcd424c919a3f702df412b8d72b694e4c1d5"},
 ]
 six = [
-    {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
-    {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 tomlkit = [
     {file = "tomlkit-0.7.0-py2.py3-none-any.whl", hash = "sha256:6babbd33b17d5c9691896b0e68159215a9387ebfa938aa3ac42f4a4beeb2b831"},

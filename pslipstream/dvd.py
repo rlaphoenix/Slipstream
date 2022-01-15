@@ -27,7 +27,6 @@ import os
 from pathlib import Path
 
 import pycdlib
-import rlapydvdid
 from PySide2.QtCore import Signal
 from pydvdcss.dvdcss import DvdCss
 from tqdm import tqdm
@@ -94,7 +93,7 @@ class Dvd:
         Get the CRC64 checksum known as the Media Player DVD ID.
         The algorithm used is the exact same one used by Microsoft's old Windows Media Center.
         """
-        crc = str(rlapydvdid.compute(rf"\\.\{self.device}" if System.Windows else self.device))
+        crc = str(DvdId(self.cdlib).checksum)
         self.log.info(f"Got CRC64 DVD ID: {crc}\n")
         return crc
 
