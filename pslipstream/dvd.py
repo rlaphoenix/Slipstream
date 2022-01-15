@@ -29,6 +29,7 @@ from pathlib import Path
 import pycdlib
 from PySide2.QtCore import Signal
 from pydvdcss.dvdcss import DvdCss
+from pydvdid_m import DvdId
 from tqdm import tqdm
 
 from pslipstream.config import System
