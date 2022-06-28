@@ -26,7 +26,7 @@ include = ["LICENSE", "README.md", "HISTORY.md", "static/*"]
 python = ">=3.7,<3.11"
 pycdlib = { git = "https://github.com/clalancette/pycdlib.git", branch = "master" }
 pydvdcss = "^1.3.2"
-pydvdid-m = "^1.1.0"
+pydvdid-m = "^1.1.1"
 appdirs = "^1.4.4"
 tqdm = "^4.46.1"
 PyYAML = "^5.4.1"
