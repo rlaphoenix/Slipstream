@@ -32,7 +32,7 @@ tqdm = "^4.46.1"
 PyYAML = "^5.4.1"
 pywin32 = {version = "301", platform = "win32"}
 WMI = {version = "^1.5.1", platform = "win32"}
-PySide2 = "^5.15.2"
+PySide2 = "^5.15.2.1"
 coloredlogs = {version = "^15.0", optional = true}
 
 [tool.poetry.dev-dependencies]
