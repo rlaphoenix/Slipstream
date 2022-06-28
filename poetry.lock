@@ -130,7 +130,7 @@ tomlkit = ">=0.4"
 
 [[package]]
 name = "pycdlib"
-version = "1.13.0"
+version = "1.14.0"
 description = "Pure python ISO manipulation library"
 category = "main"
 optional = false
@@ -141,7 +141,7 @@ develop = false
 type = "git"
 url = "https://github.com/clalancette/pycdlib.git"
 reference = "master"
-resolved_reference = "9a4f0b78bbe89a6b14ed1ac6fd154b04877e7a7a"
+resolved_reference = "f36ea8c0e616ad43c679ad5102e94b3ee8753796"
 
 [[package]]
 name = "pydvdcss"
@@ -328,8 +328,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7,<3.10"
-content-hash = "8a19eee22a6ff41693c66f96daaec653c26ea41bfe0b1d884f51c31b7f5a4ec9"
+python-versions = ">=3.7,<3.11"
+content-hash = "4dccb48c79d3fc65ce3a4af5ed0d46159dba2ce90cbdc2080b6164645f65da8f"
 
 [metadata.files]
 altgraph = [
