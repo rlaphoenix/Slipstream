@@ -34,9 +34,10 @@ pywin32 = {version = "304", platform = "win32"}
 WMI = {version = "^1.5.1", platform = "win32"}
 PySide2 = "^5.15.2.1"
 coloredlogs = {version = "^15.0", optional = true}
+pyinstaller = {version = "^4.2", optional = true}
 
-[tool.poetry.dev-dependencies]
-pyinstaller = "^4.2"
+[tool.poetry.extras]
+pyinstaller = ["pyinstaller"]
 
 [tool.poetry.scripts]
 slipstream = 'pslipstream.slipstream:main'
