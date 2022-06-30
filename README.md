@@ -60,11 +60,15 @@ Note:
   [Poetry]: <https://python-poetry.org/docs/#installation>
   [PEP 517]: <https://www.python.org/dev/peps/pep-0517>
 
-### Install from Source Code
+### Installing the Source Code
 
-    git clone https://github.com/rlaphoenix/Slipstream.git
-    cd Slipstream
-    python -m pip install --user .
+1. Download a copy of the project's source code by doing a `git clone` call:  
+   `git clone https://github.com/rlaphoenix/Slipstream.git`  
+   or, by downloading and extracting the [master.zip] file from GitHub.
+2. Enter the downloaded source code folder, either `cd Slipstream` or `cd Slipstream-master`.
+3. Install the project's dependencies by running `poetry install`.
+
+You are now ready to Run from Source Code and can do so with `poetry run slipstream`.
 
 ### Building source and wheel distributions
 
@@ -78,3 +82,6 @@ You can specify `-f` to build `sdist` or `wheel` only. Built files can be found 
     poetry run python pyinstaller.py
 
 The frozen build will be available in `/dist`. You may do both `.exe` and `Folder` builds. See `ONE_FILE` bool in `pyinstaller.py`.
+
+
+  [master.zip]: https://github.com/rlaphoenix/Slipstream/archive/refs/heads/master.zip
