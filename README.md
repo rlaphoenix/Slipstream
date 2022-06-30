@@ -16,7 +16,7 @@ It's trying to be different from the other solutions out there by providing as m
 as one could need while being stupid simple to use.
 
 ![Preview](docs/images/preview.png)  
-*Preview as of December 2021.*
+*Preview as of June 2022.*
 
 ## Quick Installation
 
