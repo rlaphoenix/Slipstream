@@ -12,7 +12,7 @@ from PyInstaller.utils.win32.versioninfo import VSVersionInfo, FixedFileInfo, St
 """Configuration options that may be changed or referenced often."""
 DEBUG = False  # When False, removes un-needed data after build has finished
 NAME = "Slipstream"
-AUTHOR = "PHOENiX"
+AUTHOR = "rlaphoenix"
 VERSION = "0.4.0"
 ICON_FILE = "pslipstream/static/img/icon.ico"  # pass None to use default icon
 ONE_FILE = False  # Must be False if using setup.iss

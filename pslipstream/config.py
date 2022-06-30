@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Slipstream - The most informative Home-media backup solution.
-Copyright (C) 2020-2021 PHOENiX
+Copyright (C) 2020-2021 rlaphoenix
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ class Config:
 
 
 class Directories:
-    _app_dirs = AppDirs("pslipstream", "PHOENiX")
+    _app_dirs = AppDirs("pslipstream", "rlaphoenix")
     user_data = Path(_app_dirs.user_data_dir)
     user_log = Path(_app_dirs.user_log_dir)
     user_config = Path(_app_dirs.user_config_dir)

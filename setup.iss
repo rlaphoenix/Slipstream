@@ -6,7 +6,7 @@
 [Setup]
 AppId={#AppName}
 AppName={#AppName}
-AppPublisher=PHOENiX
+AppPublisher=rlaphoenix
 AppPublisherURL=https://github.com/rlaphoenix/slipstream
 AppReadmeFile=https://github.com/rlaphoenix/Slipstream/blob/master/README.md
 AppSupportURL=https://github.com/rlaphoenix/Slipstream/discussions
