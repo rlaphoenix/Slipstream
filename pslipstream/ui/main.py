@@ -1,8 +1,12 @@
 import math
+from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtWidgets import QMessageBox
+from dateutil.tz import tzoffset
+from pycdlib.dates import VolumeDescriptorDate
 from pycdlib.headervd import FileOrTextIdentifier
 
 from pslipstream.config import config, Project, System
@@ -181,10 +185,24 @@ class Main(BaseWindow):
             disc_id_tree = QtWidgets.QTreeWidgetItem(["Disc ID", disc_id])
             self.window.discInfoList.addTopLevelItem(disc_id_tree)
 
+            def date_convert(vdd: VolumeDescriptorDate) -> Optional[datetime]:
+                if not vdd.year:
+                    return None
+                return datetime(
+                    year=vdd.year, month=vdd.month, day=vdd.dayofmonth,
+                    hour=vdd.hour, minute=vdd.minute, second=vdd.second,
+                    microsecond=vdd.hundredthsofsecond,  # TODO: Is this really microseconds?
+                    # offset the timezone, since ISO's dates are offsets of GMT in 15 minute intervals, we
+                    # need to calculate that but in seconds to pass to `tzoffset`.
+                    tzinfo=tzoffset("GMT", (15 * vdd.gmtoffset) * 60)
+                )
+
             pvd_tree = QtWidgets.QTreeWidgetItem(["Primary Volume Descriptor"])
             for k, v in {k: dvd.cdlib.pvd.__getattribute__(k) for k in dvd.cdlib.pvd.__slots__}.items():
                 if isinstance(v, FileOrTextIdentifier):
                     v = v.text
+                elif isinstance(v, VolumeDescriptorDate):
+                    v = date_convert(v)
                 pvd_tree.addChild(QtWidgets.QTreeWidgetItem([k, repr(v)]))
             self.window.discInfoList.addTopLevelItem(pvd_tree)
 
