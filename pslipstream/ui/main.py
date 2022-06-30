@@ -3,6 +3,7 @@ from pathlib import Path
 
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtWidgets import QMessageBox
+from pycdlib.headervd import FileOrTextIdentifier
 
 from pslipstream.config import config, Project, System
 from pslipstream.device import Device
@@ -182,6 +183,8 @@ class Main(BaseWindow):
 
             pvd_tree = QtWidgets.QTreeWidgetItem(["Primary Volume Descriptor"])
             for k, v in {k: dvd.cdlib.pvd.__getattribute__(k) for k in dvd.cdlib.pvd.__slots__}.items():
+                if isinstance(v, FileOrTextIdentifier):
+                    v = v.text
                 pvd_tree.addChild(QtWidgets.QTreeWidgetItem([k, repr(v)]))
             self.window.discInfoList.addTopLevelItem(pvd_tree)
 
