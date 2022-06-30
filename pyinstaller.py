@@ -2,6 +2,7 @@ import itertools
 import os
 import shutil
 import struct
+from datetime import datetime
 from pathlib import Path
 
 from PyInstaller.__main__ import run
@@ -63,7 +64,7 @@ SetVersion(
                     StringStruct("FileDescription", "The most informative Home-media backup solution"),
                     StringStruct("FileVersion", VERSION_4_STR),
                     StringStruct("InternalName", NAME),
-                    StringStruct("LegalCopyright", "Copyright (C) 2021 %s" % AUTHOR),
+                    StringStruct("LegalCopyright", f"Copyright (C) {datetime.now().year} %s" % AUTHOR),
                     StringStruct("OriginalFilename", ""),
                     StringStruct("ProductName", NAME),
                     StringStruct("ProductVersion", VERSION_4_STR)
