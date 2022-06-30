@@ -138,18 +138,11 @@ tomlkit = ">=0.4"
 
 [[package]]
 name = "pycdlib"
-version = "1.14.0"
+version = "1.13.0"
 description = "Pure python ISO manipulation library"
 category = "main"
 optional = false
 python-versions = "*"
-develop = false
-
-[package.source]
-type = "git"
-url = "https://github.com/clalancette/pycdlib.git"
-reference = "master"
-resolved_reference = "f36ea8c0e616ad43c679ad5102e94b3ee8753796"
 
 [[package]]
 name = "pydvdcss"
@@ -344,7 +337,7 @@ pyinstaller = ["pyinstaller"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.11"
-content-hash = "1b8f7f516110f370ca4122f79a6163896287c84acd918a533e4eed861534fe5c"
+content-hash = "6ede9b1783bcf6f838176f1cb190c3949ae241abbb8042ad9613a78e5ca1b7ac"
 
 [metadata.files]
 altgraph = [
@@ -447,7 +440,10 @@ poetry-dynamic-versioning = [
     {file = "poetry-dynamic-versioning-0.12.6.tar.gz", hash = "sha256:95e015d58bb490e138480fde131a2a9ab7ee287e467d3006378c4e217f067a6d"},
     {file = "poetry_dynamic_versioning-0.12.6-py3-none-any.whl", hash = "sha256:8f83d298a35c9ae428d98bbb6f19ed702a7e12c7a0a923c1c07d37e5a610044e"},
 ]
-pycdlib = []
+pycdlib = [
+    {file = "pycdlib-1.13.0-py2.py3-none-any.whl", hash = "sha256:cb4a9b55a3ee59c24b0b024aff7f46c2f1982452c7c8e153742f008f24a69930"},
+    {file = "pycdlib-1.13.0.tar.gz", hash = "sha256:38c033be82d3a671da5f779d441942907299c2113a6c50e1fb399a91ea1612f0"},
+]
 pydvdcss = [
     {file = "pydvdcss-1.3.2-py3-none-any.whl", hash = "sha256:f172a5ec42d00d365545c4a30815975ee8aa364eaf3a2f1b59a517d8e770eac8"},
     {file = "pydvdcss-1.3.2.tar.gz", hash = "sha256:28bc2e159b19a323c28a2eb3cb6b44bc74d5ae0569c6b026f6f182297096a7cc"},
