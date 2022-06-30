@@ -74,7 +74,7 @@ You can specify `-f` to build `sdist` or `wheel` only. Built files can be found 
 
 ### Packing with PyInstaller
 
-    python -m pip install --user pyinstaller
+    poetry install -E pyinstaller
     poetry run python pyinstaller.py
 
 The frozen build will be available in `/dist`. You may do both `.exe` and `Folder` builds. See `ONE_FILE` bool in `pyinstaller.py`.
