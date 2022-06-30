@@ -21,6 +21,7 @@ as one could need while being stupid simple to use.
 ## Quick Installation
 
     python -m pip install --user pslipstream
+    python -m slipstream
 
 You may also want to install from source, if so take a look at [Working with the Source Code](#working-with-the-source-code).
 
@@ -39,10 +40,6 @@ You may also want to install from source, if so take a look at [Working with the
 - [ ] Add the ability to choose to remux by VOB ID, and VOB CELL's.
 - [ ] Add the ability to choose which tracks of a title to output rather than all available.
 - [ ] Add Blu-ray backup support, using libaacs.
-
-## Usage
-
-To run Slipstream, type `slipstream` into Terminal, App Launcher, or Start Menu.
 
 ## Working with the Source Code
 
