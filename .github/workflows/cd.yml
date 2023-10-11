@@ -1,0 +1,60 @@
+name: cd
+permissions:
+  contents: "write"
+  id-token: "write"
+  packages: "write"
+  pull-requests: "read"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  tagged-release:
+    name: Tagged Release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.x"
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.6.1
+      - name: Install project
+        run: poetry install --only main -E pyinstaller
+      - name: Build Windows Executable with PyInstaller
+        run: poetry run python pyinstaller.py
+      - name: Create Windows Installer with Inno Setup
+        run: |
+          iscc setup.iss
+          mv dist/Slipstream-Setup.exe .
+      - name: Build Portable EXE with PyInstaller
+        run: |
+          poetry run python pyinstaller.py --one-file
+          mv dist/Slipstream.exe Slipstream-${{ github.ref_name }}-portable.exe
+      - name: Build project
+        run: poetry build
+      - name: Upload wheel
+        uses: actions/upload-artifact@v3
+        with:
+          name: Python Wheel
+          path: "dist/*.whl"
+      - name: Deploy release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          prerelease: false
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          files: |
+            dist/*.whl
+            Slipstream-Setup.exe
+            Slipstream-*-portable.exe
+      - name: Publish to PyPI
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish

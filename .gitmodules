@@ -1,0 +1,3 @@
+[submodule "submodules/libdvdcss"]
+	path = submodules/libdvdcss
+	url = https://github.com/allienx/libdvdcss-dll

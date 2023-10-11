@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "EditorConfig.EditorConfig",
+    "streetsidesoftware.code-spell-checker",
+    "charliermarsh.ruff",
+    "ms-python.isort",
+    "ms-python.mypy-type-checker"
+  ]
+}
