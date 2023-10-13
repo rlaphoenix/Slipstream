@@ -59,4 +59,8 @@ class Directories:
     static = root / "static"
 
 
-config = Config.load(Directories.user_data / "config.json")
+config_path = Directories.user_data / "config.json"
+if not config_path.exists():
+    config = Config(config_path)
+else:
+    config = Config.load(config_path)
