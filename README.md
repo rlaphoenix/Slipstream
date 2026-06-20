@@ -99,4 +99,4 @@ You can find a copy of the license in the LICENSE file in the root folder.
 
 * * *
 
-© rlaphoenix 2020-2023
+© rlaphoenix 2020-2026
