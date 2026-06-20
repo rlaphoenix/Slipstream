@@ -4,17 +4,23 @@ import logging
 import os
 import struct
 import sys
+import time
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Tuple
 
 from pycdlib import PyCdlib
-from pycdlib.pycdlibexception import PyCdlibInvalidInput
+from pycdlib.pycdlibexception import PyCdlibInvalidInput, PyCdlibInvalidISO
 from pydvdcss.dvdcss import DvdCss
 from pydvdid_m import DvdId
 from PySide6.QtCore import SignalInstance
 from tqdm import tqdm
 
 from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError, SlipstreamSeekError
+
+# Optical drives can momentarily return incomplete data right after a disc is inserted or while
+# spinning up, making pycdlib's UDF anchor parsing fail on one attempt but succeed on the next.
+OPEN_MAX_ATTEMPTS = 5
+OPEN_RETRY_DELAY = 1.0  # seconds between pycdlib open attempts
 
 
 def _register_libdvdcss() -> None:
@@ -88,11 +94,42 @@ class Dvd:
             self.dvdcss.close()
         self.device = dev
         self.log.info("Opening '%s'...", dev)
-        self.cdlib.open(rf"\\.\{dev}" if dev.endswith(":") else dev)
+        self._open_cdlib(rf"\\.\{dev}" if dev.endswith(":") else dev)
         self.log.info("Loaded Device in PyCdlib...")
         self.dvdcss.open(dev)
         self.log.info("Loaded Device in PyDvdCss...")
         self.log.info("DVD opened and ready...")
+
+    def _open_cdlib(self, device_path: str) -> None:
+        """
+        Open the device in pycdlib, retrying on intermittent disc-parse failures.
+
+        DVDs are UDF-bridge discs, so pycdlib always parses the UDF anchors. An optical drive can
+        momentarily return incomplete data (e.g. while spinning up), making this fail with errors
+        like "Expected at least 2 UDF Anchors" on one attempt yet succeed on the next. A failed
+        open leaves the PyCdlib instance in a partial state, so each retry uses a fresh instance.
+
+        Raises the last PyCdlibInvalidISO if every attempt fails.
+        """
+        last_error: Optional[PyCdlibInvalidISO] = None
+        for attempt in range(1, OPEN_MAX_ATTEMPTS + 1):
+            try:
+                self.cdlib.open(device_path)
+                if attempt > 1:
+                    self.log.info("pycdlib opened on attempt %d/%d", attempt, OPEN_MAX_ATTEMPTS)
+                return
+            except PyCdlibInvalidISO as e:
+                last_error = e
+                self.log.warning("pycdlib open attempt %d/%d failed (%s)", attempt, OPEN_MAX_ATTEMPTS, e)
+                try:
+                    self.cdlib.close()
+                except PyCdlibInvalidInput:
+                    pass
+                self.cdlib = PyCdlib()  # fresh instance for a clean retry
+                if attempt < OPEN_MAX_ATTEMPTS:
+                    time.sleep(OPEN_RETRY_DELAY)
+        assert last_error is not None  # loop always sets it before exhausting
+        raise last_error
 
     def compute_crc_id(self) -> str:
         """
