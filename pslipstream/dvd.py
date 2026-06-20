@@ -22,6 +22,11 @@ from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError
 OPEN_MAX_ATTEMPTS = 5
 OPEN_RETRY_DELAY = 1.0  # seconds between pycdlib open attempts
 
+# A disc can physically return fewer sectors than its PVD's space_size declares, effectively always at
+# the very end where the final sector(s) are unreadable padding (commonly all zeroes). We tolerate and
+# zero-fill up to this many trailing sectors (one DVD ECC block) so the image keeps its declared size.
+TRAILING_TOLERANCE_SECTORS = 16
+
 
 def _register_libdvdcss() -> None:
     """
@@ -302,16 +307,29 @@ class Dvd:
 
         ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
         read_sectors = len(ret) // self.cdlib.pvd.log_block_size
-        if read_sectors < 0:
-            raise SlipstreamReadError(f"An unexpected read error occurred reading {first_lba}->{first_lba + sectors}")
         if read_sectors != sectors:
-            # we do not want to just reduce the requested sector count as there's
-            # a chance that the pvd space size is just wrong/badly mastered
-            request_too_large = first_lba + sectors > self.cdlib.pvd.space_size
-            if not request_too_large or (first_lba + sectors) - self.cdlib.pvd.space_size != read_sectors:
+            # The disc can hand back fewer sectors than its PVD space_size claims, effectively always at
+            # the very end of the disc where the final sector(s) are unreadable padding (usually all
+            # zeroes), so the missing data cannot be recovered. k3b and similar tools tolerate this. Only
+            # accept a short read on the chunk that reaches the declared end of the disc, and zero-fill the
+            # missing trailing sectors so the image stays exactly space_size * block_size bytes. Anything
+            # else (a short read mid-disc, or a larger-than-expected gap) is a genuine read error.
+            missing = sectors - read_sectors
+            reaches_disc_end = first_lba + sectors >= self.cdlib.pvd.space_size
+            if not reaches_disc_end or not 0 < missing <= TRAILING_TOLERANCE_SECTORS:
                 raise SlipstreamReadError(
-                    f"Read {read_sectors} bytes, expected {sectors}, while reading {first_lba}->{first_lba + sectors}"
+                    f"Read {read_sectors} sectors, expected {sectors}, while reading {first_lba}->{first_lba + sectors}"
                 )
+            self.log.warning(
+                "Disc returned %d of %d sectors at the tail (%d->%d); zero-filling %d unreadable trailing "
+                "sector(s) so the image keeps its declared size.",
+                read_sectors,
+                sectors,
+                first_lba,
+                first_lba + sectors,
+                missing,
+            )
+            ret += b"\x00" * (missing * self.cdlib.pvd.log_block_size)
         self.reader_position += read_sectors
 
         return ret
