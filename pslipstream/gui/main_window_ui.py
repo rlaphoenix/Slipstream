@@ -12,9 +12,25 @@
 
 from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize, Qt
 from PySide6.QtGui import QAction, QFont, QIcon, QPixmap
-from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QFrame, QHBoxLayout, QLabel, QLayout, QMenu,
-                               QMenuBar, QProgressBar, QPushButton, QScrollArea, QSizePolicy, QSpacerItem, QStatusBar,
-                               QTreeWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QAbstractScrollArea,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QLayout,
+    QMenu,
+    QMenuBar,
+    QProgressBar,
+    QPushButton,
+    QScrollArea,
+    QSizePolicy,
+    QSpacerItem,
+    QStatusBar,
+    QTreeWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class Ui_MainWindow(object):

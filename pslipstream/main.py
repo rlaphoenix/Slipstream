@@ -18,12 +18,7 @@ def main(version: bool, debug: bool, licence: bool) -> None:
     """Slipstream—A Home-media Backup Solution"""
     logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
     log = logging.getLogger(__name__)
-    coloredlogs.install(
-        level=log.level,
-        logger=log,
-        fmt="{asctime} [{levelname[0]}] {name} : {message}",
-        style="{"
-    )
+    coloredlogs.install(level=log.level, logger=log, fmt="{asctime} [{levelname[0]}] {name} : {message}", style="{")
 
     if version:
         print(__version__)

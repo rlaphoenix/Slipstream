@@ -1,7 +1,7 @@
 ; https://jrsoftware.org/ishelp/index.php
 
 #define AppName "Slipstream"
-#define Version "1.0.0"
+#define Version GetEnv("SLIPSTREAM_VERSION")
 
 [Setup]
 AppId={#AppName}

@@ -17,8 +17,9 @@ from pslipstream import __version__
 @click.option("--name", default="Slipstream", help="Set the Project Name")
 @click.option("--author", default="rlaphoenix", help="Set the Project Author")
 @click.option("--version", default=__version__, help="Set the EXE Version")
-@click.option("--icon-file", default="pslipstream/static/img/icon.ico",
-              help="Set the Icon file path (must be a .ICO file)")
+@click.option(
+    "--icon-file", default="pslipstream/static/img/icon.ico", help="Set the Icon file path (must be a .ICO file)"
+)
 @click.option("--one-file", is_flag=True, help="Build to a singular .exe file")
 @click.option("--console", is_flag=True, help="Show the Console window")
 def main(debug: bool, name: str, author: str, version: str, icon_file: str, one_file: bool, console: bool) -> None:
@@ -26,7 +27,7 @@ def main(debug: bool, name: str, author: str, version: str, icon_file: str, one_
     additional_data: List[List[str]] = [
         # local file path, destination in build output
         ["pslipstream/static", "pslipstream/static"],
-        [f"submodules/libdvdcss/1.4.3/{8 * struct.calcsize('P')}-bit/libdvdcss-2.dll", "."]
+        [f"submodules/libdvdcss/1.4.3/{8 * struct.calcsize('P')}-bit/libdvdcss-2.dll", "."],
     ]
     hidden_imports: List[str] = []
     extra_args: List[str] = ["-y"]
@@ -67,21 +68,26 @@ def main(debug: bool, name: str, author: str, version: str, icon_file: str, one_
           ]
         )
         """).strip(),
-        encoding="utf8"
+        encoding="utf8",
     )
 
     try:
-        run([
-            "pslipstream/__main__.py",
-            "-n", name,
-            "-i", ["NONE", icon_file][bool(icon_file)],
-            ["-D", "-F"][one_file],
-            ["-w", "-c"][console],
-            *itertools.chain(*[["--add-data", ":".join(x)] for x in additional_data]),
-            *itertools.chain(*[["--hidden-import", x] for x in hidden_imports]),
-            "--version-file", str(version_file),
-            *extra_args
-        ])
+        run(
+            [
+                "pslipstream/__main__.py",
+                "-n",
+                name,
+                "-i",
+                ["NONE", icon_file][bool(icon_file)],
+                ["-D", "-F"][one_file],
+                ["-w", "-c"][console],
+                *itertools.chain(*[["--add-data", ":".join(x)] for x in additional_data]),
+                *itertools.chain(*[["--hidden-import", x] for x in hidden_imports]),
+                "--version-file",
+                str(version_file),
+                *extra_args,
+            ]
+        )
     finally:
         if not debug:
             shutil.rmtree("build", ignore_errors=True)

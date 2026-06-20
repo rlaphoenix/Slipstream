@@ -9,7 +9,7 @@ class Device:
         make: Optional[str] = None,
         model: Optional[str] = None,
         revision: Optional[str] = None,
-        volume_id: Optional[str] = None
+        volume_id: Optional[str] = None,
     ):
         self.target = target
         self.medium = medium

@@ -23,5 +23,5 @@ def convert_iso_descriptor_date(vdd: VolumeDescriptorDate) -> Optional[datetime]
         minute=vdd.minute,
         second=vdd.second,
         microsecond=vdd.hundredthsofsecond,
-        tzinfo=tzoffset("GMT", (15 * vdd.gmtoffset) * 60)
+        tzinfo=tzoffset("GMT", (15 * vdd.gmtoffset) * 60),
     )

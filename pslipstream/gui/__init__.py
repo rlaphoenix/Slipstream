@@ -14,7 +14,7 @@ def start() -> None:
     """Start the GUI and Qt execution loop."""
     if sys.platform == "win32":
         # https://stackoverflow.com/a/1552105/13183782
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u"com.rlaphoenix.slipstream")
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("com.rlaphoenix.slipstream")
 
     app = QApplication(sys.argv)
     app.setStyle("fusion")

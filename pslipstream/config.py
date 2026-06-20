@@ -12,12 +12,15 @@ from appdirs import AppDirs
 from pslipstream.device import Device
 
 IS_FROZEN = getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")
-SYSTEM_INFO = ",".join(map(str, filter(None, [
-    sys.platform,
-    f"{8 * struct.calcsize('P')}bit",
-    platform.python_version(),
-    [None, "frozen"][IS_FROZEN]
-])))
+SYSTEM_INFO = ",".join(
+    map(
+        str,
+        filter(
+            None,
+            [sys.platform, f"{8 * struct.calcsize('P')}bit", platform.python_version(), [None, "frozen"][IS_FROZEN]],
+        ),
+    )
+)
 
 
 class Config:

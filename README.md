@@ -1,10 +1,9 @@
 ![Banner](assets/banner.png)
 
-[![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Dependency management: Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/rlaphoenix/slipstream/blob/master/LICENSE)
 [![Python version](https://img.shields.io/pypi/pyversions/pslipstream)](https://pypi.python.org/pypi/pslipstream)
-[![Release version](https://img.shields.io/pypi/v/pslipstream)](https://pypi.python.org/pypi/pslipstream)
-[![DeepSource issues](https://deepsource.io/gh/rlaphoenix/slipstream.svg/?label=active+issues)](https://deepsource.io/gh/rlaphoenix/slipstream)
+[![Manager: uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Onyx-Nostalgia/uv/refs/heads/fix/logo-badge/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Build status](https://github.com/rlaphoenix/slipstream/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/rlaphoenix/slipstream/actions/workflows/ci.yml)
 
 Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a

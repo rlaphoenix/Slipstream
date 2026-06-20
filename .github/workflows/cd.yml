@@ -1,9 +1,4 @@
 name: cd
-permissions:
-  contents: "write"
-  id-token: "write"
-  packages: "write"
-  pull-requests: "read"
 
 on:
   push:
@@ -13,48 +8,44 @@ on:
 jobs:
   tagged-release:
     name: Tagged Release
-    runs-on: windows-latest
+    runs-on: windows-2022  # windows-2025 dropped InnoSetup/ISCC
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: "true"
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.11.x"
-      - name: Install Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.6.1
-      - name: Install project
-        run: poetry install --only main -E pyinstaller
+          python-version: "3.14"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install the project
+        run: uv sync --locked --all-extras --group pack
       - name: Build Windows Executable with PyInstaller
-        run: poetry run python pyinstaller.py
+        run: uv run python pyinstaller.py
       - name: Create Windows Installer with Inno Setup
         run: |
+          $env:SLIPSTREAM_VERSION = uvx hatch version
           iscc setup.iss
           mv dist/Slipstream-Setup.exe .
       - name: Build Portable EXE with PyInstaller
         run: |
-          poetry run python pyinstaller.py --one-file
+          uv run python pyinstaller.py --one-file
           mv dist/Slipstream.exe Slipstream-${{ github.ref_name }}-portable.exe
       - name: Build project
-        run: poetry build
-      - name: Upload wheel
-        uses: actions/upload-artifact@v3
-        with:
-          name: Python Wheel
-          path: "dist/*.whl"
+        run: uv build
       - name: Deploy release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           prerelease: false
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           files: |
-            dist/*.whl
             Slipstream-Setup.exe
             Slipstream-*-portable.exe
       - name: Publish to PyPI
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
-        run: poetry publish
+        run: uv publish

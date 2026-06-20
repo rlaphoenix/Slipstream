@@ -9,8 +9,15 @@ from pycdlib.dates import VolumeDescriptorDate
 from pycdlib.headervd import FileOrTextIdentifier
 from PySide6 import QtCore
 from PySide6.QtGui import QAction, QCursor
-from PySide6.QtWidgets import (QFileDialog, QHeaderView, QMainWindow, QMessageBox, QPushButton, QTreeWidgetItem,
-                               QVBoxLayout)
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QHeaderView,
+    QMainWindow,
+    QMessageBox,
+    QPushButton,
+    QTreeWidgetItem,
+    QVBoxLayout,
+)
 
 from pslipstream import __version__
 from pslipstream.config import SYSTEM_INFO, config
@@ -71,11 +78,13 @@ class MainWindow(QMainWindow):
         DEVICE_READER.finished.connect(self.on_disc_read_finish)
         DEVICE_READER.error.connect(self.on_disc_read_error)
         DEVICE_READER.progress.connect(self.on_disc_read_progress)
-        self.ui.backupButton.clicked.connect(lambda: (
-            self.start_backup(DEVICE_LOADER.disc)
-        ) if DEVICE_LOADER.disc else (
-            QMessageBox.critical(self, "Error", "You somehow clicked Backup before a Disc was loaded.")
-        ))
+        self.ui.backupButton.clicked.connect(
+            lambda: (
+                (self.start_backup(DEVICE_LOADER.disc))
+                if DEVICE_LOADER.disc
+                else (QMessageBox.critical(self, "Error", "You somehow clicked Backup before a Disc was loaded."))
+            )
+        )
 
         # startup
         WORKER_THREAD.started.connect(DEVICE_SCANNER.scan)
@@ -90,14 +99,14 @@ class MainWindow(QMainWindow):
                 self,
                 "Backup Disc Image",
                 str(config.last_opened_directory or ""),
-                "ISO files (*.iso);;DVD IFO files (*.ifo)"
+                "ISO files (*.iso);;DVD IFO files (*.ifo)",
             )
             if not loc[0]:
                 return
             device = Device(
                 target=loc[0],
                 medium="DVD",  # TODO: Don't presume DVD
-                volume_id=Path(loc[0]).name
+                volume_id=Path(loc[0]).name,
             )
 
         self.add_device_button(device)
@@ -114,12 +123,12 @@ class MainWindow(QMainWindow):
         QMessageBox.about(
             self,
             "About Slipstream",
-            f"Slipstream v{__version__} [{SYSTEM_INFO}]" +
-            f"<p>Copyright (C) 2020-{datetime.now().year} rlaphoenix</p>" +
-            "<p>The most informative Home-media backup solution.<br/>"
+            f"Slipstream v{__version__} [{SYSTEM_INFO}]"
+            + f"<p>Copyright (C) 2020-{datetime.now().year} rlaphoenix</p>"
+            + "<p>The most informative Home-media backup solution.<br/>"
             "<a href='https://github.com/rlaphoenix/Slipstream' style='color:white'>"
             "https://github.com/rlaphoenix/Slipstream"
-            "</a></p>"
+            "</a></p>",
         )
 
     def add_recent_entry(self, device: Device) -> None:
@@ -147,10 +156,7 @@ class MainWindow(QMainWindow):
 
         no_disc = not bool(device.volume_id)
 
-        button = QPushButton(
-            f"{device.volume_id or 'No disc inserted...'}\n"
-            f"{device.make} - {device.model}"
-        )
+        button = QPushButton(f"{device.volume_id or 'No disc inserted...'}\n{device.make} - {device.model}")
         button.setObjectName(device.target)
         button.setCursor(QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         button.clicked.connect(partial(DEVICE_LOADER.device.emit, device))
@@ -180,8 +186,8 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(
             self,
             "Error",
-            "An unexpected error occurred while scanning for Disc Reader Devices:\n\n" +
-            "\n".join(traceback.format_exception(error))
+            "An unexpected error occurred while scanning for Disc Reader Devices:\n\n"
+            + "\n".join(traceback.format_exception(error)),
         )
 
     # Disc Info #
@@ -227,8 +233,8 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(
             self,
             "Error",
-            "An unexpected error occurred while Loading a Disc Reader Device:\n\n" +
-            "\n".join(traceback.format_exception(error))
+            "An unexpected error occurred while Loading a Disc Reader Device:\n\n"
+            + "\n".join(traceback.format_exception(error)),
         )
 
     # Disc Backup #
@@ -237,11 +243,13 @@ class MainWindow(QMainWindow):
         save_path, _ = QFileDialog.getSaveFileName(
             self,
             "Backup Disc Image",
-            str(Path(
-                config.last_opened_directory or "",
-                disc.cdlib.pvd.volume_identifier.replace(b"\x00", b"").strip().decode() + ".ISO"
-            )),
-            "Disc Images (*.ISO, *.BIN);;All Files (*)"
+            str(
+                Path(
+                    config.last_opened_directory or "",
+                    disc.cdlib.pvd.volume_identifier.replace(b"\x00", b"").strip().decode() + ".ISO",
+                )
+            ),
+            "Disc Images (*.ISO, *.BIN);;All Files (*)",
         )
         if not save_path:
             return
@@ -271,6 +279,5 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(
             self,
             "Error",
-            "An unexpected error occurred while Backing up a Disc:\n\n" +
-            "\n".join(traceback.format_exception(error))
+            "An unexpected error occurred while Backing up a Disc:\n\n" + "\n".join(traceback.format_exception(error)),
         )

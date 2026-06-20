@@ -11,6 +11,7 @@ from pslipstream.dvd import Dvd
 
 class DeviceScanner(QObject):
     """QObject to Scan for Disc Reader Devices."""
+
     started = Signal()
     finished = Signal(int)
     error = Signal(Exception)
@@ -24,13 +25,15 @@ class DeviceScanner(QObject):
             c = WMI()
             drives = c.Win32_CDROMDrive()
             for drive in drives:
-                self.scanned_device.emit(Device(
-                    target=drive.drive,
-                    make=drive.name.split(" ")[0],
-                    model=drive.name.split(" ")[1],
-                    revision=drive.mfrAssignedRevisionLevel,
-                    volume_id=drive.volumeName
-                ))
+                self.scanned_device.emit(
+                    Device(
+                        target=drive.drive,
+                        make=drive.name.split(" ")[0],
+                        model=drive.name.split(" ")[1],
+                        revision=drive.mfrAssignedRevisionLevel,
+                        volume_id=drive.volumeName,
+                    )
+                )
             self.finished.emit(len(drives))
         except Exception as e:  # skipcq: PYL-W0703
             self.error.emit(e)
@@ -43,6 +46,7 @@ class DeviceLoader(QObject):
     Note:
     - Currently only DVD Discs are supported.
     """
+
     started = Signal(Device)
     finished = Signal(Device)
     error = Signal(Exception)
@@ -80,6 +84,7 @@ class DeviceReader(QObject):
     - Currently only DVD Discs are supported.
     - CSS (Content Scramble System) is automatically bypassed with libdvdcss.
     """
+
     started = Signal(Dvd)
     finished = Signal(Dvd)
     error = Signal(Exception)

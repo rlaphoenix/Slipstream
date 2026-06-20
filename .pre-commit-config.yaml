@@ -1,19 +1,30 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
+exclude: |
+  (?x)^(
+    pslipstream/gui/main_window_ui\.py
+  )$
 repos:
-  - repo: https://github.com/mtkennerly/pre-commit-hooks
-    rev: v0.3.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.18
     hooks:
-      - id: poetry-ruff
-      - id: poetry-mypy
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+      - id: ruff-check
+        language: system
+        types: [ python ]
+      - id: ruff-format
+        language: system
+        types: [ python ]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.1.0
     hooks:
-      - id: isort
+      - id: mypy
+        language: system
+        types: [ python ]
+        args: []  # override defaults to empty
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
+      - id: end-of-file-fixer
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
-      - id: end-of-file-fixer
