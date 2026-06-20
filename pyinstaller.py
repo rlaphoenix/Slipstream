@@ -27,7 +27,7 @@ def main(debug: bool, name: str, author: str, version: str, icon_file: str, one_
     additional_data: List[List[str]] = [
         # local file path, destination in build output
         ["pslipstream/static", "pslipstream/static"],
-        [f"submodules/libdvdcss/1.4.3/{8 * struct.calcsize('P')}-bit/libdvdcss-2.dll", "."],
+        [f"submodules/libdvdcss/1.5.0/{8 * struct.calcsize('P')}-bit/libdvdcss-2.dll", "."],
     ]
     hidden_imports: List[str] = []
     extra_args: List[str] = ["-y"]
