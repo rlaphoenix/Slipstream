@@ -1,9 +1,6 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "pslipstream"
+version = "1.0.0"  # keep in sync with pslipstream/__init__.py (the app's runtime/installer source of truth)
 description = "The most informative Home-media backup solution."
 authors = [{ email = "rlaphoenix@pm.me" }]
 requires-python = ">=3.11"
@@ -34,13 +31,11 @@ dependencies = [
     "appdirs~=1.4.4",
     "tqdm~=4.68.3",
     "PySide6-Essentials~=6.11",
-    "click~=8.4.1",
     "coloredlogs~=15.0.1",
     "jsonpickle~=4.1.2",
     "pywin32>=306; sys_platform == 'win32'",
     "WMI~=1.5.1; sys_platform == 'win32'",
 ]
-dynamic = ["version"]
 
 [project.urls]
 Repository = "https://github.com/rlaphoenix/slipstream"
@@ -48,23 +43,17 @@ Issues = "https://github.com/rlaphoenix/slipstream/issues"
 Forums = "https://github.com/rlaphoenix/slipstream/discussions"
 Changelog = "https://github.com/rlaphoenix/slipstream/blob/master/CHANGELOG.md"
 
+[tool.uv]
+package = false  # GUI application, not a distributable/importable package
+
 [dependency-groups]
-pack = ["pyinstaller~=6.21.0"]
+pack = ["pyinstaller~=6.21.0", "click~=8.4.1"]  # click is used by pyinstaller.py (build script only)
 lint = ["ruff~=0.15.18", "pre-commit~=4.6.0"]
 form = ["ruff~=0.15.18"]
 type = [
     "mypy~=2.1.0",
     "types-python-dateutil~=2.9.0.20260518",
 ]
-
-[project.scripts]
-slipstream = "pslipstream.main:main"
-
-[tool.hatch.version]
-path = "pslipstream/__init__.py"
-
-[tool.hatch.build.targets.wheel]
-exclude = ["*.ui"]
 
 [tool.ruff]
 line-length = 120

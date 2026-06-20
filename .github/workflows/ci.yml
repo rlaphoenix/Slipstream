@@ -21,7 +21,7 @@ jobs:
         run: uv tool install pre-commit --with pre-commit-uv --force-reinstall
       - name: Run pre-commit to do linting, formatting, type-checking, and more
         run: uv run pre-commit run --all-files --show-diff-on-failure
-  build:
+  smoke:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -38,5 +38,5 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install the project
         run: uv sync --locked
-      - name: Build project
-        run: uv build
+      - name: Import smoke test
+        run: uv run python -c "import pslipstream.gui"

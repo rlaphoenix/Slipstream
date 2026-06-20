@@ -1,14 +1,13 @@
 ![Banner](assets/banner.png)
 
 [![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/rlaphoenix/slipstream/blob/master/LICENSE)
-[![Python version](https://img.shields.io/pypi/pyversions/pslipstream)](https://pypi.python.org/pypi/pslipstream)
+[![Python version](https://img.shields.io/badge/python-3.11%2B-informational)](https://www.python.org/)
 [![Manager: uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Onyx-Nostalgia/uv/refs/heads/fix/logo-badge/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Build status](https://github.com/rlaphoenix/slipstream/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/rlaphoenix/slipstream/actions/workflows/ci.yml)
 
 Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a
-wide array of formats, including a full backup. Slipstream can be used with it's GUI, as CLI, or as an importable
-package.
+wide array of formats, including a full backup. Slipstream is a desktop GUI application.
 
 It's trying to be different from the other solutions out there by providing as much information about the home-media
 as one could need while being stupid simple to use.
@@ -17,18 +16,10 @@ as one could need while being stupid simple to use.
 
 ## Installation
 
-*Windows Installers are available on the [Releases] page.*
+*Windows Installers and a portable executable are available on the [Releases] page.*
 
-Alternatively you can download and install Slipstream from PIP/PyPI:
-
-    $ pip install pslipstream
-
-> **Note**
-If pip gives you a warning about a path not being in your PATH environment variable then promptly add that path then
-close all open command prompt Windows, or running `slipstream` won't work as it will not be recognized as a program.
-
-Voilà 🎉 - You now have the `pslipstream` package installed!  
-Launch it by typing `slipstream` in your Terminal or Windows Run.
+Download the latest installer, run it, then launch Slipstream from the Start Menu or Desktop shortcut.
+Prefer not to install? Grab the portable `.exe` from the same page and run it directly.
 
   [Releases]: <https://github.com/rlaphoenix/slipstream/releases>
 

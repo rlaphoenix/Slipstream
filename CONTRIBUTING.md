@@ -37,16 +37,10 @@ uv installation instructions should be followed from the uv Docs: https://docs.a
     ```
 
 Now feel free to work on the project however you like, all code will be checked before committing.
+Launch the app with `uv run python -m pslipstream`.
 
 If you make any changes to the QT UI file (`main_window.ui`), then you must run `.\make.ps1` to re-compile it to its
 Python file.
-
-## Building Source and Wheel distributions
-
-    uv build
-
-You can optionally specify `--sdist` or `--wheel` to build that distribution only.
-Built files can be found in the `/dist` directory.
 
 ## Packing with PyInstaller
 
@@ -59,6 +53,6 @@ The frozen build will be available in the `/dist` folder.
 ## Creating Windows Installers
 
 1. Install the [Inno Setup Compiler](https://jrsoftware.org/isdl.php).
-2. Set the `SLIPSTREAM_VERSION` environment variable, e.g. `$env:SLIPSTREAM_VERSION = uvx hatch version`.
+2. Set the `SLIPSTREAM_VERSION` environment variable, e.g. `$env:SLIPSTREAM_VERSION = uv run python -c "import pslipstream; print(pslipstream.__version__)"`.
 3. Right-click the [setup.iss](setup.iss) file in the root folder and click Compile.
 4. The Windows Installer will be available in the `/dist` folder.
