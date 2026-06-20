@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Tuple
 
@@ -168,7 +169,7 @@ class Dvd:
             self.log.debug("DVD isn't scrambled. CSS title key cracking skipped.")
 
         f = fn.open("wb")
-        t = tqdm(total=last_lba + 1, unit="sectors")
+        t = tqdm(total=last_lba + 1, unit="sectors", disable=sys.stderr is None)
 
         while current_lba <= last_lba:
             data = self.read(current_lba, min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1))
