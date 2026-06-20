@@ -27,7 +27,6 @@ jobs:
         run: uv run python pyinstaller.py
       - name: Create Windows Installer with Inno Setup
         run: |
-          $env:SLIPSTREAM_VERSION = uv run python -c "import pslipstream; print(pslipstream.__version__)"
           iscc setup.iss
           mv dist/Slipstream-Setup.exe .
       - name: Build Portable EXE with PyInstaller

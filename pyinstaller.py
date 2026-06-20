@@ -28,6 +28,7 @@ def main(debug: bool, name: str, author: str, version: str, icon_file: str, one_
         # local file path, destination in build output
         ["pslipstream/static", "pslipstream/static"],
         [f"submodules/libdvdcss/1.5.0/{8 * struct.calcsize('P')}-bit/libdvdcss-2.dll", "."],
+        ["pyproject.toml", "."],  # read at runtime by pslipstream/__init__.py for __version__
     ]
     hidden_imports: List[str] = []
     extra_args: List[str] = ["-y"]

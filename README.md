@@ -84,9 +84,9 @@ The frozen build will be available in the `/dist` folder.
 ### Creating Windows Installers
 
 1. Install the [Inno Setup Compiler](https://jrsoftware.org/isdl.php).
-2. Set the `SLIPSTREAM_VERSION` environment variable, e.g. `$env:SLIPSTREAM_VERSION = uv run python -c "import pslipstream; print(pslipstream.__version__)"`.
-3. Right-click the [setup.iss](setup.iss) file in the root folder and click Compile.
-4. The Windows Installer will be available in the `/dist` folder.
+2. Right-click the [setup.iss](setup.iss) file in the root folder and click Compile. The version is read
+   automatically from `pyproject.toml`.
+3. The Windows Installer will be available in the `/dist` folder.
 
 ## Licensing
 

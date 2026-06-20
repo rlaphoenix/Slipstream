@@ -1,6 +1,6 @@
 [project]
 name = "pslipstream"
-version = "1.0.0"  # keep in sync with pslipstream/__init__.py (the app's runtime/installer source of truth)
+version = "1.0.0"
 description = "The most informative Home-media backup solution."
 authors = [{ email = "rlaphoenix@pm.me" }]
 requires-python = ">=3.11"

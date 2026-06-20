@@ -1,7 +1,29 @@
 ; https://jrsoftware.org/ishelp/index.php
 
 #define AppName "Slipstream"
-#define Version GetEnv("SLIPSTREAM_VERSION")
+
+; Read [project].version from pyproject.toml (the single source of truth) at compile time, so the
+; installer version never has to be passed in or kept in sync by hand.
+#define Q """"
+#define Version ""
+#define PyProject FileOpen("pyproject.toml")
+#if !PyProject
+  #error Could not open pyproject.toml to read the version
+#endif
+
+#sub ReadVersionLine
+  #expr Local[0] = FileRead(PyProject), \
+    (Len(Version) == 0) && (Pos("version", Local[0]) == 1) && (Pos(Q, Local[0]) > 0) ? \
+      (Local[1] = Copy(Local[0], Pos(Q, Local[0]) + 1, Len(Local[0])), \
+       Version = Copy(Local[1], 1, Pos(Q, Local[1]) - 1)) : 0
+#endsub
+
+#for {0; !FileEof(PyProject); 0} ReadVersionLine
+#expr FileClose(PyProject)
+
+#if Len(Version) == 0
+  #error Could not find [project].version in pyproject.toml
+#endif
 
 [Setup]
 AppId={#AppName}
@@ -25,7 +47,7 @@ OutputManifestFile=Slipstream-Setup-Manifest.txt
 PrivilegesRequiredOverridesAllowed=dialog commandline
 SetupIconFile=pslipstream/static/img/icon.ico
 SolidCompression=yes
-VersionInfoVersion=0.1.0
+VersionInfoVersion={#Version}
 WizardStyle=modern
 
 [Languages]
