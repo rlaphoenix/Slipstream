@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import struct
 import sys
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Tuple
@@ -14,6 +15,29 @@ from PySide6.QtCore import SignalInstance
 from tqdm import tqdm
 
 from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError, SlipstreamSeekError
+
+
+def _register_libdvdcss() -> None:
+    """
+    Make the bundled libdvdcss DLL discoverable when running from source on Windows.
+
+    The frozen build ships the DLL next to the executable, but a source checkout keeps it in the
+    `submodules/libdvdcss` submodule. pydvdcss locates the library via ctypes' find_library, which
+    on Windows searches PATH, so we prepend the architecture-specific submodule directory to it.
+    On Linux/macOS, libdvdcss is provided by the system package manager instead.
+    """
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return  # frozen build bundles the DLL itself
+    if sys.platform != "win32":
+        return  # the submodule holds Windows DLLs; other platforms use the system libdvdcss
+    bits = 8 * struct.calcsize("P")
+    dll_dir = Path(__file__).resolve().parents[1] / "submodules" / "libdvdcss" / "1.5.0" / f"{bits}-bit"
+    if (dll_dir / "libdvdcss-2.dll").is_file():
+        os.environ["PATH"] = str(dll_dir) + os.pathsep + os.environ.get("PATH", "")
+        os.add_dll_directory(str(dll_dir))
+
+
+_register_libdvdcss()
 
 
 class Dvd:
