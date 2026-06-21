@@ -17,16 +17,8 @@ from PySide6.QtCore import SignalInstance
 from tqdm import tqdm
 
 from pslipstream import scsi
+from pslipstream.config import config
 from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError, SlipstreamSeekError
-
-# Optical drives can momentarily return incomplete data right after a disc is inserted or while
-# spinning up, making pycdlib's UDF anchor parsing fail on one attempt but succeed on the next.
-OPEN_MAX_ATTEMPTS = 5
-OPEN_RETRY_DELAY = 1.0  # seconds between pycdlib open attempts
-
-# When libdvdcss cannot read an unencrypted sector (e.g. one outside the logical volume), retry it this
-# many times via a raw SCSI read before giving up - a drive can transiently fail and succeed on retry.
-SCSI_READ_ATTEMPTS = 3
 
 
 def _register_libdvdcss() -> None:
@@ -113,6 +105,13 @@ class Dvd:
         self.log.info("Opening '%s'...", dev)
         self._open_cdlib(rf"\\.\{dev}" if dev.endswith(":") else dev)
         self.log.info("Loaded Device in PyCdlib...")
+        # libdvdcss reads these from the environment at open time. pydvdcss's set_cracking_mode("unset")
+        # wrongly writes the literal string "unset" instead of removing the variable, so handle it here.
+        if config.css_crack_mode == "unset":
+            os.environ.pop("DVDCSS_METHOD", None)
+        else:
+            self.dvdcss.set_cracking_mode(config.css_crack_mode)
+        self.dvdcss.set_verbosity(config.css_verbosity)
         self.dvdcss.open(dev)
         self.log.info("Loaded Device in PyDvdCss...")
         self._open_scsi(dev)
@@ -124,7 +123,7 @@ class Dvd:
             return
         device_path = rf"\\.\{dev}" if dev.endswith(":") else dev
         try:
-            self._scsi = scsi.ScsiReader(device_path)
+            self._scsi = scsi.ScsiReader(device_path, config.scsi_max_transfer_sectors)
         except OSError as e:
             self.log.warning("Raw SCSI fallback unavailable for '%s': %s", dev, e)
             self._scsi = None
@@ -140,23 +139,24 @@ class Dvd:
 
         Raises the last PyCdlibInvalidISO if every attempt fails.
         """
+        attempts = max(1, config.pycdlib_open_attempts)
         last_error: Optional[PyCdlibInvalidISO] = None
-        for attempt in range(1, OPEN_MAX_ATTEMPTS + 1):
+        for attempt in range(1, attempts + 1):
             try:
                 self.cdlib.open(device_path)
                 if attempt > 1:
-                    self.log.info("pycdlib opened on attempt %d/%d", attempt, OPEN_MAX_ATTEMPTS)
+                    self.log.info("pycdlib opened on attempt %d/%d", attempt, attempts)
                 return
             except PyCdlibInvalidISO as e:
                 last_error = e
-                self.log.warning("pycdlib open attempt %d/%d failed (%s)", attempt, OPEN_MAX_ATTEMPTS, e)
+                self.log.warning("pycdlib open attempt %d/%d failed (%s)", attempt, attempts, e)
                 try:
                     self.cdlib.close()
                 except PyCdlibInvalidInput:
                     pass
                 self.cdlib = PyCdlib()  # fresh instance for a clean retry
-                if attempt < OPEN_MAX_ATTEMPTS:
-                    time.sleep(OPEN_RETRY_DELAY)
+                if attempt < attempts:
+                    time.sleep(config.pycdlib_open_retry_delay)
         assert last_error is not None  # loop always sets it before exhausting
         raise last_error
 
@@ -262,7 +262,7 @@ class Dvd:
         t = tqdm(total=last_lba + 1, unit="sectors", disable=sys.stderr is None)
 
         while current_lba <= last_lba:
-            data = self.read(current_lba, min(self.dvdcss.BLOCK_BUFFER, last_lba - current_lba + 1))
+            data = self.read(current_lba, min(max(1, config.read_buffer_sectors), last_lba - current_lba + 1))
             f.write(data)
             read_sectors = len(data) // self.cdlib.pvd.log_block_size
             current_lba += read_sectors
@@ -368,7 +368,7 @@ class Dvd:
         if self._scsi is None:
             return None
         expected = count * self.cdlib.pvd.log_block_size
-        for _ in range(SCSI_READ_ATTEMPTS):
+        for _ in range(max(1, config.scsi_read_attempts)):
             data = self._scsi.read(lba, count)
             if data is not None and len(data) == expected:
                 return data

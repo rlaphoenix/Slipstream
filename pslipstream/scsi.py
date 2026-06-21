@@ -123,8 +123,9 @@ class ScsiReader:
     SCSI READ(12) commands, splitting large reads into drive-sized chunks.
     """
 
-    def __init__(self, device_path: str) -> None:
+    def __init__(self, device_path: str, max_transfer_sectors: int = _MAX_SCSI_SECTORS) -> None:
         self._handle: Optional[int] = None
+        self._max_transfer = max(1, max_transfer_sectors)
         if sys.platform != "win32":
             raise OSError("ScsiReader is only supported on Windows")
         self._k32 = _new_kernel32()
@@ -148,7 +149,7 @@ class ScsiReader:
         out = bytearray()
         offset = 0
         while offset < count:
-            chunk = min(_MAX_SCSI_SECTORS, count - offset)
+            chunk = min(self._max_transfer, count - offset)
             data = _scsi_read12(self._k32, self._handle, lba + offset, chunk)
             if data is None or len(data) != chunk * SECTOR_SIZE:
                 return None

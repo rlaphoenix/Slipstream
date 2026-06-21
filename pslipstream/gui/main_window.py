@@ -24,6 +24,7 @@ from pslipstream.config import SYSTEM_INFO, config
 from pslipstream.device import Device
 from pslipstream.dvd import Dvd
 from pslipstream.gui.main_window_ui import Ui_MainWindow  # type: ignore[attr-defined]
+from pslipstream.gui.settings_window import SettingsDialog
 from pslipstream.gui.workers import DEVICE_LOADER, DEVICE_READER, DEVICE_SCANNER, WORKER_THREAD
 from pslipstream.helpers import convert_iso_descriptor_date
 
@@ -59,6 +60,12 @@ class MainWindow(QMainWindow):
         self.ui.actionOpen.triggered.connect(self.open_file)
         self.ui.actionExit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.about)
+
+        # Settings entry (added in code so the .ui does not need recompiling)
+        self.actionSettings = QAction("&Settings...", self)
+        self.actionSettings.triggered.connect(self.open_settings)
+        self.ui.menuFile.insertAction(self.ui.actionExit, self.actionSettings)
+        self.ui.menuFile.insertSeparator(self.ui.actionExit)
 
         # device list
         DEVICE_SCANNER.started.connect(self.on_device_scan_start)
@@ -130,6 +137,10 @@ class MainWindow(QMainWindow):
             "https://github.com/rlaphoenix/Slipstream"
             "</a></p>",
         )
+
+    def open_settings(self) -> None:
+        """Show the Settings dialog."""
+        SettingsDialog(self).exec()
 
     def add_recent_entry(self, device: Device) -> None:
         """Add an Entry to the File->Open Recent Menu bar list."""
