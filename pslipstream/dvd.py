@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ctypes
 import logging
 import os
 import struct
@@ -15,6 +16,7 @@ from pydvdid_m import DvdId
 from PySide6.QtCore import SignalInstance
 from tqdm import tqdm
 
+from pslipstream import scsi
 from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError, SlipstreamSeekError
 
 # Optical drives can momentarily return incomplete data right after a disc is inserted or while
@@ -22,10 +24,9 @@ from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError
 OPEN_MAX_ATTEMPTS = 5
 OPEN_RETRY_DELAY = 1.0  # seconds between pycdlib open attempts
 
-# A disc can physically return fewer sectors than its PVD's space_size declares, effectively always at
-# the very end where the final sector(s) are unreadable padding (commonly all zeroes). We tolerate and
-# zero-fill up to this many trailing sectors (one DVD ECC block) so the image keeps its declared size.
-TRAILING_TOLERANCE_SECTORS = 16
+# When libdvdcss cannot read an unencrypted sector (e.g. one outside the logical volume), retry it this
+# many times via a raw SCSI read before giving up - a drive can transiently fail and succeed on retry.
+SCSI_READ_ATTEMPTS = 3
 
 
 def _register_libdvdcss() -> None:
@@ -59,6 +60,10 @@ class Dvd:
         self.device: Optional[str] = None
         self.reader_position: int = 0
         self.vob_lba_offsets: List[Tuple[int, int]] = []
+        self._scsi: Optional[scsi.ScsiReader] = None  # raw SCSI fallback reader for sectors libdvdcss can't read
+        # pydvdcss declares dvdcss_error() as returning an int, so its DvdCss.error() crashes when building
+        # a read-error message; correct the return type so libdvdcss read errors surface legibly.
+        self.dvdcss._library.dvdcss_error.restype = ctypes.c_char_p
 
     def __enter__(self) -> Dvd:
         return self
@@ -71,10 +76,14 @@ class Dvd:
         if self.cdlib:
             try:
                 self.cdlib.close()
-            except PyCdlibInvalidInput:
+            except (PyCdlibInvalidInput, AttributeError):
+                # AttributeError: pycdlib's raw-device wrapper has no close() to call
                 pass
         if self.dvdcss:
             self.dvdcss.dispose()
+        if self._scsi is not None:
+            self._scsi.close()
+            self._scsi = None
         self.device = None
         self.reader_position = 0
         self.vob_lba_offsets = []
@@ -97,13 +106,28 @@ class Dvd:
                 pass
         if self.dvdcss:
             self.dvdcss.close()
+        if self._scsi is not None:
+            self._scsi.close()
+            self._scsi = None
         self.device = dev
         self.log.info("Opening '%s'...", dev)
         self._open_cdlib(rf"\\.\{dev}" if dev.endswith(":") else dev)
         self.log.info("Loaded Device in PyCdlib...")
         self.dvdcss.open(dev)
         self.log.info("Loaded Device in PyDvdCss...")
+        self._open_scsi(dev)
         self.log.info("DVD opened and ready...")
+
+    def _open_scsi(self, dev: str) -> None:
+        """Open a raw SCSI reader used to recover sectors libdvdcss cannot read (Windows only)."""
+        if sys.platform != "win32":
+            return
+        device_path = rf"\\.\{dev}" if dev.endswith(":") else dev
+        try:
+            self._scsi = scsi.ScsiReader(device_path)
+        except OSError as e:
+            self.log.warning("Raw SCSI fallback unavailable for '%s': %s", dev, e)
+            self._scsi = None
 
     def _open_cdlib(self, device_path: str) -> None:
         """
@@ -305,31 +329,47 @@ class Dvd:
             if self.reader_position != first_lba:
                 raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
 
-        ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
-        read_sectors = len(ret) // self.cdlib.pvd.log_block_size
-        if read_sectors != sectors:
-            # The disc can hand back fewer sectors than its PVD space_size claims, effectively always at
-            # the very end of the disc where the final sector(s) are unreadable padding (usually all
-            # zeroes), so the missing data cannot be recovered. k3b and similar tools tolerate this. Only
-            # accept a short read on the chunk that reaches the declared end of the disc, and zero-fill the
-            # missing trailing sectors so the image stays exactly space_size * block_size bytes. Anything
-            # else (a short read mid-disc, or a larger-than-expected gap) is a genuine read error.
+        block_size = self.cdlib.pvd.log_block_size
+        try:
+            ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
+        except OSError as e:
+            # libdvdcss returned a read error (pydvdcss raises). Treat it as nothing read so the SCSI
+            # fallback below can try, then fall through to a clear error if that cannot recover it either.
+            self.log.warning("libdvdcss read error at %d->%d: %s", first_lba, first_lba + sectors, e)
+            ret = b""
+        read_sectors = len(ret) // block_size
+
+        if read_sectors < sectors:
+            # libdvdcss could not read part of this range - e.g. a sector outside the logical volume, or one
+            # the volume path failed on. Recover the remainder with a raw SCSI read of the device, which
+            # takes a different path and can reach it. SCSI returns raw (undecrypted) bytes, so this is only
+            # valid outside a CSS title; an encrypted gap cannot be substituted and is a genuine read error.
             missing = sectors - read_sectors
-            reaches_disc_end = first_lba + sectors >= self.cdlib.pvd.space_size
-            if not reaches_disc_end or not 0 < missing <= TRAILING_TOLERANCE_SECTORS:
+            recover_from = first_lba + read_sectors
+            recovered = self._recover_via_scsi(recover_from, missing) if not in_title else None
+            if recovered is None:
                 raise SlipstreamReadError(
                     f"Read {read_sectors} sectors, expected {sectors}, while reading {first_lba}->{first_lba + sectors}"
                 )
-            self.log.warning(
-                "Disc returned %d of %d sectors at the tail (%d->%d); zero-filling %d unreadable trailing "
-                "sector(s) so the image keeps its declared size.",
-                read_sectors,
-                sectors,
-                first_lba,
-                first_lba + sectors,
-                missing,
-            )
-            ret += b"\x00" * (missing * self.cdlib.pvd.log_block_size)
+            self.log.info("Recovered %d sector(s) at %d via a raw SCSI read of the device.", missing, recover_from)
+            ret += recovered
+
+        # Advance only by what libdvdcss itself read; any SCSI-recovered gap leaves libdvdcss positioned
+        # behind, so the next read re-seeks to resync.
         self.reader_position += read_sectors
 
         return ret
+
+    def _recover_via_scsi(self, lba: int, count: int) -> Optional[bytes]:
+        """
+        Read `count` unencrypted sectors libdvdcss could not, via a raw SCSI read (Windows SPTI). Retries
+        a few times since a drive can transiently fail. Returns the bytes, or None if unavailable/unreadable.
+        """
+        if self._scsi is None:
+            return None
+        expected = count * self.cdlib.pvd.log_block_size
+        for _ in range(SCSI_READ_ATTEMPTS):
+            data = self._scsi.read(lba, count)
+            if data is not None and len(data) == expected:
+                return data
+        return None
