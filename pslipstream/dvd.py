@@ -18,6 +18,8 @@ from pslipstream import scsi
 from pslipstream.config import config
 from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError, SlipstreamSeekError
 
+DVD_1X_KBPS = 1385  # 1x DVD read speed in KB/s (1,385,000 bytes/s); converts the Nx speed setting
+
 
 class Dvd:
     def __init__(self) -> None:
@@ -89,7 +91,10 @@ class Dvd:
         self.log.info("DVD opened and ready...")
 
     def _open_scsi(self, dev: str) -> None:
-        """Open a raw SCSI reader used to recover sectors libdvdcss cannot read (Windows only)."""
+        """
+        Open a raw SCSI reader used to recover sectors libdvdcss cannot read, and request the
+        configured drive read speed (Windows only).
+        """
         if sys.platform != "win32":
             return
         device_path = rf"\\.\{dev}" if dev.endswith(":") else dev
@@ -98,6 +103,17 @@ class Dvd:
         except OSError as e:
             self.log.warning("Raw SCSI fallback unavailable for '%s': %s", dev, e)
             self._scsi = None
+            return
+        # Request the configured read speed drive-wide so libdvdcss's backup reads benefit too.
+        if config.drive_read_speed > 0:
+            read_kbps = round(config.drive_read_speed * DVD_1X_KBPS)
+            applied = self._scsi.set_read_speed(read_kbps)
+            self.log.info(
+                "Requested drive read speed %.1fx DVD (%d KB/s): %s",
+                config.drive_read_speed,
+                read_kbps,
+                "accepted" if applied else "not applied (drive may ignore it, e.g. riplock)",
+            )
 
     def _open_cdlib(self, device_path: str) -> None:
         """

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- A configurable optical drive read speed (Settings -> "Drive read speed"), requested from the drive
+  via SCSI SET STREAMING when a disc is loaded. Set as a DVD speed multiplier (e.g. 6x; 1x = 1385
+  KB/s), defaulting to 6x; 0 leaves the drive at its own default. Drives may ignore or cap it (notably
+  firmware riplock on DVD-Video), so it is best-effort.
+
 ### Changed
 
 - Updated pydvdcss to 1.5.0.

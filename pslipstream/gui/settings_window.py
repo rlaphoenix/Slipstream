@@ -66,7 +66,11 @@ class SettingsDialog(QDialog):
 
         self.read_buffer_sectors = QSpinBox()
         self.read_buffer_sectors.setRange(1, 1024)
-        self.read_buffer_sectors.setToolTip("Sectors read per step during a backup (1 sector = 2 KiB).")
+        self.read_buffer_sectors.setToolTip(
+            "Sectors read per step during a backup (1 sector = 2 KiB).\n"
+            "Use a lower size for scratched or problematic discs (e.g. 32 or 64),\n"
+            "and a higher size for clean discs (e.g. 256 or 512)."
+        )
         form.addRow("Read buffer (sectors)", self.read_buffer_sectors)
 
         self.scsi_read_attempts = QSpinBox()
@@ -80,6 +84,18 @@ class SettingsDialog(QDialog):
             "Max sectors per raw SCSI read command (drives cap single transfers)."
         )
         form.addRow("SCSI max transfer (sectors)", self.scsi_max_transfer_sectors)
+
+        self.drive_read_speed = QDoubleSpinBox()
+        self.drive_read_speed.setRange(0.0, 40.0)  # 0 = drive default
+        self.drive_read_speed.setSingleStep(0.5)
+        self.drive_read_speed.setDecimals(1)
+        self.drive_read_speed.setSuffix("x")
+        self.drive_read_speed.setToolTip(
+            "Requested drive read speed as a DVD multiplier (1x = 1385 KB/s), sent via SCSI\n"
+            "SET STREAMING. 0 leaves the drive at its own default. Lower is gentler on damaged\n"
+            "discs; higher is faster. The drive may ignore or cap it (notably riplock on DVD-Video)."
+        )
+        form.addRow("Drive read speed", self.drive_read_speed)
 
         note = QLabel("Changes apply the next time a disc is loaded.")
         note.setEnabled(False)
@@ -109,6 +125,7 @@ class SettingsDialog(QDialog):
                 "read_buffer_sectors": config.read_buffer_sectors,
                 "scsi_read_attempts": config.scsi_read_attempts,
                 "scsi_max_transfer_sectors": config.scsi_max_transfer_sectors,
+                "drive_read_speed": config.drive_read_speed,
             }
         )
 
@@ -126,6 +143,7 @@ class SettingsDialog(QDialog):
         self.read_buffer_sectors.setValue(int(values["read_buffer_sectors"]))
         self.scsi_read_attempts.setValue(int(values["scsi_read_attempts"]))
         self.scsi_max_transfer_sectors.setValue(int(values["scsi_max_transfer_sectors"]))
+        self.drive_read_speed.setValue(float(values["drive_read_speed"]))
 
     def restore_defaults(self) -> None:
         """Reset the form to default values (not saved until Save is pressed)."""
@@ -139,5 +157,6 @@ class SettingsDialog(QDialog):
         config.read_buffer_sectors = self.read_buffer_sectors.value()
         config.scsi_read_attempts = self.scsi_read_attempts.value()
         config.scsi_max_transfer_sectors = self.scsi_max_transfer_sectors.value()
+        config.drive_read_speed = self.drive_read_speed.value()
         config.save()
         self.accept()

@@ -40,6 +40,11 @@ SETTINGS_DEFAULTS: dict[str, Any] = {
     "scsi_read_attempts": 3,
     # Maximum sectors per raw SCSI read command (drives cap single transfers; 32 = 64 KiB is safe).
     "scsi_max_transfer_sectors": 32,
+    # Requested optical drive read speed as a DVD multiplier (e.g. 6.0 = 6x; 1x = 1385 KB/s), sent via
+    # SCSI SET STREAMING when a disc is opened (Windows only, drive-wide so libdvdcss's reads benefit).
+    # 6x is a safe medium most drives manage. 0 leaves the drive at its own default. The drive may
+    # ignore or cap the request (notably firmware "riplock" on DVD-Video), so it is best-effort.
+    "drive_read_speed": 6.0,
 }
 
 
@@ -64,6 +69,7 @@ class Config:
         self.scsi_max_transfer_sectors: int = kwargs.get(
             "scsi_max_transfer_sectors", SETTINGS_DEFAULTS["scsi_max_transfer_sectors"]
         )
+        self.drive_read_speed: float = kwargs.get("drive_read_speed", SETTINGS_DEFAULTS["drive_read_speed"])
 
     @classmethod
     def load(cls, path: Path) -> Config:

@@ -13,6 +13,7 @@ title). A drive will not serve CSS-scrambled sectors over raw SCSI without authe
 from __future__ import annotations
 
 import ctypes
+import struct
 import sys
 from ctypes import wintypes
 from typing import Optional
@@ -115,6 +116,56 @@ def _scsi_read12(k32: "ctypes.WinDLL", handle: int, lba: int, count: int) -> Opt
     return bytes(data.raw)
 
 
+def _scsi_set_streaming(k32: "ctypes.WinDLL", handle: int, read_kbps: int) -> bool:
+    """
+    Issue SCSI SET STREAMING (B6h) to request a drive read speed of `read_kbps` KB/s.
+
+    Returns True if the drive accepted the command. Many drives ignore or cap the request -
+    notably firmware "riplock" that throttles DVD-Video reads - so a True result is a request,
+    not a guarantee of an actual speed change.
+    """
+    # Performance Descriptor (MMC SET STREAMING), 28 bytes. The rate is Read Size (KB) per Read
+    # Time (ms); with Read Time = 1000 ms, Read Size is simply the speed in KB/s. End LBA
+    # 0xFFFFFFFF covers the whole disc. Byte 0 flags are 0 (drive may use up to this rate).
+    descriptor = struct.pack(
+        ">B3xIIIIII",
+        0,  # flags
+        0,  # Start LBA
+        0xFFFFFFFF,  # End LBA (entire disc)
+        read_kbps,  # Read Size (KB)
+        1000,  # Read Time (ms)
+        read_kbps,  # Write Size (KB), mirrored - harmless for read-only use
+        1000,  # Write Time (ms)
+    )
+    buffer = ctypes.create_string_buffer(descriptor, len(descriptor))
+    pkt = _SPTDWithSense()
+    pkt.sptd.Length = ctypes.sizeof(_SPTD)
+    pkt.sptd.CdbLength = 12
+    pkt.sptd.SenseInfoLength = 32
+    pkt.sptd.DataIn = 0  # SCSI_IOCTL_DATA_OUT
+    pkt.sptd.DataTransferLength = len(descriptor)
+    pkt.sptd.TimeOutValue = 30
+    pkt.sptd.DataBuffer = ctypes.cast(buffer, ctypes.c_void_p)
+    pkt.sptd.SenseInfoOffset = type(pkt).sense.offset
+    cdb = (ctypes.c_ubyte * 16)()
+    cdb[0] = 0xB6  # SET STREAMING
+    cdb[9] = (len(descriptor) >> 8) & 0xFF  # Parameter List Length (MSB)
+    cdb[10] = len(descriptor) & 0xFF  # Parameter List Length (LSB)
+    pkt.sptd.Cdb = cdb
+    returned = wintypes.DWORD(0)
+    ok = k32.DeviceIoControl(
+        handle,
+        _IOCTL_SCSI_PASS_THROUGH_DIRECT,
+        ctypes.byref(pkt),
+        ctypes.sizeof(pkt),
+        ctypes.byref(pkt),
+        ctypes.sizeof(pkt),
+        ctypes.byref(returned),
+        None,
+    )
+    return bool(ok) and pkt.sptd.ScsiStatus == 0
+
+
 class ScsiReader:
     """
     Persistent raw SCSI (SPTI) sector reader for an optical device. Windows-only.
@@ -156,6 +207,18 @@ class ScsiReader:
             out += data
             offset += chunk
         return bytes(out)
+
+    def set_read_speed(self, read_kbps: int) -> bool:
+        """
+        Request a drive read speed in KB/s via SCSI SET STREAMING. Returns False if not applied.
+
+        The setting is drive-wide, so it also governs libdvdcss's reads of the same drive. Drives
+        may ignore or cap it (e.g. firmware riplock on DVD-Video), so a True result means the
+        command was accepted, not that the speed actually changed.
+        """
+        if self._handle is None or read_kbps <= 0:
+            return False
+        return _scsi_set_streaming(self._k32, self._handle, read_kbps)
 
     def close(self) -> None:
         if self._handle is not None:
