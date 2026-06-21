@@ -58,7 +58,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: dist\Slipstream\{#AppName}.exe; DestDir: {app}; Flags: ignoreversion
-Source: dist\Slipstream\_internal\libdvdcss-2.dll; DestDir: {app}; Flags: onlyifdoesntexist
 Source: dist\Slipstream\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

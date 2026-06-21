@@ -400,7 +400,7 @@ requires-dist = [
     { name = "coloredlogs", specifier = "~=15.0.1" },
     { name = "jsonpickle", specifier = "~=4.1.2" },
     { name = "pycdlib", specifier = "~=1.16.0" },
-    { name = "pydvdcss", specifier = "~=1.4.0" },
+    { name = "pydvdcss", specifier = "~=1.5.0" },
     { name = "pydvdid-m", specifier = "~=1.1.1" },
     { name = "pyside6-essentials", specifier = "~=6.11" },
     { name = "pywin32", marker = "sys_platform == 'win32'", specifier = ">=306" },
@@ -434,11 +434,13 @@ wheels = [
 
 [[package]]
 name = "pydvdcss"
-version = "1.4.0"
+version = "1.5.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/20/9e/7900cc5310bb19e0ff179146ca833dbbd97ce0495a61fa9af3e962b2f71e/pydvdcss-1.4.0.tar.gz", hash = "sha256:aee224c5c68b42eff0340f12a79eb3e869aca6dd1795692466c8806e2dc40de3", size = 20382, upload-time = "2023-10-12T08:28:32.428Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/47/12/632a2afec1c7980021e0588f389e9be0a04747bb13aa261f7908c54b5434/pydvdcss-1.5.0.tar.gz", hash = "sha256:8f5c9e661242ab01d6371c5a3f87c7312bcd39ac51b040bedcaa80045f846927", size = 31404, upload-time = "2026-06-21T22:28:09.799Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ad/2b/809c0a0f58672e8c2d1949d952650bca65e7124ee314fe4ffd39adaaf86e/pydvdcss-1.4.0-py3-none-any.whl", hash = "sha256:ece541509004f74da039553f8e623dc808d0c8722c0e244444d6d4e70a8c4b83", size = 18698, upload-time = "2023-10-12T08:28:31.266Z" },
+    { url = "https://files.pythonhosted.org/packages/f0/20/46a5b9683264d581de23a99ceff90ad600b186a332854601e6443f00ea36/pydvdcss-1.5.0-py3-none-any.whl", hash = "sha256:834ef0de5044801adda3f21c3702c846c11ac4c25717329c9a8dad938b91ab19", size = 26394, upload-time = "2026-06-21T22:28:06.645Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/b9/2a6ae50b96b75cf7a134e2fbdd6d6a760e980c2442bc0c131edceeafda47/pydvdcss-1.5.0-py3-none-win32.whl", hash = "sha256:5373c92b8e5c1f9b073210ae717a25998860bf5639403fadc645f1e3f7e96b18", size = 133471, upload-time = "2026-06-21T22:28:07.779Z" },
+    { url = "https://files.pythonhosted.org/packages/de/aa/defc107441ccc31d5aab6cdc9a3968479fbafb7cffba243ffcfe05698055/pydvdcss-1.5.0-py3-none-win_amd64.whl", hash = "sha256:3e03c28b25c01d02d00cae2fd666514b550a2379d655380227c71b3648ab751f", size = 139874, upload-time = "2026-06-21T22:28:08.882Z" },
 ]
 
 [[package]]

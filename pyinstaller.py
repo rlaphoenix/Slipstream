@@ -1,6 +1,5 @@
 import itertools
 import shutil
-import struct
 from datetime import datetime
 from pathlib import Path
 from textwrap import dedent
@@ -27,11 +26,12 @@ def main(debug: bool, name: str, author: str, version: str, icon_file: str, one_
     additional_data: List[List[str]] = [
         # local file path, destination in build output
         ["pslipstream/static", "pslipstream/static"],
-        [f"submodules/libdvdcss/1.5.0/{8 * struct.calcsize('P')}-bit/libdvdcss-2.dll", "."],
         ["pyproject.toml", "."],  # read at runtime by pslipstream/__init__.py for __version__
     ]
     hidden_imports: List[str] = []
-    extra_args: List[str] = ["-y"]
+    # pydvdcss bundles libdvdcss-2.dll inside its package on Windows; collect it so the frozen
+    # build finds the library in the pydvdcss package, exactly as a pip install would.
+    extra_args: List[str] = ["-y", "--collect-binaries", "pydvdcss"]
 
     # Prepare environment
     shutil.rmtree("build", ignore_errors=True)

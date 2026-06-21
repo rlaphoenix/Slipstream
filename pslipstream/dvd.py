@@ -1,17 +1,15 @@
 from __future__ import annotations
 
-import ctypes
 import logging
 import os
-import struct
 import sys
 import time
 from pathlib import Path
-from typing import Any, Generator, List, Optional, Tuple
+from typing import Any, Generator, List, Literal, Optional, Tuple, cast
 
 from pycdlib import PyCdlib
 from pycdlib.pycdlibexception import PyCdlibInvalidInput, PyCdlibInvalidISO
-from pydvdcss.dvdcss import DvdCss
+from pydvdcss import DvdCss, PyDvdCssError, ReadFlag, SeekFlag
 from pydvdid_m import DvdId
 from PySide6.QtCore import SignalInstance
 from tqdm import tqdm
@@ -19,29 +17,6 @@ from tqdm import tqdm
 from pslipstream import scsi
 from pslipstream.config import config
 from pslipstream.exceptions import SlipstreamNoKeysObtained, SlipstreamReadError, SlipstreamSeekError
-
-
-def _register_libdvdcss() -> None:
-    """
-    Make the bundled libdvdcss DLL discoverable when running from source on Windows.
-
-    The frozen build ships the DLL next to the executable, but a source checkout keeps it in the
-    `submodules/libdvdcss` submodule. pydvdcss locates the library via ctypes' find_library, which
-    on Windows searches PATH, so we prepend the architecture-specific submodule directory to it.
-    On Linux/macOS, libdvdcss is provided by the system package manager instead.
-    """
-    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-        return  # frozen build bundles the DLL itself
-    if sys.platform != "win32":
-        return  # the submodule holds Windows DLLs; other platforms use the system libdvdcss
-    bits = 8 * struct.calcsize("P")
-    dll_dir = Path(__file__).resolve().parents[1] / "submodules" / "libdvdcss" / "1.5.0" / f"{bits}-bit"
-    if (dll_dir / "libdvdcss-2.dll").is_file():
-        os.environ["PATH"] = str(dll_dir) + os.pathsep + os.environ.get("PATH", "")
-        os.add_dll_directory(str(dll_dir))
-
-
-_register_libdvdcss()
 
 
 class Dvd:
@@ -53,9 +28,6 @@ class Dvd:
         self.reader_position: int = 0
         self.vob_lba_offsets: List[Tuple[int, int]] = []
         self._scsi: Optional[scsi.ScsiReader] = None  # raw SCSI fallback reader for sectors libdvdcss can't read
-        # pydvdcss declares dvdcss_error() as returning an int, so its DvdCss.error() crashes when building
-        # a read-error message; correct the return type so libdvdcss read errors surface legibly.
-        self.dvdcss._library.dvdcss_error.restype = ctypes.c_char_p
 
     def __enter__(self) -> Dvd:
         return self
@@ -72,7 +44,7 @@ class Dvd:
                 # AttributeError: pycdlib's raw-device wrapper has no close() to call
                 pass
         if self.dvdcss:
-            self.dvdcss.dispose()
+            self.dvdcss.close()
         if self._scsi is not None:
             self._scsi.close()
             self._scsi = None
@@ -105,12 +77,11 @@ class Dvd:
         self.log.info("Opening '%s'...", dev)
         self._open_cdlib(rf"\\.\{dev}" if dev.endswith(":") else dev)
         self.log.info("Loaded Device in PyCdlib...")
-        # libdvdcss reads these from the environment at open time. pydvdcss's set_cracking_mode("unset")
-        # wrongly writes the literal string "unset" instead of removing the variable, so handle it here.
-        if config.css_crack_mode == "unset":
-            os.environ.pop("DVDCSS_METHOD", None)
-        else:
-            self.dvdcss.set_cracking_mode(config.css_crack_mode)
+        # libdvdcss reads these process-global env vars when a disc is opened, so set
+        # them before open(). The cracking mode is constrained to the valid set by the
+        # settings UI; cast narrows the stored str to the literal pydvdcss expects.
+        crack_mode = cast(Literal["unset", "title", "disc", "key"], config.css_crack_mode)
+        self.dvdcss.set_cracking_mode(crack_mode)
         self.dvdcss.set_verbosity(config.css_verbosity)
         self.dvdcss.open(dev)
         self.log.info("Loaded Device in PyDvdCss...")
@@ -211,13 +182,17 @@ class Dvd:
                 continue
             # get title key
             if crack_keys:
-                if lba == self.dvdcss.seek(lba, self.dvdcss.SEEK_KEY):
-                    self.log.info("Got title key for %s", vob)
-                else:
-                    raise SlipstreamSeekError(
-                        f"Failed to seek the disc to {lba} while attempting to "
-                        f"crack the title key for {os.path.basename(vob)}"
-                    )
+                seek_error = (
+                    f"Failed to seek the disc to {lba} while attempting to "
+                    f"crack the title key for {os.path.basename(vob)}"
+                )
+                try:
+                    got_key = self.dvdcss.seek(lba, SeekFlag.SEEK_KEY) == lba
+                except PyDvdCssError as e:
+                    raise SlipstreamSeekError(seek_error) from e
+                if not got_key:
+                    raise SlipstreamSeekError(seek_error)
+                self.log.info("Got title key for %s", vob)
             # add data to title offsets
             lba_data.append((lba, size))
         # Return lba data
@@ -250,7 +225,7 @@ class Dvd:
         self.log.debug(f"Length: {last_lba + 1:,} sectors, {disc_size:,} bytes")  # skipcq: PYL-W1203
         self.log.debug('Saving to "%s"...', fn.with_suffix(""))
 
-        if self.dvdcss.is_scrambled():
+        if self.dvdcss.is_scrambled:
             self.log.debug("DVD is scrambled. Checking if all CSS keys can be cracked. This might take a while.")
             self.vob_lba_offsets = self.get_vob_lbas(crack_keys=True)
             if not self.vob_lba_offsets:
@@ -318,43 +293,47 @@ class Dvd:
 
         if need_to_seek:
             if entered_title:
-                flags = self.dvdcss.SEEK_KEY
+                flag = SeekFlag.SEEK_KEY
             elif in_title:
-                flags = self.dvdcss.SEEK_MPEG
+                flag = SeekFlag.SEEK_MPEG
             else:
-                flags = self.dvdcss.NO_FLAGS
+                flag = SeekFlag.Unset
 
             # refresh the key status for this sector's data
-            self.reader_position = self.dvdcss.seek(first_lba, flags)
+            seek_error = f"Failed to seek the disc to {first_lba} while doing a device read."
+            try:
+                self.reader_position = self.dvdcss.seek(first_lba, flag)
+            except PyDvdCssError as e:
+                raise SlipstreamSeekError(seek_error) from e
             if self.reader_position != first_lba:
-                raise SlipstreamSeekError(f"Failed to seek the disc to {first_lba} while doing a device read.")
+                raise SlipstreamSeekError(seek_error)
 
         block_size = self.cdlib.pvd.log_block_size
         try:
-            ret = self.dvdcss.read(sectors, [self.dvdcss.NO_FLAGS, self.dvdcss.READ_DECRYPT][in_title])
-        except OSError as e:
-            # libdvdcss returned a read error (pydvdcss raises). Treat it as nothing read so the SCSI
-            # fallback below can try, then fall through to a clear error if that cannot recover it either.
+            # pydvdcss reads the whole range or raises; it does not return a short read.
+            ret = self.dvdcss.read(sectors, ReadFlag.READ_DECRYPT if in_title else ReadFlag.Unset)
+            read_sectors = len(ret) // block_size
+        except (PyDvdCssError, OSError) as e:
+            # libdvdcss could not read the full range - e.g. a sector outside the logical volume, or one
+            # the volume path failed on. Inside a CSS title the data is encrypted and cannot be substituted,
+            # so it's a genuine error. Outside a title, recover via a raw SCSI read of the device, which
+            # takes a different path and returns raw (undecrypted) bytes that are correct for plain sectors.
             self.log.warning("libdvdcss read error at %d->%d: %s", first_lba, first_lba + sectors, e)
-            ret = b""
-        read_sectors = len(ret) // block_size
-
-        if read_sectors < sectors:
-            # libdvdcss could not read part of this range - e.g. a sector outside the logical volume, or one
-            # the volume path failed on. Recover the remainder with a raw SCSI read of the device, which
-            # takes a different path and can reach it. SCSI returns raw (undecrypted) bytes, so this is only
-            # valid outside a CSS title; an encrypted gap cannot be substituted and is a genuine read error.
-            missing = sectors - read_sectors
-            recover_from = first_lba + read_sectors
-            recovered = self._recover_via_scsi(recover_from, missing) if not in_title else None
+            if in_title:
+                raise SlipstreamReadError(
+                    f"Failed to read {sectors} encrypted sector(s) at {first_lba}->{first_lba + sectors}"
+                ) from e
+            recovered = self._recover_via_scsi(first_lba, sectors)
             if recovered is None:
                 raise SlipstreamReadError(
-                    f"Read {read_sectors} sectors, expected {sectors}, while reading {first_lba}->{first_lba + sectors}"
-                )
-            self.log.info("Recovered %d sector(s) at %d via a raw SCSI read of the device.", missing, recover_from)
-            ret += recovered
+                    f"Read failed at {first_lba}->{first_lba + sectors} and the raw SCSI "
+                    f"fallback could not recover it either"
+                ) from e
+            self.log.info("Recovered %d sector(s) at %d via a raw SCSI read of the device.", sectors, first_lba)
+            ret = recovered
+            read_sectors = 0  # libdvdcss advanced nowhere usable; force a re-seek on the next read
 
-        # Advance only by what libdvdcss itself read; any SCSI-recovered gap leaves libdvdcss positioned
+        # Advance only by what libdvdcss itself read; a SCSI-recovered range leaves libdvdcss positioned
         # behind, so the next read re-seeks to resync.
         self.reader_position += read_sectors
 

@@ -26,7 +26,7 @@ classifiers = [
 ]
 dependencies = [
     "pycdlib~=1.16.0",
-    "pydvdcss~=1.4.0",
+    "pydvdcss~=1.5.0",
     "pydvdid-m~=1.1.1",
     "appdirs~=1.4.4",
     "tqdm~=4.68.3",

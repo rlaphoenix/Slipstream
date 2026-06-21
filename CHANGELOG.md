@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Updated pydvdcss to 1.5.0.
+- libdvdcss is now provided by the pydvdcss package, which bundles it in its Windows wheels;
+  Slipstream no longer vendors its own libdvdcss DLL.
+
 ## [1.0.1] - 2026-06-20
 
 ### Changed
