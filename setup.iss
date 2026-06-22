@@ -29,10 +29,10 @@
 AppId={#AppName}
 AppName={#AppName}
 AppPublisher=rlaphoenix
-AppPublisherURL=https://github.com/rlaphoenix/slipstream
-AppReadmeFile=https://github.com/rlaphoenix/Slipstream/blob/master/README.md
-AppSupportURL=https://github.com/rlaphoenix/Slipstream/discussions
-AppUpdatesURL=https://github.com/rlaphoenix/slipstream/releases
+AppPublisherURL=https://github.com/Homemediadb/Slipstream
+AppReadmeFile=https://github.com/Homemediadb/Slipstream/blob/master/README.md
+AppSupportURL=https://github.com/Homemediadb/Slipstream/discussions
+AppUpdatesURL=https://github.com/Homemediadb/Slipstream/releases
 AppVerName={#AppName} {#Version}
 AppVersion={#Version}
 ArchitecturesAllowed=x64

@@ -15,7 +15,7 @@ def main() -> None:
 
     log.info("Slipstream version %s [%s]", __version__, SYSTEM_INFO)
     log.info("Copyright (c) 2020-%d rlaphoenix", datetime.now().year)
-    log.info("https://github.com/rlaphoenix/slipstream")
+    log.info("https://github.com/Homemediadb/Slipstream")
 
     gui.start()
 

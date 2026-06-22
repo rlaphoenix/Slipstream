@@ -47,5 +47,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 New Beginnings - Initial release with a consistent and coherent project structure.  
 Previous 0.x releases have been yanked and history has been rewritten to slim the repo commit count.
 
-[1.0.1]: https://github.com/rlaphoenix/slipstream/releases/tag/v1.0.1
-[1.0.0]: https://github.com/rlaphoenix/slipstream/releases/tag/v1.0.0
+[1.0.1]: https://github.com/Homemediadb/Slipstream/releases/tag/v1.0.1
+[1.0.0]: https://github.com/Homemediadb/Slipstream/releases/tag/v1.0.0

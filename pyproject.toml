@@ -38,10 +38,10 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/rlaphoenix/slipstream"
-Issues = "https://github.com/rlaphoenix/slipstream/issues"
-Forums = "https://github.com/rlaphoenix/slipstream/discussions"
-Changelog = "https://github.com/rlaphoenix/slipstream/blob/master/CHANGELOG.md"
+Repository = "https://github.com/Homemediadb/Slipstream"
+Issues = "https://github.com/Homemediadb/Slipstream/issues"
+Forums = "https://github.com/Homemediadb/Slipstream/discussions"
+Changelog = "https://github.com/Homemediadb/Slipstream/blob/master/CHANGELOG.md"
 
 [tool.uv]
 package = false  # GUI application, not a distributable/importable package

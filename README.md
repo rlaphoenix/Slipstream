@@ -1,10 +1,10 @@
 ![Banner](assets/banner.png)
 
-[![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/rlaphoenix/slipstream/blob/master/LICENSE)
+[![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/Homemediadb/Slipstream/blob/master/LICENSE)
 [![Python version](https://img.shields.io/badge/python-3.11%2B-informational)](https://www.python.org/)
 [![Manager: uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Onyx-Nostalgia/uv/refs/heads/fix/logo-badge/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Build status](https://github.com/rlaphoenix/slipstream/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/rlaphoenix/slipstream/actions/workflows/ci.yml)
+[![Build status](https://github.com/Homemediadb/Slipstream/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Homemediadb/Slipstream/actions/workflows/ci.yml)
 
 Slipstream's goal is to provide the user's a dead-simple process for backing up their legally owned home-media to a
 wide array of formats, including a full backup. Slipstream is a desktop GUI application.
@@ -41,7 +41,7 @@ uv installation instructions should be followed from the uv Docs: https://docs.a
 
 1. Clone the Repository:
     ```shell
-    git clone --recurse-submodules https://github.com/rlaphoenix/slipstream
+    git clone --recurse-submodules https://github.com/Homemediadb/Slipstream
     cd slipstream
     ```
 2. Install the Project with uv:

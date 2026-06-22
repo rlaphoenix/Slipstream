@@ -133,8 +133,8 @@ class MainWindow(QMainWindow):
             f"Slipstream v{__version__} [{SYSTEM_INFO}]"
             + f"<p>Copyright (C) 2020-{datetime.now().year} rlaphoenix</p>"
             + "<p>The most informative Home-media backup solution.<br/>"
-            "<a href='https://github.com/rlaphoenix/Slipstream' style='color:white'>"
-            "https://github.com/rlaphoenix/Slipstream"
+            "<a href='https://github.com/Homemediadb/Slipstream' style='color:white'>"
+            "https://github.com/Homemediadb/Slipstream"
             "</a></p>",
         )
 
