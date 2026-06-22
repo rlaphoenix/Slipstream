@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A Settings window for tuning read/backup behaviour, persisted to the user config. It exposes the
+  libdvdcss CSS crack mode and verbosity, the disc-open retry count and delay, the read buffer size,
+  and the raw SCSI read retry count and max transfer size, with a "Restore Defaults" option. Settings
+  added in newer versions are backfilled with their defaults when loading an older config file.
 - A configurable optical drive read speed (Settings -> "Drive read speed"), requested from the drive
   via SCSI SET STREAMING when a disc is loaded. Set as a DVD speed multiplier (e.g. 6x; 1x = 1385
   KB/s), defaulting to 6x; 0 leaves the drive at its own default. Drives may ignore or cap it (notably
@@ -19,6 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated pydvdcss to 1.5.0.
 - libdvdcss is now provided by the pydvdcss package, which bundles it in its Windows wheels;
   Slipstream no longer vendors its own libdvdcss DLL.
+
+### Fixed
+
+- Sectors that libdvdcss cannot read (e.g. unreadable tail sectors, or sectors outside the logical
+  volume) are now recovered with a raw SCSI read of the drive (Windows SPTI) instead of being
+  zero-filled, so the backup keeps the real data wherever the drive can still return it. A genuinely
+  unreadable encrypted sector is still reported as a read error.
+- libdvdcss read errors now surface with their actual message instead of crashing while being formatted.
 
 ## [1.0.1] - 2026-06-20
 
