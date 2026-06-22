@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Loading some CSS-protected discs no longer fails with "Copy Protection Error - The read failed
+  because the sector is encrypted." pycdlib now parses the disc through the raw SCSI reader, which
+  bypasses the Windows ReadFile copy-protection check that refused those sectors.
+
 ## [1.1.0] - 2026-06-22
 
 ### Added

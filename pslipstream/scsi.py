@@ -13,10 +13,14 @@ title). A drive will not serve CSS-scrambled sectors over raw SCSI without authe
 from __future__ import annotations
 
 import ctypes
+import logging
+import os
 import struct
 import sys
 from ctypes import wintypes
 from typing import Optional
+
+log = logging.getLogger("Scsi")
 
 SECTOR_SIZE = 2048
 _MAX_SCSI_SECTORS = 32  # split larger reads to stay within drive transfer limits (64 KiB is a safe ceiling)
@@ -116,6 +120,39 @@ def _scsi_read12(k32: "ctypes.WinDLL", handle: int, lba: int, count: int) -> Opt
     return bytes(data.raw)
 
 
+def _scsi_read_capacity(k32: "ctypes.WinDLL", handle: int) -> Optional[int]:
+    """Issue SCSI READ CAPACITY(10) and return the disc's total sector count. None on failure."""
+    data = ctypes.create_string_buffer(8)
+    pkt = _SPTDWithSense()
+    pkt.sptd.Length = ctypes.sizeof(_SPTD)
+    pkt.sptd.CdbLength = 10
+    pkt.sptd.SenseInfoLength = 32
+    pkt.sptd.DataIn = 1  # SCSI_IOCTL_DATA_IN
+    pkt.sptd.DataTransferLength = 8
+    pkt.sptd.TimeOutValue = 30
+    pkt.sptd.DataBuffer = ctypes.cast(data, ctypes.c_void_p)
+    pkt.sptd.SenseInfoOffset = type(pkt).sense.offset
+    cdb = (ctypes.c_ubyte * 16)()
+    cdb[0] = 0x25  # READ CAPACITY(10)
+    pkt.sptd.Cdb = cdb
+    returned = wintypes.DWORD(0)
+    ok = k32.DeviceIoControl(
+        handle,
+        _IOCTL_SCSI_PASS_THROUGH_DIRECT,
+        ctypes.byref(pkt),
+        ctypes.sizeof(pkt),
+        ctypes.byref(pkt),
+        ctypes.sizeof(pkt),
+        ctypes.byref(returned),
+        None,
+    )
+    if not ok or pkt.sptd.ScsiStatus != 0:
+        return None
+    # READ CAPACITY(10) returns the LBA of the LAST sector (big-endian), so add one for the count.
+    last_lba = struct.unpack(">I", data.raw[:4])[0]
+    return last_lba + 1
+
+
 def _scsi_set_streaming(k32: "ctypes.WinDLL", handle: int, read_kbps: int) -> bool:
     """
     Issue SCSI SET STREAMING (B6h) to request a drive read speed of `read_kbps` KB/s.
@@ -208,6 +245,12 @@ class ScsiReader:
             offset += chunk
         return bytes(out)
 
+    def capacity(self) -> Optional[int]:
+        """Return the disc's total sector count via SCSI READ CAPACITY(10). None on failure."""
+        if self._handle is None:
+            return None
+        return _scsi_read_capacity(self._k32, self._handle)
+
     def set_read_speed(self, read_kbps: int) -> bool:
         """
         Request a drive read speed in KB/s via SCSI SET STREAMING. Returns False if not applied.
@@ -224,3 +267,97 @@ class ScsiReader:
         if self._handle is not None:
             self._k32.CloseHandle(self._handle)
             self._handle = None
+
+
+class ScsiSectorStream:
+    """
+    A minimal seekable, read-only binary stream over a ScsiReader.
+
+    pycdlib normally reads the device itself, but on Windows its ReadFile path refuses to serve some
+    sectors of a CSS-protected DVD with a copy-protection error, which aborts disc parsing. Pointing
+    pycdlib at this stream instead routes those reads through raw SCSI, which bypasses that check.
+    Byte-range reads are mapped onto sector-aligned SCSI reads and sliced. The bytes are raw and
+    undecrypted, which is fine because pycdlib only parses the unscrambled UDF/ISO volume, directory,
+    and .IFO structures - never the scrambled VOB title content.
+
+    It exposes a binary ``mode`` and deliberately no ``name``, so pycdlib uses it directly rather than
+    wrapping it in its own ``\\\\.\\`` raw-device reader (which would reintroduce the ReadFile path).
+
+    The underlying ScsiReader is owned by the caller, so closing this stream does not close it.
+    """
+
+    mode = "rb"
+
+    def __init__(self, reader: ScsiReader, total_sectors: int) -> None:
+        self._reader = reader
+        self._size = total_sectors * SECTOR_SIZE
+        self._pos = 0
+
+    def seekable(self) -> bool:
+        return True
+
+    def readable(self) -> bool:
+        return True
+
+    def writable(self) -> bool:
+        return False
+
+    def __len__(self) -> int:
+        return self._size
+
+    def tell(self) -> int:
+        return self._pos
+
+    def seek(self, offset: int, whence: int = os.SEEK_SET) -> int:
+        if whence == os.SEEK_SET:
+            pos = offset
+        elif whence == os.SEEK_CUR:
+            pos = self._pos + offset
+        elif whence == os.SEEK_END:
+            pos = self._size + offset
+        else:
+            raise ValueError(f"Invalid whence: {whence}")
+        if pos < 0:
+            raise OSError("Negative seek position")
+        self._pos = pos
+        return self._pos
+
+    def read(self, size: int = -1) -> bytes:
+        if size is None or size < 0:
+            size = max(0, self._size - self._pos)
+        size = min(size, max(0, self._size - self._pos))
+        if size == 0:
+            return b""
+        start = self._pos
+        start_lba = start // SECTOR_SIZE
+        end_lba = -(-(start + size) // SECTOR_SIZE)  # ceil division to cover the final partial sector
+        count = end_lba - start_lba
+        data = self._reader.read(start_lba, count)
+        if data is None:
+            # One or more sectors in the range could not be read - commonly the unreadable
+            # tail-padding sectors a drive declares but won't serve. pycdlib probes such sectors
+            # (e.g. anchor candidates at the physical end) expecting bytes back, not an exception,
+            # so recover sector-by-sector and zero-fill the ones that fail (matching how pycdlib's
+            # own raw-device reader behaves). Parsing only touches unscrambled structures, so a
+            # genuinely needed sector reads fine; a zero-filled one simply fails to parse and is
+            # skipped.
+            data = self._read_tolerant(start_lba, count)
+        inner = start - start_lba * SECTOR_SIZE
+        chunk = data[inner : inner + size]
+        self._pos += len(chunk)
+        return chunk
+
+    def _read_tolerant(self, start_lba: int, count: int) -> bytes:
+        """Read each sector individually, substituting a zero-filled sector for any that fail."""
+        out = bytearray()
+        for lba in range(start_lba, start_lba + count):
+            sector = self._reader.read(lba, 1)
+            if sector is None:
+                log.warning("Sector %d unreadable; zero-filling it for parsing.", lba)
+                sector = b"\x00" * SECTOR_SIZE
+            out += sector
+        return bytes(out)
+
+    def close(self) -> None:
+        # The ScsiReader is owned by the caller (Dvd), so it is intentionally not closed here.
+        pass

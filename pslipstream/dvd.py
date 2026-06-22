@@ -77,6 +77,11 @@ class Dvd:
             self._scsi = None
         self.device = dev
         self.log.info("Opening '%s'...", dev)
+        # Open the raw SCSI reader first. On a CSS-protected DVD, Windows' ReadFile refuses to serve
+        # some sectors with a copy-protection error, which aborts pycdlib's own device reads while it
+        # parses the disc. pycdlib is therefore pointed at the SCSI reader (in _open_cdlib), which
+        # bypasses that check; opening it here also lets the configured read speed apply before reads.
+        self._open_scsi(dev)
         self._open_cdlib(rf"\\.\{dev}" if dev.endswith(":") else dev)
         self.log.info("Loaded Device in PyCdlib...")
         # libdvdcss reads these process-global env vars when a disc is opened, so set
@@ -87,7 +92,6 @@ class Dvd:
         self.dvdcss.set_verbosity(config.css_verbosity)
         self.dvdcss.open(dev)
         self.log.info("Loaded Device in PyDvdCss...")
-        self._open_scsi(dev)
         self.log.info("DVD opened and ready...")
 
     def _open_scsi(self, dev: str) -> None:
@@ -124,17 +128,20 @@ class Dvd:
         like "Expected at least 2 UDF Anchors" on one attempt yet succeed on the next. A failed
         open leaves the PyCdlib instance in a partial state, so each retry uses a fresh instance.
 
-        Raises the last PyCdlibInvalidISO if every attempt fails.
+        When a raw SCSI reader is available it backs pycdlib's reads, because Windows' ReadFile path
+        refuses to serve some sectors of a CSS-protected disc with a copy-protection error.
+
+        Raises the last open error if every attempt fails.
         """
         attempts = max(1, config.pycdlib_open_attempts)
-        last_error: Optional[PyCdlibInvalidISO] = None
+        last_error: Optional[Exception] = None
         for attempt in range(1, attempts + 1):
             try:
-                self.cdlib.open(device_path)
+                self._open_cdlib_once(device_path)
                 if attempt > 1:
                     self.log.info("pycdlib opened on attempt %d/%d", attempt, attempts)
                 return
-            except PyCdlibInvalidISO as e:
+            except (PyCdlibInvalidISO, OSError) as e:
                 last_error = e
                 self.log.warning("pycdlib open attempt %d/%d failed (%s)", attempt, attempts, e)
                 try:
@@ -146,6 +153,21 @@ class Dvd:
                     time.sleep(config.pycdlib_open_retry_delay)
         assert last_error is not None  # loop always sets it before exhausting
         raise last_error
+
+    def _open_cdlib_once(self, device_path: str) -> None:
+        """
+        Open the device in pycdlib once. Prefer the raw SCSI reader as pycdlib's backing stream so
+        CSS-protected sectors that Windows' ReadFile would reject (copy-protection error) don't abort
+        parsing. Fall back to letting pycdlib open the device path itself when SCSI is unavailable
+        (e.g. non-Windows, or READ CAPACITY failed).
+        """
+        if self._scsi is not None:
+            total_sectors = self._scsi.capacity()
+            if total_sectors:
+                self.cdlib.open_fp(scsi.ScsiSectorStream(self._scsi, total_sectors))
+                return
+            self.log.warning("SCSI READ CAPACITY failed; parsing via the raw device path instead.")
+        self.cdlib.open(device_path)
 
     def compute_crc_id(self) -> str:
         """
